@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "projects": [
+    {
+      "id": "secondbrain",
+      "path": ".",
+      "instructions": ["AGENTS.md", "CLAUDE.md", ".claude/skills/project-harness/SKILL.md"],
+      "required_files": [".harness/WORKFLOW.md", "sb", "cau-hinh.yml", "Cargo.toml"],
+      "inputs": ["CLAUDE.md", "README.md", "cau-hinh.yml", "Cargo.toml", "Cargo.lock", "sb", "Mo-Second-Brain.bat", "Mo-Second-Brain.command", "src", "templates", "assets", "knowledge", "articles", ".claude/skills", ".github", ".harness/checks", ".harness/tests"],
+      "checks": [
+        {"name": "Second Brain: ./sb check (liên kết, nguồn, frontmatter, bài viết)", "argv": ["{node}", "{workspace}/.harness/checks/check_secondbrain.mjs", "check"], "timeout_ms": 600000},
+        {"name": "Harness: test vòng đời", "argv": ["{node}", "--test", "{workspace}/.harness/tests/harness.test.mjs"], "timeout_ms": 60000}
+      ],
+      "manual_gates": [
+        "Tri thức: mỗi khẳng định quan trọng có >= 2 nguồn độc lập hoặc 1 nguồn điểm 5; nguồn điểm 1 không làm căn cứ; bản nháp mới nằm trong knowledge/_inbox/ với status: draft.",
+        "Không tự đổi status thành verified hay tự đăng khi người dùng chưa duyệt.",
+        "Bài viết SEO/GEO: mọi dữ kiện có trong ghi chú gốc (based_on); từ khoá chính không trùng (./sb seo --keyword).",
+        "Code/giao diện: mở Bàn làm việc hoặc trang sinh ra (./sb build) và xem tận mắt phần đã đổi.",
+        "Đưa lên web (commit/push) chỉ khi người dùng đã nhờ."
+      ]
+    }
+  ]
+}

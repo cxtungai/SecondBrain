@@ -7,7 +7,7 @@ description: "Run substantial coding, research and 3D tasks in this workspace wi
 
 This is an adapted local export; original instructions are in CODEX-SKILL.md. Use Claude's available tools. Codex namespaces (functions.*, tools.*, image_gen, collaboration, mcp__codex_apps__*, skills.read) are not installed by this folder. Never invent tool calls, credentials, or a successful connection. Read AGENTS.md and CLAUDE.md at the applicable scope. The user's current authorization remains authoritative.
 
-Locate the workspace containing `.harness/projects.json`. Read `.harness/WORKFLOW.md` and the target project's `AGENTS.md`. Use its registered checks and preserve its data/model authority.
+In Second Brain the workspace is the repository root and the only project is `secondbrain` (`node .harness/harness.mjs start --project secondbrain ...`); `.harness/README.md` explains the commands in Vietnamese. Reply to the user in Vietnamese per CLAUDE.md. Locate the workspace containing `.harness/projects.json`. Read `.harness/WORKFLOW.md` and the target project's `AGENTS.md`. Use its registered checks and preserve its data/model authority.
 
 Use clear mode for bounded requests. Explore only a material uncertainty: record alternatives and probe the disputed premise on copies before composing a solution. Do not automatically multiply agents, model calls or test runs.
 
