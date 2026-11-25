@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-head">
+  <h1>Trung tâm kiến thức</h1>
+  <p class="lead">
+    Đây không phải blog để lướt mà là một thư viện tri thức đã được đọc, hiểu và kiểm chứng. Mỗi <strong>chủ đề trụ cột</strong> dẫn tới cụm ghi chú liên quan.
+    Tra nhanh thuật ngữ trong <a href="{{ url('tu-dien/') }}">Từ điển</a> hoặc xem các mối liên kết trên <a href="{{ url('graph/') }}">Đồ thị tri thức</a>.
+  </p>
+</header>
+
+{% if pillars %}
+<nav class="pillar-nav" aria-label="Các chủ đề trụ cột">
+  {% for p in pillars %}<a href="#{{ p.slug }}">{{ p.index }} · {{ p.title }}</a>{% endfor %}
+</nav>
+<div class="pillars">
+  {% for p in pillars %}
+  <section class="pillar card" id="{{ p.slug }}" data-type="topic">
+    <div class="pillar-index">{{ p.index_pad }}</div>
+    <div class="pillar-body">
+      <h2><a href="{{ p.url }}">{{ p.title }}</a></h2>
+      <p class="stat-line" style="margin-top:0">{{ p.summary }}</p>
+      {% for g in p.groups %}
+      <div class="pillar-group" data-type="{{ g.type }}">
+        <span class="badge badge-type">{{ g.label }}</span>
+        <ul>{% for n in g.notes %}<li><a href="{{ n.url }}" title="{{ n.summary }}">{{ n.title }}</a></li>{% endfor %}</ul>
+      </div>
+      {% endfor %}
+      {% if p.broken %}
+      <p class="stat-line">Còn thiếu: {% for b in p.broken %}{% if not loop.first %}, {% endif %}<a class="wikilink--broken" href="{{ b.href }}">{{ b.name }}</a>{% endfor %}</p>
+      {% endif %}
+      <a class="pillar-more" href="{{ p.url }}">Đọc chủ đề · {{ p.count }} ghi chú →</a>
+    </div>
+  </section>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">Chưa có ghi chú chủ đề nào. Nhờ Claude: <em>“nghiên cứu &lt;chủ đề&gt;”</em> — Claude sẽ tạo chủ đề trụ cột kèm các ghi chú con.</p>
+{% endif %}
+
+{% if unassigned %}
+<section class="section">
+  <h2 class="section-title">Chưa thuộc chủ đề nào ({{ unassigned|length }})</h2>
+  <p class="stat-line">Những ghi chú này chưa được ghi chú chủ đề nào liên kết tới — nên thêm vào một trụ cột để tri thức được kết nối.</p>
+  <ul>{% for n in unassigned %}<li><a href="{{ n.url }}">{{ n.title }}</a> <span class="stat-line">— {{ n.type_label }}</span></li>{% endfor %}</ul>
+</section>
+{% endif %}
+
+<section class="section">
+  <h2 class="section-title">Duyệt theo cách khác</h2>
+  <div class="grid">
+    {% for t in types %}
+    <a class="card type-card" data-type="{{ t.key }}" href="{{ t.url }}"><div class="count">{{ t.count }}</div><div class="name">{{ t.label }}</div></a>
+    {% endfor %}
+  </div>
+  {% if tags %}
+  <div class="tag-cloud" style="margin-top:1.25rem">{% for t in tags %}<a class="tag" href="{{ t.url }}">#{{ t.name }}<small>{{ t.count }}</small></a>{% endfor %}</div>
+  {% endif %}
+  <p class="stat-line"><a href="{{ url('gaps/') }}">Tri thức còn thiếu ({{ gaps }}) →</a></p>
+</section>
+{% endblock %}

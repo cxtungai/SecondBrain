@@ -1,0 +1,74 @@
+{% macro cred(c) -%}
+<span class="cred cred-{% if c.value %}{{ c.value }}{% else %}none{% endif %}" title="{{ c.tip }}" aria-label="{{ c.tip }}"><span class="cred-dots" aria-hidden="true">{% for i in range(1, 6) %}<span{% if c.value and i <= c.value %} class="on"{% endif %}></span>{% endfor %}</span><span class="cred-text">{{ c.text }}{% if c.label %} · {{ c.label }}{% endif %}</span></span>
+{%- endmacro %}
+
+{% macro type_badge(n, link=true) -%}
+{% if link %}<a class="badge badge-type" data-type="{{ n.type }}" href="{{ n.type_url }}">{{ n.type_label }}</a>{% else %}<span class="badge badge-type" data-type="{{ n.type }}">{{ n.type_label }}</span>{% endif %}
+{%- endmacro %}
+
+{% macro status_badge(n) -%}
+<span class="badge badge-status-{{ n.status }}" title="{{ n.status_desc }}">{{ n.status_label }}</span>
+{%- endmacro %}
+
+{% macro note_list(notes, empty="Chưa có ghi chú nào.", show_type=true) -%}
+{% if not notes %}
+<p class="empty">{{ empty }}</p>
+{% else %}
+<ul class="note-list">
+  {% for n in notes %}
+  <li class="note-item" data-type="{{ n.type }}">
+    <div class="meta-row">
+      {% if n.inbox %}<span class="badge badge-inbox">Chờ duyệt</span>{% endif %}
+      {% if show_type %}<a class="badge badge-type" data-type="{{ n.type }}" href="{{ n.type_url }}">{{ n.type_label }}</a>{% endif %}
+      <span class="badge badge-status-{{ n.status }}" title="{{ n.status_desc }}">{{ n.status_label }}</span>
+      <span>Cập nhật {{ n.updated }}</span>
+    </div>
+    <h3><a href="{{ n.url }}">{{ n.title }}</a></h3>
+    <p>{{ n.summary }}</p>
+    {% if n.tags %}
+    <div class="meta-row" style="margin-top:0.5rem">{% for t in n.tags %}<a class="tag" href="{{ t.url }}">#{{ t.name }}</a>{% endfor %}</div>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+{%- endmacro %}
+
+{% macro article_list(articles, empty="Chưa có bài viết nào.") -%}
+{% if not articles %}
+<p class="empty">{{ empty }}</p>
+{% else %}
+<ul class="note-list">
+  {% for a in articles %}
+  <li class="note-item" data-type="article">
+    <div class="meta-row">
+      {% if a.draft %}<span class="badge badge-inbox">Bản nháp</span>{% endif %}
+      <span class="badge badge-type">{{ a.intent_label }}</span>
+      <span>Cập nhật {{ a.updated }}</span>
+    </div>
+    <h3><a href="{{ a.url }}">{{ a.title }}</a></h3>
+    <p>{{ a.description }}</p>
+    {% if a.notes %}<p class="stat-line" style="margin-top:0.4rem">Dựa trên: {{ a.notes|join(' · ') }}</p>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+{%- endmacro %}
+
+{% macro graph(data, height=520) -%}
+<div class="graph" data-graph="{{ data }}" style="height:{{ height }}px"><svg role="img" aria-label="Đồ thị liên kết giữa các ghi chú"></svg></div>
+{%- endmacro %}
+
+{% macro hints(list, extra="") -%}
+{% if list %}
+<details class="card aside-block seo-hints">
+  <summary><h2>SEO / GEO {{ list|selectattr('ok')|list|length }}/{{ list|length }}</h2></summary>
+  <p class="stat-line">Chỉ hiện khi xem trên máy. {{ extra }}</p>
+  <ul>
+    {% for h in list %}
+    <li class="{% if h.ok %}ok{% else %}todo{% endif %}"><span aria-hidden="true">{% if h.ok %}✓{% else %}○{% endif %}</span> {{ h.label }}{% if not h.ok %}<small>{{ h.tip }}</small>{% endif %}</li>
+    {% endfor %}
+  </ul>
+</details>
+{% endif %}
+{%- endmacro %}

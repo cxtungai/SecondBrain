@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+{% import "macros.html" as m %}
+<header class="page-head"{% if data_type %} data-type="{{ data_type }}"{% endif %}>
+  {% if badge %}<div class="meta-row"><span class="badge badge-type">{{ badge }}</span></div>{% endif %}
+  <h1>{{ title }}</h1>
+  {% if lead %}<p class="lead">{{ lead }}</p>{% endif %}
+</header>
+{{ m.note_list(notes, empty=empty, show_type=show_type) }}
+{% endblock %}

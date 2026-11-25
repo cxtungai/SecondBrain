@@ -1,0 +1,68 @@
+name: Phát hành chương trình
+
+# Build chương trình Second Brain cho Windows, macOS, Linux mỗi khi mã nguồn đổi trên nhánh mặc định,
+# rồi cập nhật bản phát hành "ban-moi-nhat" — file Mo-Second-Brain tải chương trình từ đây.
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'templates/**'
+      - 'assets/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - '.github/workflows/release.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.ref_name == github.event.repository.default_branch
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: windows-latest, target: x86_64-pc-windows-msvc, bin: secondbrain.exe, file: secondbrain-windows-x64.exe }
+          - { os: macos-latest, target: aarch64-apple-darwin, bin: secondbrain, file: secondbrain-macos-arm64 }
+          - { os: macos-latest, target: x86_64-apple-darwin, bin: secondbrain, file: secondbrain-macos-x64 }
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu, bin: secondbrain, file: secondbrain-linux-x64 }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+      - run: cargo build --release --locked --target ${{ matrix.target }}
+      - shell: bash
+        run: cp "target/${{ matrix.target }}/release/${{ matrix.bin }}" "${{ matrix.file }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.file }}
+          path: ${{ matrix.file }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ban-moi-nhat
+          target_commitish: ${{ github.sha }}
+          name: Second Brain — bản mới nhất
+          make_latest: true
+          body: |
+            Chương trình Second Brain, tự build từ mã nguồn mới nhất.
+            Không cần tải tay: bấm đúp **Mo-Second-Brain** (Windows: `.bat`, macOS/Linux: `.command`) trong thư mục dự án — lần đầu sẽ tự tải file phù hợp với máy.
+          files: out/*

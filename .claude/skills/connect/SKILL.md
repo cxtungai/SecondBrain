@@ -10,13 +10,13 @@ Mục tiêu: mọi ghi chú đều nằm trong ít nhất một chủ đề tr�
 ## 1. Đo hiện trạng
 
 ```bash
-npm run kb -- stats
-npm run kb -- mentions   # nhắc tên ghi chú khác mà chưa đặt [[liên kết]]
-npm run kb -- orphans    # ghi chú không liên kết với ai
-npm run kb -- gaps       # [[liên kết]] chưa có ghi chú
+./sb kb stats
+./sb kb mentions   # nhắc tên ghi chú khác mà chưa đặt [[liên kết]]
+./sb kb orphans    # ghi chú không liên kết với ai
+./sb kb gaps       # [[liên kết]] chưa có ghi chú
 ```
 
-Xem thêm trang `/kien-thuc/` (mục "Chưa thuộc chủ đề nào") khi chạy `npm run dev`.
+Xem thêm trang `/kien-thuc/` (mục "Chưa thuộc chủ đề nào") trên Bàn làm việc (`./sb mo`).
 
 ## 2. Sửa
 
@@ -28,6 +28,6 @@ Xem thêm trang `/kien-thuc/` (mục "Chưa thuộc chủ đề nào") khi chạ
 
 ## 3. Kiểm tra và báo cáo
 
-- `npm run check` và `npm run build` chạy thành công.
+- `./sb check` và `./sb build` chạy thành công.
 - Commit: `Kết nối tri thức: <tóm tắt>`.
 - Báo cáo: số liên kết đã thêm, ghi chú đã nối vào chủ đề, top mục còn thiếu nên nghiên cứu.

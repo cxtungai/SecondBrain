@@ -4,6 +4,8 @@ Second Brain là kho tri thức chuyên môn **đã được người dùng đ�
 
 Nguyên tắc cốt lõi: **AI nghiên cứu và đề xuất, người dùng duyệt, chỉ tri thức đã duyệt mới lên web.** Không bao giờ tự đăng hay tự đổi `status` thành `verified` khi người dùng chưa duyệt.
 
+**Người dùng không rành kỹ thuật.** Họ làm việc qua hai nơi: nói chuyện với bạn (Claude) bằng tiếng Việt, và **Bàn làm việc** — trang web chạy trên máy họ (bấm đúp `Mo-Second-Brain.bat` trên Windows / `Mo-Second-Brain.command` trên macOS) để đọc bản nháp, sửa bằng form, bấm **Duyệt & đăng** và **Đưa lên web**. Đừng yêu cầu họ gõ lệnh hay sửa YAML; bạn chạy lệnh thay họ và giải thích kết quả bằng lời thường. Khi cần họ duyệt, chỉ họ mở Bàn làm việc.
+
 Site có hai lớp nội dung: **tri thức** (`knowledge/`, nguồn sự thật) và **bài viết SEO/GEO** (`articles/`, lớp trình bày để kéo traffic, dẫn xuất từ tri thức). Xem mục "Bài viết SEO/GEO".
 
 ## Cấu trúc thư mục
@@ -19,8 +21,11 @@ knowledge/              Kho tri thức (mở được bằng Obsidian)
   case-studies/         Case study
   sources/              Tóm tắt nguồn tham khảo
 articles/               Bài viết SEO/GEO dẫn xuất từ tri thức (URL /bai-viet/<slug>/)
-scripts/                CLI: check, new, publish, kb, seo
-src/                    Website (Astro) + lõi xử lý tri thức (src/lib)
+src/                    Chương trình Rust `secondbrain`: lõi tri thức, sinh web tĩnh, Bàn làm việc, CLI
+templates/  assets/     Giao diện web (minijinja) + CSS/JS — được nhúng vào chương trình
+cau-hinh.yml            Tên, mô tả, tác giả, miễn trừ, quy tắc cho AI agent
+sb                      Lệnh chạy chương trình cho agent: ./sb <lệnh> (cargo nếu có, không thì tải bản build sẵn)
+Mo-Second-Brain.*       File bấm đúp cho người dùng: tải chương trình lần đầu rồi mở Bàn làm việc
 .claude/skills/         Skill cho Claude Code: research, publish, connect, seo-article, write-content
 ```
 
@@ -48,7 +53,7 @@ sources:
     accessed: 2026-11-25
 created: 2026-11-25
 updated: 2026-11-25
-reviewed: 2026-11-25              # ngày người dùng duyệt — scripts/publish.mjs tự điền
+reviewed: 2026-11-25              # ngày người dùng duyệt — `./sb publish` tự điền
 research:                         # tuỳ chọn — do agent nghiên cứu điền
   keyword: Price action
   date: 2026-11-25
@@ -91,7 +96,7 @@ Mỗi nguồn được chấm 1–5. Xuất phát từ mức của loại nguồ
 | 2 | Thấp | Blog cá nhân, video, khoá học chưa rõ kiểm chứng; ý kiến ít dẫn chứng |
 | 1 | Rất thấp | Diễn đàn, mạng xã hội, nguồn ẩn danh, nội dung quảng cáo hoặc có xung đột lợi ích rõ ràng |
 
-Quy tắc dùng điểm: khẳng định quan trọng cần ≥ 2 nguồn độc lập hoặc 1 nguồn điểm 5; nguồn điểm 1 không làm căn cứ cho khẳng định; ghi chú `fact` ở trạng thái `verified` cần ít nhất một nguồn ≥ 3 (`npm run check` sẽ cảnh báo).
+Quy tắc dùng điểm: khẳng định quan trọng cần ≥ 2 nguồn độc lập hoặc 1 nguồn điểm 5; nguồn điểm 1 không làm căn cứ cho khẳng định; ghi chú `fact` ở trạng thái `verified` cần ít nhất một nguồn ≥ 3 (`./sb check` sẽ cảnh báo).
 
 ## Liên kết tri thức
 
@@ -124,7 +129,7 @@ based_on: [ho-tro-va-khang-cu, price-action]          # ghi chú tri thức gố
 status: draft                                         # draft | published
 created: 2026-11-25
 updated: 2026-11-25
-published_on: 2026-11-26                              # scripts/publish.mjs tự điền
+published_on: 2026-11-26                              # `./sb publish` tự điền
 ---
 ```
 
@@ -133,42 +138,47 @@ Quy tắc:
 - Mọi dữ kiện, số liệu, định nghĩa trong bài phải có trong ghi chú gốc. Thiếu → nghiên cứu ghi chú trước (`/research`), ghi `[[đề-xuất]]` trong bài.
 - Đặt `[[slug]]` tới ghi chú gốc ngay chỗ dùng dữ kiện. Trang bài viết tự hiện mục "Tri thức gốc" (nguồn, điểm uy tín); trang ghi chú tự hiện "Bài viết về chủ đề này". **Ghi chú không liên kết sang bài viết.**
 - Không nhồi từ khoá, không giật tít, không hứa hẹn; giữ nguyên sắc thái "còn tranh cãi / giới hạn" của tri thức.
-- Kiểm tra trùng từ khoá trước khi viết: `npm run seo -- --keyword "<từ khoá>"`.
+- Kiểm tra trùng từ khoá trước khi viết: `./sb seo --keyword "<từ khoá>"`.
 
-**GEO cho ghi chú tri thức** — chỉ những gì làm tri thức rõ và đáng tin hơn: câu đầu trả lời thẳng ("X là …"), `summary` 70–160 ký tự, nguồn có điểm uy tín, `## Câu hỏi thường gặp`, liên kết nội bộ, ngày cập nhật. `npm run seo` liệt kê gợi ý; khi chạy `npm run dev`, trang nào cũng có hộp "SEO / GEO" (không lên web).
+**GEO cho ghi chú tri thức** — chỉ những gì làm tri thức rõ và đáng tin hơn: câu đầu trả lời thẳng ("X là …"), `summary` 70–160 ký tự, nguồn có điểm uy tín, `## Câu hỏi thường gặp`, liên kết nội bộ, ngày cập nhật. `./sb seo` liệt kê gợi ý; trên Bàn làm việc (`./sb mo`), trang nào cũng có hộp "SEO / GEO" (không lên web).
 
 ## Quy trình
 
 1. **Nghiên cứu** (`/research <từ khoá>`): agent tìm nguồn, chấm điểm uy tín, viết bài tổng hợp tiếng Việt có liên kết, lưu vào `knowledge/_inbox/<slug>.md` với `status: draft`, rồi báo cáo cho người dùng.
-2. **Duyệt** (người dùng): đọc, sửa trực tiếp file (Obsidian / editor / GitHub), xem trước bằng `npm run dev`.
-3. **Đăng** (`/publish <file>` hoặc `npm run publish -- <file>`): chuyển vào thư mục đúng loại, `status: verified`, điền `reviewed` — sau đó **kết nối**: thêm liên kết hai chiều với ghi chú liên quan và chủ đề trụ cột.
-4. **Kết nối định kỳ** (`/connect`): thêm liên kết còn thiếu, nối ghi chú cô lập, liệt kê tri thức còn thiếu.
-5. **Bài viết SEO/GEO** (`/seo-article <từ khoá>`): agent kiểm tra trùng từ khoá, viết bài nháp vào `articles/` chỉ từ tri thức đã có; người dùng duyệt rồi `/publish articles/<file>.md`.
-6. **Viết content cho kênh khác** (`/write-content <đề bài>`): agent đọc kho và viết bài có trích nguồn (blog ngoài, mạng xã hội, email…).
+2. **Duyệt** (người dùng): trên Bàn làm việc — đọc bản nháp, bấm **Sửa** (form có ô cho từng trường, xem trước ngay), hoặc nhờ bạn sửa bằng lời.
+3. **Đăng**: người dùng bấm **Duyệt & đăng** (hoặc bảo bạn `/publish <file>` → `./sb publish <file>`): chuyển vào thư mục đúng loại, `status: verified`, điền `reviewed`. Sau đó **kết nối**: thêm liên kết hai chiều với ghi chú liên quan và chủ đề trụ cột (`/connect`).
+4. **Đưa lên web**: nút **Đưa lên web** trên Bàn làm việc (git add/commit/push), hoặc bạn commit & push khi người dùng nhờ.
+5. **Kết nối định kỳ** (`/connect`): thêm liên kết còn thiếu, nối ghi chú cô lập, liệt kê tri thức còn thiếu.
+6. **Bài viết SEO/GEO** (`/seo-article <từ khoá>`): agent kiểm tra trùng từ khoá, viết bài nháp vào `articles/` chỉ từ tri thức đã có; người dùng duyệt rồi `/publish articles/<file>.md`.
+7. **Viết content cho kênh khác** (`/write-content <đề bài>`): agent đọc kho và viết bài có trích nguồn (blog ngoài, mạng xã hội, email…).
 
 ## Lệnh
 
+Chạy từ thư mục gốc repo. `./sb` dùng `cargo run --release` nếu máy có Rust (code bạn sửa có hiệu lực ngay), không thì dùng/tải bản build sẵn trong `bin/` (`./sb cap-nhat` để tải lại bản mới nhất).
+
 ```bash
-npm run dev                         # xem site tại http://localhost:4321 (hiện cả bản nháp chờ duyệt)
-npm run check                       # kiểm tra schema, liên kết, chất lượng nguồn
-npm run check -- --inbox --verbose  # coi lỗi trong _inbox là lỗi, liệt kê mọi gợi ý
-npm run build                       # check + build site tĩnh vào dist/
-npm run new -- concept "Tiêu đề" [--inbox] [--tags a,b]
-npm run publish [-- <file> [--status draft] [--dry-run]]
-npm run kb -- search "<từ khoá>"    # tra cứu kho (thêm --json cho máy đọc)
-npm run kb -- show <slug>           # metadata + liên kết + backlinks
-npm run kb -- list --type fact --status verified
-npm run kb -- gaps | orphans | mentions [slug] | stats
-npm run new -- article "Tiêu đề" --keyword "…" --based-on a,b [--intent how-to]
-npm run publish -- articles/<file>.md   # đăng bài viết (cần ghi chú gốc verified)
-npm run seo                         # báo cáo SEO/GEO mọi trang
-npm run seo -- <slug> [--drafts]    # chi tiết một trang
-npm run seo -- --keyword "<từ khoá>"  # trang nào đã nhắm từ khoá này
+./sb mo                             # Bàn làm việc + xem trước web tại http://localhost:4321 (có bản nháp, tự cập nhật)
+./sb check                          # kiểm tra cấu trúc, liên kết, chất lượng nguồn, trùng từ khoá
+./sb check --inbox --verbose        # coi lỗi trong bản nháp cũng là lỗi, liệt kê mọi gợi ý
+./sb build                          # check + xuất web tĩnh vào dist/ (đọc SITE_URL, BASE_PATH)
+./sb new concept "Tiêu đề" [--inbox] [--tags a,b]
+./sb publish [<file> [--status draft] [--dry-run]]
+./sb kb search "<từ khoá>"          # tra cứu kho (thêm --json cho máy đọc)
+./sb kb show <slug>                 # metadata + liên kết + backlinks + bài viết dựa trên
+./sb kb list --type fact --status verified
+./sb kb gaps | orphans | mentions [slug] | stats
+./sb new article "Tiêu đề" --keyword "…" --based-on a,b [--intent how-to]
+./sb publish articles/<file>.md     # đăng bài viết (cần ghi chú gốc verified; --force nếu người dùng chấp nhận rõ ràng)
+./sb seo                            # báo cáo SEO/GEO mọi trang
+./sb seo <slug> [--drafts]          # chi tiết một trang
+./sb seo --keyword "<từ khoá>"      # trang nào đã nhắm từ khoá này
 ```
+
+Đưa lên web = commit & push lên nhánh mặc định của repo (người dùng có nút **Đưa lên web** trên Bàn làm việc làm đúng việc này). GitHub Actions tự build và đăng lên GitHub Pages.
 
 ## Dùng kho để viết content (agent bên ngoài repo)
 
-Site xuất sẵn: `/llms.txt` (chỉ mục + quy tắc), `/llms-full.txt` (toàn bộ nội dung), `/knowledge.json` (dữ liệu có cấu trúc), `/notes/<slug>.md` (từng ghi chú). Quy tắc bắt buộc nằm trong `src/config.mjs` (`AGENT_RULES`):
+Site xuất sẵn: `/llms.txt` (chỉ mục + quy tắc), `/llms-full.txt` (toàn bộ nội dung), `/knowledge.json` (dữ liệu có cấu trúc), `/notes/<slug>.md` (từng ghi chú). Quy tắc bắt buộc nằm trong `cau-hinh.yml` (`agent_rules`):
 
 - Chỉ dùng số liệu, dữ kiện, trích dẫn từ ghi chú `verified` như sự thật; luôn ghi nguồn.
 - `draft` chỉ làm ý tưởng; không dùng `outdated` cho content mới.
@@ -176,6 +186,7 @@ Site xuất sẵn: `/llms.txt` (chỉ mục + quy tắc), `/llms-full.txt` (toà
 
 ## Khi sửa code
 
-- Lõi xử lý tri thức (`src/lib/*.mjs`) là JavaScript thuần, dùng chung cho site và scripts — không import Astro vào đó.
-- Đổi cấu trúc ghi chú → sửa `src/lib/schema.mjs`, templates trong `knowledge/_templates/`, và tài liệu này.
-- Trước khi kết thúc: `npm run check && npm run build` phải chạy thành công.
+- Chương trình là một crate Rust (`Cargo.toml`): `text.rs` (bỏ dấu, slug, wikilink), `schema.rs` (loại, trạng thái, thang điểm, đọc frontmatter), `kb.rs` (dựng kho, liên kết, backlinks, gaps), `mentions.rs`, `articles.rs`, `seo.rs`, `render.rs` (Markdown → HTML, FAQ, mục lục), `site.rs` (mọi trang + llms.txt, knowledge.json, sitemap…), `server.rs` (Bàn làm việc + API), `publish.rs`, `cli.rs`.
+- Giao diện: `templates/*.html` (minijinja) và `assets/` (CSS/JS thuần, không thư viện) — nhúng vào chương trình khi build, nên sửa xong phải build lại.
+- Đổi cấu trúc ghi chú → sửa `src/schema.rs`, templates trong `knowledge/_templates/`, và tài liệu này.
+- Trước khi kết thúc: `cargo test`, `./sb check` và `./sb build` phải chạy thành công.

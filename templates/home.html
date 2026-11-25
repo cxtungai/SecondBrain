@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+{% import "macros.html" as m %}
+<section class="hero">
+  <h1>{{ site.name }}</h1>
+  <p class="lead">{{ site.description }}</p>
+  <form class="hero-search" action="{{ url('search/') }}" method="get" role="search">
+    <input type="search" name="q" placeholder="Tìm khái niệm, số liệu, phương pháp… (gõ không dấu cũng được)" aria-label="Tìm trong kho tri thức" />
+  </form>
+  <p class="stat-line">
+    {{ stats.notes }} ghi chú · {{ stats.verified }} đã kiểm chứng · {{ stats.articles }} bài viết · {{ stats.gaps }} mục còn thiếu ·
+    <a href="{{ url('ai/') }}">Kết nối AI agent →</a>
+  </p>
+</section>
+
+{% if issues %}
+<div class="callout {% if errors %}callout-bad{% else %}callout-warn{% endif %} issues">
+  <strong>Chỉ hiện trên máy bạn:</strong> {{ errors }} lỗi, {{ issues_total - errors }} cảnh báo trong kho. Xem chi tiết ở <a href="{{ url('ban-lam-viec/') }}">Bàn làm việc</a>.
+  <ul>{% for i in issues %}<li><code>{{ i.path }}</code> — {{ i.message }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+<section class="section">
+  <h2 class="section-title">Loại tri thức</h2>
+  <div class="grid">
+    {% for t in types %}
+    <a class="card type-card" data-type="{{ t.key }}" href="{{ t.url }}">
+      <div class="count">{{ t.count }}</div>
+      <div class="name">{{ t.label }}</div>
+      <div class="desc">{{ t.description }}</div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% if inbox %}
+<section class="section">
+  <h2 class="section-title">Chờ duyệt ({{ inbox|length }}) <a href="{{ url('ban-lam-viec/') }}">Mở Bàn làm việc →</a></h2>
+  {{ m.note_list(inbox) }}
+</section>
+{% endif %}
+
+{% if draft_articles %}
+<section class="section">
+  <h2 class="section-title">Bài viết nháp ({{ draft_articles|length }}) <a href="{{ url('ban-lam-viec/') }}">Mở Bàn làm việc →</a></h2>
+  {{ m.article_list(draft_articles) }}
+</section>
+{% endif %}
+
+{% if pillars %}
+<section class="section">
+  <h2 class="section-title">Trung tâm kiến thức <a href="{{ url('kien-thuc/') }}">Xem toàn bộ →</a></h2>
+  <div class="grid">
+    {% for p in pillars %}
+    <a class="card type-card" data-type="topic" href="{{ p.url }}">
+      <div class="count">{{ p.index }}</div>
+      <div class="name">{{ p.title }}</div>
+      <div class="desc">{{ p.summary }}</div>
+      <div class="desc" style="margin-top:0.5rem;font-weight:600">{{ p.count }} ghi chú →</div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if foundations %}
+<section class="section">
+  <h2 class="section-title">Bắt đầu từ đây</h2>
+  <p class="stat-line" style="margin-top:-0.5rem">Những ghi chú nền tảng được nhiều ghi chú khác dẫn tới nhất.</p>
+  {{ m.note_list(foundations) }}
+</section>
+{% endif %}
+
+{% if articles %}
+<section class="section">
+  <h2 class="section-title">Bài viết mới <a href="{{ url('bai-viet/') }}">Tất cả bài viết →</a></h2>
+  {{ m.article_list(articles) }}
+</section>
+{% endif %}
+
+<section class="section">
+  <h2 class="section-title">Mới cập nhật <a href="{{ url('search/') }}">Xem tất cả →</a></h2>
+  {{ m.note_list(recent, empty="Kho còn trống. Nhờ Claude nghiên cứu chủ đề đầu tiên, hoặc tạo ghi chú trên Bàn làm việc.") }}
+</section>
+
+{% if tags %}
+<section class="section">
+  <h2 class="section-title">Tag <a href="{{ url('tags/') }}">Tất cả →</a></h2>
+  <div class="tag-cloud">{% for t in tags %}<a class="tag" href="{{ t.url }}">#{{ t.name }}<small>{{ t.count }}</small></a>{% endfor %}</div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-head">
+  <h1>Kết nối AI agent</h1>
+  <p class="lead">
+    {{ site.name }} xuất toàn bộ tri thức thành các file tĩnh mà mọi AI agent đều đọc được — không cần API key hay server.
+    Agent làm việc trực tiếp trong thư mục dự án (Claude Code, Cursor…) có thể đọc thẳng thư mục <code>knowledge/</code> theo hướng dẫn trong <code>AGENTS.md</code>.
+  </p>
+</header>
+<section class="section">
+  <h2 class="section-title">Các nguồn dữ liệu</h2>
+  <div class="grid">
+    {% for e in endpoints %}
+    <div class="card endpoint">
+      <strong>{{ e.title }}</strong>
+      <a href="{{ e.url }}"><code>{{ e.abs }}</code></a>
+      <span class="stat-line" style="margin:0">{{ e.desc }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% if not absolute %}
+  <p class="callout callout-info">Đang xem trên máy nên đường dẫn là tương đối. Khi đưa lên web, các link trong llms.txt sẽ là URL đầy đủ.</p>
+  {% endif %}
+</section>
+<section class="section">
+  <h2 class="section-title">Quy tắc agent phải tuân theo</h2>
+  <ul>{% for r in site.agent_rules %}<li>{{ r }}</li>{% endfor %}</ul>
+  <p class="stat-line">Sửa quy tắc trong file <code>cau-hinh.yml</code>.</p>
+</section>
+<section class="section">
+  <h2 class="section-title">Prompt mẫu cho agent viết content</h2>
+  <div class="copy-wrap">
+    <button class="copy-btn" type="button" data-copy="#agent-prompt">Sao chép</button>
+    <pre id="agent-prompt">{{ prompt }}</pre>
+  </div>
+</section>
+{% endblock %}

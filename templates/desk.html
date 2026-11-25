@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-head">
+  <h1>Bàn làm việc</h1>
+  <p class="lead">Nơi bạn đọc bản nháp, sửa, duyệt và đưa tri thức lên web — chỉ cần bấm nút. Trang này chỉ có trên máy bạn, không lên Internet.</p>
+</header>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<section class="desk-grid">
+  <div class="card desk-card desk-wide">
+    <h2>📥 Chờ bạn duyệt ({{ pending_items|length }})</h2>
+    {% if pending_items %}
+    <p class="stat-line">Bấm vào tiêu đề để đọc. Hài lòng thì bấm <strong>Duyệt & đăng</strong>; chưa ổn thì <strong>Sửa</strong>, hoặc nhờ Claude sửa.</p>
+    <ul class="desk-list">
+      {% for p in pending_items %}
+      <li data-type="{{ p.type }}">
+        <div class="desk-item-main">
+          <div class="meta-row"><span class="badge badge-type">{{ p.label }}</span>{% if p.cred %}<span>{{ p.cred }}</span>{% endif %}<span>{{ p.path }}</span></div>
+          <a class="desk-title" href="{{ p.url }}">{{ p.title }}</a>
+          <p>{{ p.summary }}</p>
+          {% if p.errors %}<p class="desk-error">⚠ Cần sửa trước khi đăng: {{ p.errors|join('; ') }}</p>{% endif %}
+        </div>
+        <div class="desk-actions">
+          <a class="btn" href="{{ p.edit_url }}">✏️ Sửa</a>
+          <button class="btn btn-primary" data-action="publish" data-path="{{ p.path }}"{% if p.errors %} disabled title="Còn lỗi, hãy sửa trước"{% endif %}>✅ Duyệt & đăng</button>
+          <button class="btn btn-ghost" data-action="delete" data-path="{{ p.path }}" data-title="{{ p.title }}">🗑 Bỏ</button>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">Không có bản nháp nào. Nhờ Claude nghiên cứu một chủ đề (xem bên dưới) — bản nháp sẽ hiện ở đây.</p>
+    {% endif %}
+  </div>
+
+  <div class="card desk-card">
+    <h2>🚀 Đưa lên Internet</h2>
+    {% if git.available %}
+    <p>{% if git.changes %}Có <strong>{{ git.changes }}</strong> thay đổi trên máy chưa đưa lên web.{% else %}Mọi thay đổi đã được đưa lên web.{% endif %}</p>
+    <button class="btn btn-primary" data-action="push"{% if not git.changes %} disabled{% endif %}>🚀 Đưa lên web</button>
+    <p class="stat-line">Lưu thay đổi lên GitHub; trang web tự cập nhật sau 1–2 phút.{% if git.branch %} Nhánh: <code>{{ git.branch }}</code>.{% endif %}</p>
+    <pre class="desk-log" id="push-log" hidden></pre>
+    {% else %}
+    <p class="stat-line">Chưa tìm thấy Git trên máy, hoặc thư mục này chưa kết nối GitHub. Nhờ Claude: <em>“đưa thay đổi lên GitHub giúp tôi”</em>.</p>
+    {% endif %}
+  </div>
+
+  <div class="card desk-card">
+    <h2>✍️ Tự viết ghi chú</h2>
+    <p class="stat-line">Ghi lại điều bạn vừa đọc và hiểu. Ghi chú mới nằm ở mục chờ duyệt cho tới khi bạn đăng.</p>
+    <form id="new-note" class="desk-form">
+      <label>Tiêu đề <input name="title" required placeholder="Ví dụ: Vùng hỗ trợ và kháng cự" /></label>
+      <label>Loại
+        <select name="type">{% for t in types %}<option value="{{ t.key }}"{% if t.key == 'concept' %} selected{% endif %}>{{ t.label }}</option>{% endfor %}</select>
+      </label>
+      <button class="btn btn-primary" type="submit">Tạo và mở để viết</button>
+    </form>
+  </div>
+
+  <div class="card desk-card desk-wide">
+    <h2>🤖 Nhờ Claude làm</h2>
+    <p class="stat-line">Mở Claude (ứng dụng Claude → Code, chọn thư mục SecondBrain), bấm “Chép” rồi dán vào khung chat và sửa phần trong ngoặc.</p>
+    <div class="prompt-list">
+      {% for p in prompts %}
+      <div class="prompt">
+        <div><strong>{{ p.title }}</strong><code id="prompt-{{ loop.index }}">{{ p.text }}</code></div>
+        <button class="btn btn-small" type="button" data-copy="#prompt-{{ loop.index }}">Chép</button>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if issues %}
+  <div class="card desk-card desk-wide">
+    <h2>🔧 Cần chú ý ({{ issues|length }})</h2>
+    <p class="stat-line">Lỗi (đỏ) cần sửa trước khi đăng; cảnh báo (vàng) là gợi ý. Bấm tên file để sửa, hoặc nhờ Claude: <em>“sửa các lỗi trên Bàn làm việc”</em>.</p>
+    <ul class="desk-issues">
+      {% for i in issues %}
+      <li class="{% if i.error %}is-error{% else %}is-warning{% endif %}"><a href="{{ i.edit_url }}"><code>{{ i.path }}</code></a> — {{ i.message }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if gaps %}
+  <div class="card desk-card">
+    <h2>🧩 Tri thức còn thiếu</h2>
+    <p class="stat-line">Các khái niệm đã được nhắc tới nhưng chưa có ghi chú — gợi ý chủ đề nghiên cứu tiếp.</p>
+    <ul>{% for g in gaps %}<li>{{ g.name }} <small class="stat-line">({{ g.count }} ghi chú nhắc tới)</small></li>{% endfor %}</ul>
+    <p><a href="{{ url('gaps/') }}">Xem tất cả →</a></p>
+  </div>
+  {% endif %}
+
+  <div class="card desk-card">
+    <h2>⚙️ Cài đặt trang</h2>
+    <form id="settings" class="desk-form">
+      <label>Tên trang <input name="name" value="{{ site.name }}" /></label>
+      <label>Mô tả <textarea name="description" rows="3">{{ site.description }}</textarea></label>
+      <label>Tác giả / thương hiệu <input name="author" value="{{ site.author }}" placeholder="Để trống nếu chưa muốn công khai" /></label>
+      <label>Miễn trừ trách nhiệm <textarea name="disclaimer" rows="3">{{ site.disclaimer }}</textarea></label>
+      <button class="btn" type="submit">💾 Lưu cài đặt</button>
+    </form>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url('assets/desk.js') }}" defer></script>{% endblock %}

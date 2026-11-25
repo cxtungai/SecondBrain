@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <a href="{{ url('ban-lam-viec/') }}">Bàn làm việc</a><span aria-hidden="true">›</span><span aria-current="page">Sửa: {{ fields.title or path }}</span>
+</nav>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<form id="editor" class="editor" data-path="{{ path }}" data-kind="{{ kind }}">
+  <div class="editor-head">
+    <h1>{% if kind == 'article' %}Sửa bài viết{% else %}Sửa ghi chú{% endif %}</h1>
+    <div class="editor-actions">
+      {% if page_url %}<a class="btn btn-ghost" href="{{ page_url }}">← Xem trang</a>{% endif %}
+      <button class="btn" type="submit">💾 Lưu</button>
+      {% if is_draft %}<button class="btn btn-primary" type="button" data-action="save-publish">✅ Lưu, duyệt & đăng</button>{% endif %}
+    </div>
+  </div>
+  {% if parse_error %}<p class="callout callout-bad">Không đọc được phần thông tin đầu file: {{ parse_error }}. Nhờ Claude sửa file <code>{{ path }}</code>.</p>{% endif %}
+
+  <div class="editor-cols">
+    <div class="editor-fields">
+      <label>Tiêu đề <input name="title" value="{{ fields.title }}" required /></label>
+      {% if kind == 'article' %}
+      <label>Mô tả trên Google <small>70–160 ký tự, nói người đọc nhận được gì</small><textarea name="description" rows="3">{{ fields.description }}</textarea></label>
+      <div class="row2">
+        <label>Từ khoá chính <input name="keyword" value="{{ fields.keyword }}" /></label>
+        <label>Ý định tìm kiếm
+          <select name="intent">{% for i in intents %}<option value="{{ i.key }}"{% if i.key == fields.intent %} selected{% endif %}>{{ i.label }}</option>{% endfor %}</select>
+        </label>
+      </div>
+      <label>Từ khoá phụ <small>cách nhau bằng dấu phẩy</small><input name="keywords" value="{{ fields.keywords }}" /></label>
+      <label>Dựa trên ghi chú <small>tên file ghi chú gốc, cách nhau bằng dấu phẩy</small><input name="based_on" value="{{ fields.based_on }}" /></label>
+      {% else %}
+      <div class="row2">
+        <label>Loại
+          <select name="type">{% for t in types %}<option value="{{ t.key }}"{% if t.key == fields.type %} selected{% endif %}>{{ t.label }}</option>{% endfor %}</select>
+        </label>
+        <label>Tag <small>cách nhau bằng dấu phẩy</small><input name="tags" value="{{ fields.tags }}" /></label>
+      </div>
+      <label>Tóm tắt <small>1–2 câu, 70–160 ký tự — hiện trên Google và là câu AI đọc đầu tiên</small><textarea name="summary" rows="3">{{ fields.summary }}</textarea></label>
+      <label>Tên khác <small>tên tiếng Anh, viết tắt… cách nhau bằng dấu phẩy</small><input name="aliases" value="{{ fields.aliases }}" /></label>
+
+      <fieldset class="sources">
+        <legend>Nguồn tham khảo</legend>
+        <div id="sources">
+          {% for s in sources %}
+          <div class="source-row">
+            <input name="s_title" placeholder="Tên tài liệu" value="{{ s.title }}" />
+            <input name="s_url" placeholder="https://…" value="{{ s.url }}" />
+            <div class="row2">
+              <select name="s_kind"><option value="">Loại nguồn…</option>{% for k in kinds %}<option value="{{ k.key }}"{% if k.key == s.kind %} selected{% endif %}>{{ k.label }}</option>{% endfor %}</select>
+              <select name="s_cred"><option value="">Điểm uy tín…</option>{% for c in scale %}<option value="{{ c.score }}"{% if c.score == s.credibility %} selected{% endif %}>{{ c.score }} — {{ c.label }}</option>{% endfor %}</select>
+            </div>
+            <input name="s_note" placeholder="Lý do chấm điểm (1 câu)" value="{{ s.credibility_note }}" />
+            <input type="hidden" name="s_extra" value="{{ s.extra }}" />
+            <button class="btn btn-ghost btn-small" type="button" data-action="remove-source">Xoá nguồn này</button>
+          </div>
+          {% endfor %}
+        </div>
+        <button class="btn btn-small" type="button" data-action="add-source">+ Thêm nguồn</button>
+      </fieldset>
+      {% endif %}
+
+      <label class="body-label">Nội dung
+        <small>Viết bình thường. <code>## Tiêu đề mục</code> để chia mục, <code>**đậm**</code>, <code>- </code> để liệt kê, <code>[[tên ghi chú]]</code> để liên kết tới ghi chú khác.</small>
+        <textarea name="body" rows="26" spellcheck="false">{{ body }}</textarea>
+      </label>
+    </div>
+
+    <div class="editor-preview">
+      <div class="editor-preview-head">Xem trước</div>
+      <div class="prose" id="preview">{{ preview|safe }}</div>
+    </div>
+  </div>
+</form>
+
+<template id="source-template">
+  <div class="source-row">
+    <input name="s_title" placeholder="Tên tài liệu" />
+    <input name="s_url" placeholder="https://…" />
+    <div class="row2">
+      <select name="s_kind"><option value="">Loại nguồn…</option>{% for k in kinds %}<option value="{{ k.key }}">{{ k.label }}</option>{% endfor %}</select>
+      <select name="s_cred"><option value="">Điểm uy tín…</option>{% for c in scale %}<option value="{{ c.score }}">{{ c.score }} — {{ c.label }}</option>{% endfor %}</select>
+    </div>
+    <input name="s_note" placeholder="Lý do chấm điểm (1 câu)" />
+    <input type="hidden" name="s_extra" value="{}" />
+    <button class="btn btn-ghost btn-small" type="button" data-action="remove-source">Xoá nguồn này</button>
+  </div>
+</template>
+{% endblock %}
+{% block scripts %}<script src="{{ url('assets/desk.js') }}" defer></script>{% endblock %}

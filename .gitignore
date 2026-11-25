@@ -1,6 +1,11 @@
-node_modules/
+# Chương trình đã build / đã tải về
+target/
+bin/
 dist/
-.astro/
+
+# Thùng rác của Bàn làm việc (bản nháp bạn đã bỏ) — chỉ giữ trên máy
+knowledge/_thung-rac/
+
 .DS_Store
 *.log
 .env

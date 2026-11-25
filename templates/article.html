@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block content %}
+{% import "macros.html" as m %}
+<div class="note-layout" data-type="article">
+  <article>
+    <header class="note-header">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        {% for cr in crumbs[:-1] %}<a href="{{ cr.href }}">{{ cr.name }}</a><span aria-hidden="true">›</span>{% endfor %}
+        <span aria-current="page">{{ a.title }}</span>
+      </nav>
+      <div class="meta-row">
+        {% if draft %}<span class="badge badge-inbox">Bản nháp</span>{% endif %}
+        <span class="badge badge-type">Bài viết · {{ a.intent_label }}</span>
+        <span>Cập nhật {{ a.updated }}</span>
+        <span>{{ read_minutes }} phút đọc</span>
+      </div>
+      <h1>{{ a.title }}</h1>
+      <p class="note-summary">{{ a.description }}</p>
+      {% if draft %}
+      <div class="callout callout-info review-bar">
+        <div><strong>Bài viết nháp</strong> — chỉ hiện trên máy bạn, chưa lên web. Đọc, sửa nếu cần, rồi bấm đăng.</div>
+        {% if edit_url %}
+        <div class="review-actions">
+          <a class="btn" href="{{ edit_url }}">✏️ Sửa</a>
+          <button class="btn btn-primary" data-action="publish" data-path="{{ path }}">✅ Duyệt & đăng</button>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </header>
+
+    {% if toc %}
+    <details class="toc card" open>
+      <summary>Mục lục</summary>
+      <ol>
+        {% for h in toc %}
+        <li><a href="#{{ h.id }}">{{ h.text }}</a>{% if h.children %}<ul>{% for ch in h.children %}<li><a href="#{{ ch.id }}">{{ ch.text }}</a></li>{% endfor %}</ul>{% endif %}</li>
+        {% endfor %}
+        {% if basis %}<li><a href="#tri-thuc-goc">Tri thức gốc</a></li>{% endif %}
+      </ol>
+    </details>
+    {% endif %}
+
+    <div class="prose">{{ html|safe }}</div>
+
+    {% if basis %}
+    <section class="basis" id="tri-thuc-goc">
+      <h2 class="section-title">Tri thức gốc của bài viết</h2>
+      <p class="stat-line">Dữ kiện trong bài lấy từ các ghi chú dưới đây — nơi ghi đầy đủ nguồn tham khảo và điểm uy tín của từng nguồn.</p>
+      <ul class="note-list">
+        {% for n in basis %}
+        <li class="note-item" data-type="{{ n.type }}">
+          <div class="meta-row">
+            {{ m.type_badge(n) }}
+            {{ m.status_badge(n) }}
+            {% if n.rated %}{{ m.cred(n.cred) }}{% endif %}
+            <span>{{ n.sources_count }} nguồn · cập nhật {{ n.updated }}</span>
+          </div>
+          <h3><a href="{{ n.url }}">{{ n.title }}</a></h3>
+          <p>{{ n.summary }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+    {% if related %}
+    <section class="next-steps">
+      <h2 class="section-title">Bài viết liên quan</h2>
+      <div class="grid">
+        {% for r in related %}
+        <a class="card" href="{{ r.url }}" data-type="article">
+          <span class="badge badge-type">{{ r.intent_label }}</span>
+          <strong style="display:block;margin-top:0.4rem">{{ r.title }}</strong>
+          <span class="stat-line" style="display:block;margin-top:0.25rem">{{ r.description }}</span>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% if site.disclaimer %}<p class="disclaimer">{{ site.disclaimer }}</p>{% endif %}
+  </article>
+
+  <aside class="note-aside">
+    <div class="card aside-block">
+      <h2>Thông tin</h2>
+      <dl>
+        <dt>Đăng</dt><dd>{{ published }}</dd>
+        <dt>Cập nhật</dt><dd>{{ a.updated }}</dd>
+        <dt>Độ dài</dt><dd>{{ word_count }} từ · {{ read_minutes }} phút</dd>
+        <dt>Dựa trên</dt><dd><a href="#tri-thuc-goc">{{ basis|length }} ghi chú</a></dd>
+        <dt>Nguồn</dt><dd>{{ sources }} nguồn{% if avg_cred %} · {{ m.cred(avg_cred) }}{% endif %}</dd>
+      </dl>
+      {% if edit_url and not draft %}<p style="margin:0.75rem 0 0"><a class="btn btn-small" href="{{ edit_url }}">✏️ Sửa bài này</a></p>{% endif %}
+    </div>
+    {% if mentioned %}
+    <div class="card aside-block">
+      <h2>Ghi chú được nhắc tới</h2>
+      <ul>{% for n in mentioned %}<li><a href="{{ n.url }}">{{ n.title }}</a></li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+    {{ m.hints(hints, hints_extra) }}
+  </aside>
+</div>
+{% endblock %}
+{% block scripts %}{% if dev %}<script src="{{ url('assets/desk.js') }}" defer></script>{% endif %}{% endblock %}

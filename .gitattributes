@@ -1,0 +1,5 @@
+# Giữ đúng kiểu xuống dòng cho file chạy trên từng hệ điều hành
+*.bat text eol=crlf
+*.command text eol=lf
+sb text eol=lf
+*.rs text eol=lf

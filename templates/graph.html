@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+{% import "macros.html" as m %}
+<header class="page-head">
+  <h1>Đồ thị tri thức</h1>
+  <p class="lead">{{ count }} ghi chú · {{ edges }} liên kết. Chấm càng to, ghi chú càng được kết nối nhiều.</p>
+</header>
+{{ m.graph(graph, 620) }}
+<div class="graph-legend">
+  {% for t in legend %}<span data-type="{{ t.key }}"><i></i>{{ t.label }}</span>{% endfor %}
+  <span class="hint">Kéo để di chuyển · cuộn để phóng to · bấm vào chấm để mở ghi chú</span>
+</div>
+{% if orphans %}
+<p class="callout callout-warn">
+  {{ orphans|length }} ghi chú chưa có liên kết nào: {% for n in orphans %}{% if not loop.first %}, {% endif %}<a href="{{ n.url }}">{{ n.title }}</a>{% endfor %}.
+  Hãy liên kết chúng với ghi chú liên quan để tri thức không bị rời rạc.
+</p>
+{% endif %}
+{% endblock %}
+{% block scripts %}<script src="{{ url('assets/graph.js') }}" defer></script>{% endblock %}

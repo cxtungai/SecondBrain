@@ -12,8 +12,8 @@ Bài để đăng lên **chính website Second Brain** (kéo traffic, SEO/GEO) �
 
 ## 1. Thu thập tri thức
 
-- `npm run kb -- search "<chủ đề>"`, bắt đầu từ ghi chú loại `topic`, đi theo liên kết (`npm run kb -- show <slug>`) và đọc file `.md` của các ghi chú liên quan.
-- Tuân thủ quy tắc trong `src/config.mjs` (`AGENT_RULES`): chỉ dùng dữ kiện/số liệu từ ghi chú `verified`; `draft` chỉ làm ý tưởng; bỏ qua `outdated`; không bịa số liệu, nguồn, trích dẫn.
+- `./sb kb search "<chủ đề>"`, bắt đầu từ ghi chú loại `topic`, đi theo liên kết (`./sb kb show <slug>`) và đọc file `.md` của các ghi chú liên quan.
+- Tuân thủ quy tắc trong `cau-hinh.yml` (`agent_rules`): chỉ dùng dữ kiện/số liệu từ ghi chú `verified`; `draft` chỉ làm ý tưởng; bỏ qua `outdated`; không bịa số liệu, nguồn, trích dẫn.
 - Kho thiếu thông tin cần thiết → nói rõ phần thiếu, đề xuất `/research <chủ đề>`; không lấp bằng kiến thức không có nguồn.
 
 ## 2. Viết

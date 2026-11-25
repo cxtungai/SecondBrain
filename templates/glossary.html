@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-head">
+  <h1>Từ điển A–Z</h1>
+  <p class="lead">
+    Toàn bộ khái niệm, mô hình và chủ đề trong kho — mỗi thuật ngữ một dòng định nghĩa, bấm để đọc ghi chú đầy đủ.
+    Cần nhìn toàn cảnh? Xem <a href="{{ url('kien-thuc/') }}">Trung tâm kiến thức</a>.
+  </p>
+</header>
+<nav class="az-nav" aria-label="Chọn chữ cái">
+  {% for l in letters %}{% if l.present %}<a href="#az-{{ l.l }}">{{ l.l }}</a>{% else %}<span aria-hidden="true">{{ l.l }}</span>{% endif %}{% endfor %}
+  {% if has_other %}<a href="#az-other">#</a>{% endif %}
+</nav>
+{% for g in groups %}
+<section class="az-group" id="{{ g.id }}">
+  <h2>{{ g.letter }}</h2>
+  <dl>
+    {% for e in g.entries %}
+    <div class="az-entry" data-type="{{ e.type }}">
+      <dt><a href="{{ e.url }}">{{ e.term }}</a> {% if not e.alias_of %}<span class="badge badge-type" data-type="{{ e.type }}">{{ e.type_label }}</span>{% endif %}</dt>
+      <dd>{% if e.alias_of %}Xem <a href="{{ e.url }}">{{ e.alias_of }}</a>{% else %}{{ e.summary }}{% endif %}</dd>
+    </div>
+    {% endfor %}
+  </dl>
+</section>
+{% else %}
+<p class="empty">Chưa có thuật ngữ nào.</p>
+{% endfor %}
+{% endblock %}

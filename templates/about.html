@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+{% import "macros.html" as m %}
+<header class="page-head">
+  <h1>Giới thiệu & quy trình biên tập</h1>
+  <p class="lead">{{ site.description }}</p>
+  <p class="stat-line">{{ stats.notes }} ghi chú · {{ stats.verified }} đã kiểm chứng · {{ stats.sources }} nguồn được dẫn · {{ stats.articles }} bài viết</p>
+</header>
+<div class="prose">
+  <h2 id="hai-lop-noi-dung">Hai lớp nội dung</h2>
+  <ul>
+    <li><strong><a href="{{ url('kien-thuc/') }}">Tri thức</a></strong> — ghi chú ngắn gọn, mỗi ghi chú một khái niệm, dữ kiện hay phương pháp, có nguồn và điểm uy tín từng nguồn. Đây là <em>nguồn sự thật</em> của trang: được viết để chính xác và dễ trích dẫn, không viết để câu view.</li>
+    <li><strong><a href="{{ url('bai-viet/') }}">Bài viết</a></strong> — trình bày lại tri thức theo những câu hỏi người đọc hay tìm (hướng dẫn, so sánh, cẩm nang cho người mới…). Bài viết không đưa thêm dữ kiện mới: mọi dữ kiện đều lấy từ ghi chú và có mục “Tri thức gốc” dẫn về ghi chú đó.</li>
+  </ul>
+  <h2 id="quy-trinh">Quy trình</h2>
+  <ol>
+    <li><strong>Nghiên cứu.</strong> AI agent tìm tài liệu từ nhiều nguồn, ưu tiên nguồn gốc (nghiên cứu, cơ quan chính thức, tài liệu của người đặt ra khái niệm), chấm điểm uy tín từng nguồn và viết bản nháp.</li>
+    <li><strong>Duyệt.</strong> Người biên tập đọc, đối chiếu nguồn, sửa và chỉ đăng khi đã hiểu và đồng ý với nội dung. AI không tự đăng.</li>
+    <li><strong>Kết nối.</strong> Ghi chú mới được liên kết hai chiều với tri thức liên quan và chủ đề trụ cột, để người đọc đi từ tổng quan tới chi tiết.</li>
+    <li><strong>Cập nhật.</strong> Mỗi ghi chú ghi ngày cập nhật; thông tin cũ được rà soát, sửa hoặc đánh dấu “lỗi thời”.</li>
+  </ol>
+  <h2 id="trang-thai">Trạng thái của ghi chú</h2>
+  <table class="cred-table"><tbody>
+    {% for s in statuses %}<tr><td><span class="badge badge-status-{{ s.key }}">{{ s.label }}</span></td><td>{{ s.description }}</td></tr>{% endfor %}
+  </tbody></table>
+  <h2 id="thang-diem-nguon">Thang điểm uy tín nguồn</h2>
+  <p>Mỗi nguồn được chấm từ 1 đến 5 theo năm tiêu chí: <strong>thẩm quyền</strong> (ai nói), <strong>bằng chứng</strong> (có dữ liệu, phương pháp, dẫn nguồn), <strong>độc lập</strong> (có bán sản phẩm hay xung đột lợi ích), <strong>thời điểm</strong> (còn mới so với chủ đề) và <strong>đối chiếu</strong> (nguồn độc lập khác có xác nhận). Khẳng định quan trọng cần ít nhất hai nguồn độc lập hoặc một nguồn điểm 5.</p>
+  <table class="cred-table"><tbody>
+    {% for s in scale %}<tr><td style="white-space:nowrap">{{ m.cred(s.cred) }}</td><td>{{ s.description }}</td></tr>{% endfor %}
+  </tbody></table>
+  {% if site.disclaimer %}
+  <h2 id="mien-tru">Miễn trừ trách nhiệm</h2>
+  <p>{{ site.disclaimer }}</p>
+  {% endif %}
+  <h2 id="cho-ai">Dùng kho này với AI</h2>
+  <p>Toàn bộ tri thức được xuất dưới dạng máy đọc được (<a href="{{ url('llms.txt') }}">llms.txt</a>, <a href="{{ url('knowledge.json') }}">knowledge.json</a>) kèm quy tắc trích dẫn. Xem <a href="{{ url('ai/') }}">trang dành cho AI agent</a>.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-head">
+  <h1>Chủ đề (tag)</h1>
+  <p class="lead">Tất cả tag trong kho, sắp theo số ghi chú.</p>
+</header>
+{% if tags %}
+<div class="tag-cloud">{% for t in tags %}<a class="tag" href="{{ t.url }}">#{{ t.name }}<small>{{ t.count }}</small></a>{% endfor %}</div>
+{% else %}
+<p class="empty">Chưa có tag nào.</p>
+{% endif %}
+{% endblock %}

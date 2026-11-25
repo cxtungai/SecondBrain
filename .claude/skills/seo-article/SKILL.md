@@ -12,13 +12,13 @@ Từ khoá: **$ARGUMENTS** (trống → hỏi người dùng, hoặc đề xuấ
 
 ## 1. Kiểm tra tri thức trước
 
-- `npm run kb -- search "<từ khoá>"` (thử có dấu, không dấu, tiếng Anh) và `npm run kb -- show <slug>` để đọc ghi chú liên quan.
+- `./sb kb search "<từ khoá>"` (thử có dấu, không dấu, tiếng Anh) và `./sb kb show <slug>` để đọc ghi chú liên quan.
 - Kho **chưa có** tri thức đủ để trả lời từ khoá → dừng, đề xuất `/research <chủ đề>` trước. Không viết bài từ trí nhớ.
 - Ghi chú liên quan còn `draft` → vẫn có thể viết bài nháp, nhưng nói rõ bài chỉ đăng được khi ghi chú gốc đã `verified`.
 
 ## 2. Ý định tìm kiếm và trùng từ khoá
 
-- `npm run seo -- --keyword "<từ khoá>"` — trang nào trong site đã nhắm từ khoá này.
+- `./sb seo --keyword "<từ khoá>"` — trang nào trong site đã nhắm từ khoá này.
   - **Trùng ghi chú** (vd. "X là gì" khi đã có ghi chú X): truy vấn định nghĩa thuộc về ghi chú. Đề xuất cải thiện ghi chú (đoạn mở đầu, FAQ) hoặc chọn góc khác cho bài: hướng dẫn, so sánh, sai lầm thường gặp, cẩm nang cho người mới…
   - **Trùng bài viết**: cập nhật bài cũ thay vì viết bài mới.
 - WebSearch từ khoá (tiếng Việt) để hiểu người tìm muốn gì: dạng kết quả đứng đầu (định nghĩa / hướng dẫn / danh sách / so sánh), các câu "Mọi người cũng hỏi", các ý mà bài top đều có. **Chỉ học cấu trúc và câu hỏi — không lấy dữ kiện từ đó.** Dữ kiện còn thiếu trong kho → ghi `[[ten-ghi-chu-de-xuat]]` và báo người dùng nên nghiên cứu.
@@ -26,7 +26,7 @@ Từ khoá: **$ARGUMENTS** (trống → hỏi người dùng, hoặc đề xuấ
 
 ## 3. Viết bài
 
-Tạo file: `npm run new -- article "<Tiêu đề>" --keyword "<từ khoá>" --based-on slug-a,slug-b --intent <intent>`, rồi viết vào `articles/<slug>.md`.
+Tạo file: `./sb new article "<Tiêu đề>" --keyword "<từ khoá>" --based-on slug-a,slug-b --intent <intent>`, rồi viết vào `articles/<slug>.md`.
 
 - **Tiêu đề** ≤ 60 ký tự, có từ khoá chính, tự nhiên, không giật tít, không hứa hẹn.
 - **description** 70–160 ký tự: người đọc nhận được gì; có từ khoá.
@@ -41,9 +41,9 @@ Tạo file: `npm run new -- article "<Tiêu đề>" --keyword "<từ khoá>" --b
 
 ## 4. Kiểm tra
 
-- `npm run check` — không lỗi cho bài này (`based_on` tồn tại, có liên kết về ghi chú gốc, không trùng từ khoá).
-- `npm run seo -- <slug> --drafts` — sửa các tiêu chí chưa đạt khi hợp lý (không đánh đổi độ chính xác lấy điểm).
-- Xem trước: `npm run dev` → trang chủ mục "Bài viết nháp"; hộp "SEO / GEO" bên phải chỉ hiện khi chạy local.
+- `./sb check` — không lỗi cho bài này (`based_on` tồn tại, có liên kết về ghi chú gốc, không trùng từ khoá).
+- `./sb seo <slug> --drafts` — sửa các tiêu chí chưa đạt khi hợp lý (không đánh đổi độ chính xác lấy điểm).
+- Xem trước: Bàn làm việc (`./sb mo`) → mục "Chờ bạn duyệt"; hộp "SEO / GEO" bên phải chỉ hiện khi xem trên máy.
 
 ## 5. Báo cáo cho người dùng
 

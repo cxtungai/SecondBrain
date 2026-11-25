@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Chạy chương trình Second Brain (dùng cho Claude và người rành kỹ thuật): ./sb check, ./sb build, ./sb publish …
+# - Máy có Rust (cargo): build từ mã nguồn trong repo — thay đổi code có hiệu lực ngay.
+# - Không có Rust: dùng bản đã tải trong bin/, hoặc tự tải bản mới nhất từ GitHub Releases.
+#   ./sb cap-nhat  → tải lại bản mới nhất.
+set -e
+cd "$(dirname "$0")"
+REPO="cxtungai/SecondBrain"
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*) BIN=bin/secondbrain.exe; FILE=secondbrain-windows-x64.exe ;;
+  Darwin) BIN=bin/secondbrain; if [ "$(uname -m)" = arm64 ]; then FILE=secondbrain-macos-arm64; else FILE=secondbrain-macos-x64; fi ;;
+  *) BIN=bin/secondbrain; FILE=secondbrain-linux-x64 ;;
+esac
+download() {
+  mkdir -p bin
+  echo "Đang tải chương trình Second Brain ($FILE)…" >&2
+  curl -fsSL "https://github.com/$REPO/releases/download/ban-moi-nhat/$FILE" -o "$BIN.tmp"
+  mv "$BIN.tmp" "$BIN"
+  chmod +x "$BIN"
+}
+if [ "${1:-}" = "cap-nhat" ]; then
+  download
+  exec "$BIN" --version
+fi
+if command -v cargo >/dev/null 2>&1 && [ "${SB_PREBUILT:-}" != 1 ]; then
+  exec cargo run --quiet --release -- "$@"
+fi
+[ -x "$BIN" ] || download
+exec "$BIN" "$@"

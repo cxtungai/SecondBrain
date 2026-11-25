@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="{{ site.language }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% if title %}{{ title }} · {{ site.name }}{% else %}{{ site.name }}{% endif %}</title>
+    <meta name="description" content="{{ description or site.description }}" />
+    {% if canonical %}<link rel="canonical" href="{{ canonical }}" />{% endif %}
+    {% if noindex or dev %}<meta name="robots" content="noindex" />{% endif %}
+    <meta property="og:site_name" content="{{ site.name }}" />
+    <meta property="og:title" content="{{ title or site.name }}" />
+    <meta property="og:description" content="{{ description or site.description }}" />
+    <meta property="og:type" content="{{ og_type or 'website' }}" />
+    <meta property="og:locale" content="{{ site.locale }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url('assets/style.css') }}" />
+    <link rel="icon" href="{{ url('assets/favicon.svg') }}" type="image/svg+xml" />
+    <link rel="sitemap" href="{{ url('sitemap.xml') }}" />
+    <link rel="alternate" type="text/plain" title="llms.txt" href="{{ url('llms.txt') }}" />
+    <link rel="alternate" type="application/json" title="Knowledge index" href="{{ url('knowledge.json') }}" />
+    {% if md_url %}<link rel="alternate" type="text/markdown" title="Markdown cho AI" href="{{ md_url }}" />{% endif %}
+    {% if json_ld %}<script type="application/ld+json">{{ json_ld|safe }}</script>{% endif %}
+  </head>
+  <body{% if dev %} data-dev="1"{% endif %}>
+    {% if dev %}
+    <div class="dev-bar">
+      <div class="container">
+        <span>Đang xem trên máy của bạn — có cả bản nháp. Sửa file là trang tự cập nhật.</span>
+        <a href="{{ url('ban-lam-viec/') }}" class="dev-bar-btn">Bàn làm việc{% if pending %} <b>{{ pending }}</b>{% endif %}</a>
+      </div>
+    </div>
+    {% endif %}
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="{{ url('') }}"><span class="brand-mark" aria-hidden="true"></span>{{ site.name }}</a>
+        <nav class="site-nav" aria-label="Điều hướng chính">
+          {% for key, href, label in [('hub', 'kien-thuc/', 'Kiến thức'), ('articles', 'bai-viet/', 'Bài viết'), ('glossary', 'tu-dien/', 'Từ điển'), ('graph', 'graph/', 'Đồ thị'), ('search', 'search/', 'Tìm kiếm'), ('ai', 'ai/', 'Cho AI')] %}
+          <a href="{{ url(href) }}"{% if section == key %} aria-current="page"{% endif %}>{{ label }}</a>
+          {% endfor %}
+        </nav>
+        {% if section != 'search' %}
+        <form class="header-search" action="{{ url('search/') }}" method="get" role="search">
+          <input type="search" name="q" placeholder="Tìm ghi chú…" aria-label="Tìm ghi chú" />
+        </form>
+        {% endif %}
+      </div>
+    </header>
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        <span>{{ site.name }} — kho tri thức cho người và AI agent. <a href="{{ url('gioi-thieu/') }}">Giới thiệu & quy trình biên tập</a></span>
+        <span><a href="{{ url('llms.txt') }}">llms.txt</a> · <a href="{{ url('knowledge.json') }}">knowledge.json</a></span>
+        {% if site.disclaimer %}<small class="footer-disclaimer">{{ site.disclaimer }}</small>{% endif %}
+      </div>
+    </footer>
+    <script src="{{ url('assets/app.js') }}" defer></script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

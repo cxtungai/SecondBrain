@@ -1,0 +1,23 @@
+# Cấu hình Second Brain — sửa trên Bàn làm việc (mục Cài đặt) hoặc sửa trực tiếp file này.
+
+# Tên và mô tả trang (hiện trên web và Google)
+name: "Second Brain"
+description: "Kho tri thức chuyên môn được chắt lọc và kiểm chứng — để người đọc tra cứu nhanh và để AI agent viết content chính xác, có nguồn."
+
+# Tác giả / thương hiệu (để trống nếu chưa muốn công khai)
+author: ""
+
+# Miễn trừ trách nhiệm ở chân trang và cuối mỗi bài viết
+disclaimer: "Nội dung nhằm mục đích tham khảo và học tập, không phải lời khuyên đầu tư, tài chính hay chuyên môn cho trường hợp cụ thể của bạn."
+
+language: vi
+locale: vi_VN
+
+# Quy tắc AI agent phải tuân theo khi dùng kho để viết content (hiện trong llms.txt)
+agent_rules:
+  - "Chỉ dùng số liệu, dữ kiện, trích dẫn từ ghi chú có status \"verified\" như sự thật; luôn ghi nguồn theo trường sources của ghi chú đó."
+  - "Ghi chú \"draft\" chỉ dùng làm ý tưởng hoặc định hướng — không trích dẫn con số hay khẳng định từ đó như sự thật."
+  - "Không dùng ghi chú \"outdated\" cho content mới, trừ khi nói về bối cảnh lịch sử."
+  - "Không bịa số liệu, nguồn hay trích dẫn. Nếu kho không có thông tin cần thiết, nói rõ là thiếu và đề xuất ghi chú cần bổ sung."
+  - "Ưu tiên ghi chú cập nhật gần hơn khi có thông tin mâu thuẫn, và nêu rõ mốc thời gian của số liệu."
+  - "Bắt đầu từ ghi chú loại \"topic\" (bản đồ chủ đề) để nắm tổng quan, rồi đi theo liên kết tới ghi chú chi tiết."

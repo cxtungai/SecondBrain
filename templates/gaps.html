@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-head">
+  <h1>Tri thức còn thiếu</h1>
+  <p class="lead">
+    Các khái niệm đã được nhắc tới bằng <code>[[liên kết]]</code> nhưng chưa có ghi chú. Đây là hàng đợi nghiên cứu:
+    nói với Claude <em>“nghiên cứu &lt;tên&gt;”</em>, rồi duyệt và đăng trên Bàn làm việc.
+  </p>
+</header>
+{% if gaps %}
+<ul class="note-list">
+  {% for g in gaps %}
+  <li class="note-item" id="{{ g.slug }}">
+    <h3 style="margin-top:0">{{ g.name }}</h3>
+    <p>Được nhắc trong {{ g.from|length }} ghi chú: {% for n in g.from %}{% if not loop.first %}, {% endif %}<a href="{{ n.url }}">{{ n.title }}</a>{% endfor %}</p>
+    <p class="stat-line">Nhờ Claude: <code>nghiên cứu {{ g.name }}</code></p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="empty">Không còn liên kết nào bị thiếu. Mọi [[liên kết]] đều đã có ghi chú.</p>
+{% endif %}
+{% endblock %}

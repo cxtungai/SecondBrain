@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-head">
+  <h1>Tìm kiếm</h1>
+  <p class="lead">Tìm theo tiêu đề, tóm tắt, tag và nội dung. Gõ có dấu hay không dấu đều được.</p>
+</header>
+<div id="search" data-index="{{ url('search-index.json') }}" data-types="{{ types_json }}" data-statuses="{{ statuses_json }}">
+  <form class="search-box" role="search" onsubmit="return false">
+    <input id="q" type="search" name="q" placeholder="Ví dụ: khai niem, PARA, số liệu…" aria-label="Từ khoá" autofocus />
+  </form>
+  <div class="search-filters" role="group" aria-label="Lọc theo loại">
+    <button class="chip" type="button" data-filter="" aria-pressed="true">Tất cả</button>
+    {% for t in types %}<button class="chip" type="button" data-filter="{{ t.key }}" aria-pressed="false">{{ t.label }}</button>{% endfor %}
+  </div>
+  <p class="search-status" id="status" aria-live="polite">Đang tải chỉ mục…</p>
+  <ul class="note-list" id="results"></ul>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url('assets/search.js') }}" defer></script>{% endblock %}

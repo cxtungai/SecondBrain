@@ -1,7 +1,7 @@
 name: Build & deploy
 
-# Mọi push / PR đều được build để kiểm tra.
-# Chỉ nhánh mặc định của repo (Settings → Branches) mới được deploy lên GitHub Pages.
+# Mọi push / PR đều được kiểm tra và build.
+# Chỉ nhánh mặc định của repo mới được đưa lên GitHub Pages.
 on:
   push:
   pull_request:
@@ -24,17 +24,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
       - name: Configure GitHub Pages
         id: pages
         if: env.DEPLOY == 'true'
         uses: actions/configure-pages@v5
-      - name: Check & build
-        run: npm run build
+      - name: Kiểm tra & xuất web
+        run: cargo run --locked -- build
         env:
           SITE_URL: ${{ steps.pages.outputs.origin }}
           BASE_PATH: ${{ steps.pages.outputs.base_path }}

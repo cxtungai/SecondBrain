@@ -2,7 +2,7 @@
 title: "{{title}}"
 # Mô tả hiện trên Google (70–160 ký tự): người đọc nhận được gì từ bài
 description: ""
-# Từ khoá chính — mỗi từ khoá chỉ một trang trong toàn site (kiểm tra: npm run seo -- --keyword "...")
+# Từ khoá chính — mỗi từ khoá chỉ một trang trong toàn site (kiểm tra: ./sb seo --keyword "...")
 keyword: ""
 keywords: []
 # guide | how-to | compare | list | explain
