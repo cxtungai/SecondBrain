@@ -7,6 +7,7 @@
 - Bản nháp nghiên cứu luôn vào `knowledge/_inbox/`; chỉ đăng khi người dùng nói đã duyệt (hoặc họ bấm Duyệt & đăng trên Bàn làm việc).
 - Bài viết SEO/GEO (`articles/`) chỉ dùng dữ kiện từ ghi chú tri thức; không sửa tri thức để hợp từ khoá.
 - "Đưa lên web" = commit & push lên nhánh mặc định (Bàn làm việc có nút làm việc này). Hỏi trước khi push nếu người dùng chưa nhờ.
+  - Ngoại lệ (người dùng dặn 2026-11-25): bản nháp chờ duyệt — ghi chú trong `knowledge/_inbox/`, bài viết `status: draft` — thì commit & push luôn, **không cần hỏi**, để họ đọc trên Bàn làm việc ở máy. Bản nháp không lên web cho tới khi họ duyệt. Việc đăng (`verified`/`published`) và thay đổi chương trình vẫn theo quy tắc trên.
 - **Máy tính và cloud chạy song song**, chung một kho trên GitHub (nhánh mặc định là bản chính; xem nhánh: `git remote show origin | grep HEAD`). Bàn làm việc tự lấy bản mới khi mở và trước khi đưa lên web, gộp được thì tự gộp, không gộp được thì dừng và giữ nguyên bài trên máy.
   - Đầu mỗi việc trên máy: `git pull` trước khi sửa. Đừng sửa cùng một bài ở hai nơi cùng lúc.
   - Phiên cloud thường làm trên nhánh `claude/…` riêng. Bản nháp hay thay đổi làm trên cloud chỉ hiện ở máy (mục "Chờ bạn duyệt") và trên web khi đã vào nhánh mặc định: khi người dùng bảo "đưa lên web" / "gửi về máy" / "đồng bộ", `git fetch origin <nhánh-mặc-định> && git merge origin/<nhánh-mặc-định>`, rồi `git push origin HEAD:<nhánh-mặc-định>`.
