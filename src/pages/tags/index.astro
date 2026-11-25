@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import { kb } from '../../lib/knowledge';
+import { tagUrl } from '../../lib/urls';
+---
+
+<Base title="Chủ đề" section="tags">
+  <header class="page-head">
+    <h1>Chủ đề</h1>
+    <p class="lead">Tất cả tag trong kho, sắp theo số ghi chú.</p>
+  </header>
+  {kb.tags.length === 0 ? (
+    <p class="empty">Chưa có tag nào.</p>
+  ) : (
+    <div class="tag-cloud">
+      {kb.tags.map((t) => <a class="tag" href={tagUrl(t.name)}>#{t.name}<small>{t.notes.length}</small></a>)}
+    </div>
+  )}
+</Base>

@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import NoteList from '../../components/NoteList.astro';
+import { kb } from '../../lib/knowledge';
+import { NOTE_TYPES } from '../../lib/schema.mjs';
+
+export function getStaticPaths() {
+  return Object.keys(NOTE_TYPES).map((type) => ({ params: { type } }));
+}
+
+const type = Astro.params.type as keyof typeof NOTE_TYPES;
+const info = NOTE_TYPES[type];
+const notes = kb.byType(type);
+---
+
+<Base title={info.label} description={info.description} section="types">
+  <header class="page-head" data-type={type}>
+    <div class="meta-row"><span class="badge badge-type">{notes.length} ghi chú</span></div>
+    <h1>{info.label}</h1>
+    <p class="lead">{info.description}</p>
+  </header>
+  <NoteList notes={notes} showType={false} empty={`Chưa có ghi chú loại này. Tạo bằng: npm run new -- ${type} "Tiêu đề"`} />
+</Base>

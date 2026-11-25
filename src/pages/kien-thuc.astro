@@ -1,0 +1,87 @@
+---
+import Base from '../layouts/Base.astro';
+import { kb } from '../lib/knowledge';
+import { NOTE_TYPES } from '../lib/schema.mjs';
+import { slugify } from '../lib/text.mjs';
+import { noteUrl, tagUrl, typeUrl, url } from '../lib/urls';
+
+// Trung tâm kiến thức: mỗi ghi chú "Chủ đề" là một trụ cột, các ghi chú nó liên kết tới là cụm bài con.
+const topics = [...kb.byType('topic')].sort((a, b) => a.title.localeCompare(b.title, 'vi'));
+const pillars = topics.map((t, i) => {
+  const children = t.links.map((s) => kb.get(s)!).filter((n) => n && !n.inbox);
+  const groups = Object.entries(NOTE_TYPES)
+    .map(([type, info]) => ({ type, label: info.label, notes: children.filter((n) => n.type === type) }))
+    .filter((g) => g.notes.length);
+  return { note: t, index: i + 1, count: children.length, groups };
+});
+const covered = new Set(topics.flatMap((t) => [t.slug, ...t.links]));
+const unassigned = kb.notes.filter((n) => !covered.has(n.slug));
+---
+
+<Base title="Trung tâm kiến thức" description="Toàn bộ tri thức được tổ chức theo các chủ đề trụ cột, mỗi chủ đề dẫn tới cụm ghi chú liên quan." section="hub">
+  <header class="page-head">
+    <h1>Trung tâm kiến thức</h1>
+    <p class="lead">
+      Đây không phải blog để lướt mà là một thư viện tri thức đã được đọc, hiểu và kiểm chứng. Mỗi <strong>chủ đề trụ cột</strong> dẫn tới cụm ghi chú liên quan.
+      Tra nhanh thuật ngữ trong <a href={url('tu-dien/')}>Từ điển</a> hoặc xem các mối liên kết trên <a href={url('graph/')}>Đồ thị tri thức</a>.
+    </p>
+  </header>
+
+  {pillars.length > 0 && (
+    <nav class="pillar-nav" aria-label="Các chủ đề trụ cột">
+      {pillars.map((p) => <a href={`#${p.note.slug}`}>{p.index} · {p.note.title}</a>)}
+    </nav>
+  )}
+
+  {pillars.length === 0 ? (
+    <p class="empty">Chưa có ghi chú chủ đề nào. Tạo trụ cột đầu tiên: <code>npm run new -- topic "Tên chủ đề"</code></p>
+  ) : (
+    <div class="pillars">
+      {pillars.map((p) => (
+        <section class="pillar card" id={p.note.slug} data-type="topic">
+          <div class="pillar-index">{String(p.index).padStart(2, '0')}</div>
+          <div class="pillar-body">
+            <h2><a href={noteUrl(p.note.slug)}>{p.note.title}</a></h2>
+            <p class="stat-line" style="margin-top:0">{p.note.summary}</p>
+            {p.groups.map((g) => (
+              <div class="pillar-group" data-type={g.type}>
+                <span class="badge badge-type">{g.label}</span>
+                <ul>{g.notes.map((n) => <li><a href={noteUrl(n.slug)} title={n.summary}>{n.title}</a></li>)}</ul>
+              </div>
+            ))}
+            {p.note.brokenLinks.length > 0 && (
+              <p class="stat-line">Còn thiếu: {p.note.brokenLinks.map((b, i) => <>{i > 0 && ', '}<a class="wikilink--broken" href={url(`gaps/#${slugify(b)}`)}>{b}</a></>)}</p>
+            )}
+            <a class="pillar-more" href={noteUrl(p.note.slug)}>Đọc chủ đề · {p.count} ghi chú →</a>
+          </div>
+        </section>
+      ))}
+    </div>
+  )}
+
+  {unassigned.length > 0 && (
+    <section class="section">
+      <h2 class="section-title">Chưa thuộc chủ đề nào ({unassigned.length})</h2>
+      <p class="stat-line">Những ghi chú này chưa được ghi chú chủ đề nào liên kết tới — nên thêm vào một trụ cột để tri thức được kết nối.</p>
+      <ul>{unassigned.map((n) => <li><a href={noteUrl(n.slug)}>{n.title}</a> <span class="stat-line">— {NOTE_TYPES[n.type as keyof typeof NOTE_TYPES].label}</span></li>)}</ul>
+    </section>
+  )}
+
+  <section class="section">
+    <h2 class="section-title">Duyệt theo cách khác</h2>
+    <div class="grid">
+      {Object.entries(NOTE_TYPES).map(([k, info]) => (
+        <a class="card type-card" data-type={k} href={typeUrl(k)}>
+          <div class="count">{kb.byType(k).length}</div>
+          <div class="name">{info.label}</div>
+        </a>
+      ))}
+    </div>
+    {kb.tags.length > 0 && (
+      <div class="tag-cloud" style="margin-top:1.25rem">
+        {kb.tags.map((t) => <a class="tag" href={tagUrl(t.name)}>#{t.name}<small>{t.notes.length}</small></a>)}
+      </div>
+    )}
+    <p class="stat-line"><a href={url('gaps/')}>Tri thức còn thiếu ({kb.gaps.length}) →</a></p>
+  </section>
+</Base>

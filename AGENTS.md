@@ -1,0 +1,136 @@
+# Hướng dẫn cho AI agent — Second Brain
+
+Second Brain là kho tri thức chuyên môn **đã được người dùng đọc, hiểu và duyệt**, đăng thành website và xuất thành dữ liệu cho AI agent viết content. Mọi tri thức nằm trong `knowledge/` dưới dạng Markdown, liên kết với nhau bằng `[[wikilink]]`.
+
+Nguyên tắc cốt lõi: **AI nghiên cứu và đề xuất, người dùng duyệt, chỉ tri thức đã duyệt mới lên web.** Không bao giờ tự đăng hay tự đổi `status` thành `verified` khi người dùng chưa duyệt.
+
+## Cấu trúc thư mục
+
+```
+knowledge/              Kho tri thức (mở được bằng Obsidian)
+  _inbox/               Bản nháp AI nghiên cứu, chờ duyệt — KHÔNG lên web
+  _templates/           Template cho từng loại ghi chú
+  topics/               Chủ đề trụ cột (bản đồ nội dung)
+  concepts/             Khái niệm
+  facts/                Số liệu & dữ kiện
+  frameworks/           Mô hình, phương pháp, quy trình, setup
+  case-studies/         Case study
+  sources/              Tóm tắt nguồn tham khảo
+scripts/                CLI: check, new, publish, kb
+src/                    Website (Astro) + lõi xử lý tri thức (src/lib)
+.claude/skills/         Skill cho Claude Code: research, publish, connect, write-content
+```
+
+## Ghi chú
+
+Mỗi ghi chú là một file `.md`. **Tên file là slug** (không dấu, chữ thường, nối bằng `-`) và phải duy nhất trong toàn kho.
+
+```yaml
+---
+title: Price Action               # bắt buộc
+type: topic                       # bắt buộc: topic | concept | fact | framework | case-study | source
+summary: Price action là …        # bắt buộc, 1–2 câu — AI dùng để chọn ghi chú, Google dùng làm mô tả
+tags: [trading, phan-tich-ky-thuat]
+status: draft                     # draft | verified | outdated
+aliases: [PA, Hành động giá]      # tên khác — dùng để tra từ điển và dò liên kết
+sources:
+  - title: Tên tài liệu
+    url: https://…
+    author: Tác giả
+    publisher: Nhà xuất bản / tổ chức
+    date: 2019                    # năm hoặc ngày phát hành
+    kind: book                    # paper | official | data | book | media | education | expert | blog | video | forum | other
+    credibility: 4                # 1–5, theo thang bên dưới
+    credibility_note: Sách chuyên môn của tác giả có kinh nghiệm thực tế, có dẫn nguồn
+    accessed: 2026-11-25
+created: 2026-11-25
+updated: 2026-11-25
+reviewed: 2026-11-25              # ngày người dùng duyệt — scripts/publish.mjs tự điền
+research:                         # tuỳ chọn — do agent nghiên cứu điền
+  keyword: Price action
+  date: 2026-11-25
+  agent: claude
+---
+```
+
+| Loại | Dùng cho |
+| --- | --- |
+| `topic` | Chủ đề trụ cột: giới thiệu ngắn + dẫn tới các ghi chú con, nhóm theo loại. |
+| `concept` | Một khái niệm/thuật ngữ. Câu đầu trả lời thẳng "X là gì?". |
+| `fact` | Số liệu, dữ kiện có thể trích dẫn. **Bắt buộc có nguồn.** |
+| `framework` | Mô hình, phương pháp, quy trình, setup, checklist. |
+| `case-study` | Ví dụ thực tế: bối cảnh, cách làm, kết quả, bài học. |
+| `source` | Tóm tắt một tài liệu (sách, báo cáo, video…). |
+
+| Trạng thái | Ý nghĩa |
+| --- | --- |
+| `draft` | Chưa kiểm chứng — chỉ dùng làm ý tưởng, không trích dẫn như sự thật. |
+| `verified` | Người dùng đã duyệt — được dùng và trích dẫn. |
+| `outdated` | Lỗi thời — không dùng cho content mới. |
+
+Nội dung bài: trích nguồn bằng số thứ tự trong `sources`, ví dụ `(Nguồn [2])`. Kết bài bằng `## Câu hỏi thường gặp` (mỗi câu hỏi là `### …?`) — site tự sinh dữ liệu FAQ cho Google/AI — và `## Liên quan`.
+
+## Thang điểm uy tín nguồn
+
+Mỗi nguồn được chấm 1–5. Xuất phát từ mức của loại nguồn, rồi điều chỉnh ±1 theo 5 tiêu chí:
+
+- **Thẩm quyền** — ai nói? tác giả/tổ chức có chuyên môn và trách nhiệm với thông tin không?
+- **Bằng chứng** — có dữ liệu, phương pháp, dẫn nguồn không?
+- **Độc lập** — có bán khoá học/sản phẩm/tín hiệu, hay xung đột lợi ích không?
+- **Thời điểm** — còn mới so với tốc độ thay đổi của chủ đề không?
+- **Đối chiếu** — các nguồn độc lập khác có xác nhận không?
+
+| Điểm | Mức | Ví dụ |
+| --- | --- | --- |
+| 5 | Rất cao | Nghiên cứu có bình duyệt, cơ quan quản lý, sở giao dịch, dữ liệu sơ cấp, tài liệu gốc của người đặt ra khái niệm |
+| 4 | Cao | Sách chuyên môn của tác giả có uy tín, báo chí lớn, tổ chức nghề nghiệp/đào tạo có tên tuổi — có biên tập và dẫn nguồn |
+| 3 | Trung bình | Chuyên gia/người thực hành có danh tiếng và thành tích kiểm chứng được; trang kiến thức chuyên ngành có biên tập |
+| 2 | Thấp | Blog cá nhân, video, khoá học chưa rõ kiểm chứng; ý kiến ít dẫn chứng |
+| 1 | Rất thấp | Diễn đàn, mạng xã hội, nguồn ẩn danh, nội dung quảng cáo hoặc có xung đột lợi ích rõ ràng |
+
+Quy tắc dùng điểm: khẳng định quan trọng cần ≥ 2 nguồn độc lập hoặc 1 nguồn điểm 5; nguồn điểm 1 không làm căn cứ cho khẳng định; ghi chú `fact` ở trạng thái `verified` cần ít nhất một nguồn ≥ 3 (`npm run check` sẽ cảnh báo).
+
+## Liên kết tri thức
+
+- `[[slug]]`, `[[slug|nhãn hiển thị]]`, `[[slug#tiêu-đề]]`. Cũng có thể viết `[[Tiêu đề]]` hoặc `[[alias]]` — hệ thống tự tìm ghi chú.
+- Link lần xuất hiện đầu tiên của mỗi thuật ngữ đã có ghi chú. Không dùng link Markdown thường cho ghi chú nội bộ.
+- `[[thuật-ngữ-chưa-có]]` là hợp lệ: nó hiện trong trang **Tri thức còn thiếu** (`/gaps/`) — hàng đợi nghiên cứu.
+- Mỗi ghi chú mới phải được ít nhất một ghi chú `topic` liên kết tới, và nên có mục `## Liên quan`.
+- Backlinks, đồ thị, breadcrumb, "Đọc tiếp" đều được sinh tự động từ liên kết.
+
+## Quy trình
+
+1. **Nghiên cứu** (`/research <từ khoá>`): agent tìm nguồn, chấm điểm uy tín, viết bài tổng hợp tiếng Việt có liên kết, lưu vào `knowledge/_inbox/<slug>.md` với `status: draft`, rồi báo cáo cho người dùng.
+2. **Duyệt** (người dùng): đọc, sửa trực tiếp file (Obsidian / editor / GitHub), xem trước bằng `npm run dev`.
+3. **Đăng** (`/publish <file>` hoặc `npm run publish -- <file>`): chuyển vào thư mục đúng loại, `status: verified`, điền `reviewed` — sau đó **kết nối**: thêm liên kết hai chiều với ghi chú liên quan và chủ đề trụ cột.
+4. **Kết nối định kỳ** (`/connect`): thêm liên kết còn thiếu, nối ghi chú cô lập, liệt kê tri thức còn thiếu.
+5. **Viết content** (`/write-content <đề bài>`): agent đọc kho và viết bài có trích nguồn.
+
+## Lệnh
+
+```bash
+npm run dev                         # xem site tại http://localhost:4321 (hiện cả bản nháp chờ duyệt)
+npm run check                       # kiểm tra schema, liên kết, chất lượng nguồn
+npm run check -- --inbox --verbose  # coi lỗi trong _inbox là lỗi, liệt kê mọi gợi ý
+npm run build                       # check + build site tĩnh vào dist/
+npm run new -- concept "Tiêu đề" [--inbox] [--tags a,b]
+npm run publish [-- <file> [--status draft] [--dry-run]]
+npm run kb -- search "<từ khoá>"    # tra cứu kho (thêm --json cho máy đọc)
+npm run kb -- show <slug>           # metadata + liên kết + backlinks
+npm run kb -- list --type fact --status verified
+npm run kb -- gaps | orphans | mentions [slug] | stats
+```
+
+## Dùng kho để viết content (agent bên ngoài repo)
+
+Site xuất sẵn: `/llms.txt` (chỉ mục + quy tắc), `/llms-full.txt` (toàn bộ nội dung), `/knowledge.json` (dữ liệu có cấu trúc), `/notes/<slug>.md` (từng ghi chú). Quy tắc bắt buộc nằm trong `src/config.mjs` (`AGENT_RULES`):
+
+- Chỉ dùng số liệu, dữ kiện, trích dẫn từ ghi chú `verified` như sự thật; luôn ghi nguồn.
+- `draft` chỉ làm ý tưởng; không dùng `outdated` cho content mới.
+- Không bịa số liệu, nguồn, trích dẫn. Thiếu thông tin thì nói rõ và đề xuất ghi chú cần bổ sung.
+
+## Khi sửa code
+
+- Lõi xử lý tri thức (`src/lib/*.mjs`) là JavaScript thuần, dùng chung cho site và scripts — không import Astro vào đó.
+- Đổi cấu trúc ghi chú → sửa `src/lib/schema.mjs`, templates trong `knowledge/_templates/`, và tài liệu này.
+- Trước khi kết thúc: `npm run check && npm run build` phải chạy thành công.

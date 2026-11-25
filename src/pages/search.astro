@@ -1,0 +1,169 @@
+---
+import Base from '../layouts/Base.astro';
+import { NOTE_TYPES, STATUSES } from '../lib/schema.mjs';
+import { url } from '../lib/urls';
+
+const types = Object.entries(NOTE_TYPES).map(([key, info]) => ({ key, label: info.label }));
+---
+
+<Base title="Tìm kiếm" section="search">
+  <header class="page-head">
+    <h1>Tìm kiếm</h1>
+    <p class="lead">Tìm theo tiêu đề, tóm tắt, tag và nội dung. Gõ có dấu hay không dấu đều được.</p>
+  </header>
+
+  <div
+    id="search"
+    data-index={url('search-index.json')}
+    data-notes={url('notes/')}
+    data-types={JSON.stringify(Object.fromEntries(types.map((t) => [t.key, t.label])))}
+    data-statuses={JSON.stringify(Object.fromEntries(Object.entries(STATUSES).map(([k, v]) => [k, v.label])))}
+  >
+    <form class="search-box" role="search" onsubmit="return false">
+      <input id="q" type="search" name="q" placeholder="Ví dụ: khai niem, PARA, số liệu…" aria-label="Từ khoá" autofocus />
+    </form>
+    <div class="search-filters" role="group" aria-label="Lọc theo loại">
+      <button class="chip" type="button" data-filter="" aria-pressed="true">Tất cả</button>
+      {types.map((t) => <button class="chip" type="button" data-filter={t.key} aria-pressed="false">{t.label}</button>)}
+    </div>
+    <p class="search-status" id="status" aria-live="polite">Đang tải chỉ mục…</p>
+    <ul class="note-list" id="results"></ul>
+  </div>
+</Base>
+
+<script>
+  type Entry = {
+    slug: string; title: string; aliases: string[]; type: string; status: string;
+    updated: string; summary: string; tags: string[]; text: string;
+    _title?: string; _meta?: string; _text?: string;
+  };
+
+  const root = document.getElementById('search')!;
+  const input = document.getElementById('q') as HTMLInputElement;
+  const statusEl = document.getElementById('status')!;
+  const results = document.getElementById('results')!;
+  const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+  const TYPE_LABELS: Record<string, string> = JSON.parse(root.dataset.types!);
+  const STATUS_LABELS: Record<string, string> = JSON.parse(root.dataset.statuses!);
+  const NOTES_BASE = root.dataset.notes!;
+
+  const norm = (s: string) =>
+    s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
+  const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+  const fmt = (iso: string) => iso.split('-').reverse().join('/');
+
+  /** Tô sáng từ khoá trên chuỗi gốc (có dấu) bằng cách so khớp trên bản đã chuẩn hoá cùng độ dài. */
+  function highlight(original: string, terms: string[]) {
+    // norm() có thể đổi độ dài chuỗi (NFD), nên so khớp từng ký tự đã chuẩn hoá.
+    const chars = [...original];
+    const normChars = chars.map((c) => norm(c));
+    const flat = normChars.join('');
+    const marks = new Array(chars.length).fill(false);
+    const offsets: number[] = [];
+    let pos = 0;
+    for (const nc of normChars) { offsets.push(pos); pos += nc.length; }
+    for (const term of terms) {
+      let from = 0;
+      while (term && (from = flat.indexOf(term, from)) !== -1) {
+        const end = from + term.length;
+        chars.forEach((_, i) => { if (offsets[i] >= from && offsets[i] < end) marks[i] = true; });
+        from = end;
+      }
+    }
+    let out = '';
+    let open = false;
+    chars.forEach((c, i) => {
+      if (marks[i] && !open) { out += '<mark>'; open = true; }
+      if (!marks[i] && open) { out += '</mark>'; open = false; }
+      out += esc(c);
+    });
+    return out + (open ? '</mark>' : '');
+  }
+
+  function snippet(text: string, terms: string[]) {
+    const n = norm(text);
+    const idx = Math.min(...terms.map((t) => n.indexOf(t)).filter((i) => i >= 0));
+    if (!isFinite(idx)) return '';
+    const start = Math.max(0, idx - 60);
+    return (start > 0 ? '…' : '') + text.slice(start, start + 180) + '…';
+  }
+
+  let index: Entry[] = [];
+  let typeFilter = new URLSearchParams(location.search).get('type') ?? '';
+
+  function render() {
+    const raw = input.value.trim();
+    const terms = norm(raw).split(/\s+/).filter(Boolean);
+    let list = index.filter((e) => !typeFilter || e.type === typeFilter);
+    let scored = list.map((e) => ({ e, score: 0 }));
+    if (terms.length) {
+      scored = list
+        .map((e) => {
+          let score = 0;
+          for (const t of terms) {
+            const s = (e._title!.includes(t) ? 10 : 0) + (e._meta!.includes(t) ? 4 : 0) + (e._text!.includes(t) ? 1 : 0);
+            if (!s) return null;
+            score += s;
+          }
+          return { e, score };
+        })
+        .filter((x): x is { e: Entry; score: number } => x !== null)
+        .sort((a, b) => b.score - a.score);
+    }
+
+    statusEl.textContent = terms.length
+      ? `${scored.length} kết quả cho “${raw}”`
+      : `${scored.length} ghi chú${typeFilter ? ` loại ${TYPE_LABELS[typeFilter]}` : ''}`;
+
+    results.innerHTML = scored
+      .slice(0, 100)
+      .map(({ e }) => {
+        const snip = terms.length && !norm(e.title + e.summary).includes(terms[0]) ? snippet(e.text, terms) : '';
+        return `<li class="note-item" data-type="${esc(e.type)}">
+          <div class="meta-row">
+            <span class="badge badge-type">${esc(TYPE_LABELS[e.type] ?? e.type)}</span>
+            <span class="badge badge-status-${esc(e.status)}">${esc(STATUS_LABELS[e.status] ?? e.status)}</span>
+            <span>Cập nhật ${fmt(e.updated)}</span>
+          </div>
+          <h3><a href="${NOTES_BASE}${encodeURIComponent(e.slug)}/">${highlight(e.title, terms)}</a></h3>
+          <p>${highlight(e.summary, terms)}</p>
+          ${snip ? `<p style="margin-top:.4rem;font-size:.88rem">${highlight(snip, terms)}</p>` : ''}
+          ${e.tags.length ? `<div class="meta-row" style="margin-top:.5rem">${e.tags.map((t) => `<span class="tag">#${esc(t)}</span>`).join('')}</div>` : ''}
+        </li>`;
+      })
+      .join('');
+
+    const params = new URLSearchParams();
+    if (raw) params.set('q', raw);
+    if (typeFilter) params.set('type', typeFilter);
+    history.replaceState(null, '', params.toString() ? `?${params}` : location.pathname);
+  }
+
+  function syncChips() {
+    chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filter === typeFilter)));
+  }
+
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      typeFilter = chip.dataset.filter ?? '';
+      syncChips();
+      render();
+    }),
+  );
+  input.addEventListener('input', render);
+  input.value = new URLSearchParams(location.search).get('q') ?? '';
+  syncChips();
+
+  fetch(root.dataset.index!)
+    .then((r) => r.json())
+    .then((data: Entry[]) => {
+      index = data.map((e) => ({
+        ...e,
+        _title: norm([e.title, ...e.aliases].join(' ')),
+        _meta: norm([e.summary, ...e.tags].join(' ')),
+        _text: norm(e.text),
+      }));
+      render();
+    })
+    .catch(() => (statusEl.textContent = 'Không tải được chỉ mục tìm kiếm.'));
+</script>

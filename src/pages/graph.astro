@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import Graph from '../components/Graph.astro';
+import { kb } from '../lib/knowledge';
+import { url } from '../lib/urls';
+
+const edgeCount = kb.notes.reduce((sum, n) => sum + n.links.length, 0);
+const orphans = kb.orphans();
+---
+
+<Base title="Đồ thị tri thức" description="Bản đồ liên kết giữa toàn bộ ghi chú trong kho." section="graph">
+  <header class="page-head">
+    <h1>Đồ thị tri thức</h1>
+    <p class="lead">{kb.notes.length} ghi chú · {edgeCount} liên kết. Chấm càng to, ghi chú càng được kết nối nhiều.</p>
+  </header>
+  <Graph height={620} legend />
+  {orphans.length > 0 && (
+    <p class="callout callout-warn">
+      {orphans.length} ghi chú chưa có liên kết nào: {orphans.map((n, i) => <>{i > 0 && ', '}<a href={url(`notes/${n.slug}/`)}>{n.title}</a></>)}.
+      Hãy liên kết chúng với ghi chú liên quan để tri thức không bị rời rạc.
+    </p>
+  )}
+</Base>

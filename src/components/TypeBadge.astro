@@ -1,0 +1,17 @@
+---
+import { NOTE_TYPES } from '../lib/schema.mjs';
+import { typeUrl } from '../lib/urls';
+
+interface Props {
+  type: keyof typeof NOTE_TYPES;
+  link?: boolean;
+}
+const { type, link = true } = Astro.props;
+const info = NOTE_TYPES[type];
+---
+
+{link ? (
+  <a class="badge badge-type" data-type={type} href={typeUrl(type)}>{info.label}</a>
+) : (
+  <span class="badge badge-type" data-type={type}>{info.label}</span>
+)}

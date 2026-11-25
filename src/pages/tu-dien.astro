@@ -1,0 +1,70 @@
+---
+import Base from '../layouts/Base.astro';
+import TypeBadge from '../components/TypeBadge.astro';
+import { kb } from '../lib/knowledge';
+import { stripDiacritics } from '../lib/text.mjs';
+import { noteUrl, url } from '../lib/urls';
+
+// Từ điển A–Z: mỗi thuật ngữ một dòng định nghĩa (lấy từ summary), tên khác trỏ về thuật ngữ chính.
+const TERM_TYPES = ['concept', 'framework', 'topic'];
+type Entry = { term: string; slug: string; summary: string; type: string; aliasOf?: string };
+const entries: Entry[] = [];
+for (const n of kb.notes.filter((n) => TERM_TYPES.includes(n.type))) {
+  entries.push({ term: n.title, slug: n.slug, summary: n.summary, type: n.type });
+  for (const a of n.aliases) {
+    if (stripDiacritics(a).toLowerCase() !== stripDiacritics(n.title).toLowerCase()) {
+      entries.push({ term: a, slug: n.slug, summary: n.summary, type: n.type, aliasOf: n.title });
+    }
+  }
+}
+entries.sort((a, b) => a.term.localeCompare(b.term, 'vi', { sensitivity: 'base' }));
+const letterOf = (s: string) => {
+  const c = stripDiacritics(s.trim()).charAt(0).toUpperCase();
+  return /[A-Z]/.test(c) ? c : '#';
+};
+const groups = new Map<string, Entry[]>();
+for (const e of entries) {
+  const l = letterOf(e.term);
+  if (!groups.has(l)) groups.set(l, []);
+  groups.get(l)!.push(e);
+}
+const letters = [...groups.keys()];
+const ALL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const glossaryLd = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTermSet',
+  name: 'Từ điển Second Brain',
+  hasDefinedTerm: entries.filter((e) => !e.aliasOf).map((e) => ({ '@type': 'DefinedTerm', name: e.term, description: e.summary, url: Astro.site ? new URL(noteUrl(e.slug), Astro.site).href : undefined })),
+};
+---
+
+<Base title="Từ điển A–Z" description="Mục lục A–Z toàn bộ khái niệm, mô hình và chủ đề trong kho — mỗi thuật ngữ một dòng định nghĩa." section="glossary" jsonLd={glossaryLd}>
+  <header class="page-head">
+    <h1>Từ điển A–Z</h1>
+    <p class="lead">
+      Toàn bộ khái niệm, mô hình và chủ đề trong kho — mỗi thuật ngữ một dòng định nghĩa, bấm để đọc ghi chú đầy đủ.
+      Cần nhìn toàn cảnh? Xem <a href={url('kien-thuc/')}>Trung tâm kiến thức</a>.
+    </p>
+  </header>
+
+  <nav class="az-nav" aria-label="Chọn chữ cái">
+    {ALL.map((l) => (letters.includes(l) ? <a href={`#az-${l}`}>{l}</a> : <span aria-hidden="true">{l}</span>))}
+    {letters.includes('#') && <a href="#az-other">#</a>}
+  </nav>
+
+  {entries.length === 0 && <p class="empty">Chưa có thuật ngữ nào.</p>}
+
+  {letters.map((l) => (
+    <section class="az-group" id={l === '#' ? 'az-other' : `az-${l}`}>
+      <h2>{l}</h2>
+      <dl>
+        {groups.get(l)!.map((e) => (
+          <div class="az-entry" data-type={e.type}>
+            <dt><a href={noteUrl(e.slug)}>{e.term}</a> {!e.aliasOf && <TypeBadge type={e.type as any} link={false} />}</dt>
+            <dd>{e.aliasOf ? <>Xem <a href={noteUrl(e.slug)}>{e.aliasOf}</a></> : e.summary}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  ))}
+</Base>

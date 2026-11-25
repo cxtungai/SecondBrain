@@ -1,0 +1,100 @@
+---
+import Base from '../layouts/Base.astro';
+import NoteList from '../components/NoteList.astro';
+import { SITE } from '../config.mjs';
+import { kb } from '../lib/knowledge';
+import { NOTE_TYPES } from '../lib/schema.mjs';
+import { tagUrl, typeUrl, url, noteUrl } from '../lib/urls';
+
+const types = Object.entries(NOTE_TYPES).map(([key, info]) => ({ key, ...info, count: kb.byType(key).length }));
+const recent = kb.notes.slice(0, 6);
+const topics = [...kb.byType('topic')].sort((a, b) => a.title.localeCompare(b.title, 'vi'));
+const foundations = [...kb.notes]
+  .filter((n) => n.type !== 'topic' && n.backlinks.length > 0)
+  .sort((a, b) => b.backlinks.length - a.backlinks.length)
+  .slice(0, 3);
+const verified = kb.notes.filter((n) => n.status === 'verified').length;
+const errors = kb.issues.filter((i) => i.level === 'error');
+const showIssues = import.meta.env.DEV && kb.issues.length > 0;
+---
+
+<Base section="home">
+  <section class="hero">
+    <h1>{SITE.name}</h1>
+    <p class="lead">{SITE.description}</p>
+    <form class="hero-search" action={url('search/')} method="get" role="search">
+      <input type="search" name="q" placeholder="Tìm khái niệm, số liệu, phương pháp… (gõ không dấu cũng được)" aria-label="Tìm trong kho tri thức" />
+    </form>
+    <p class="stat-line">
+      {kb.notes.length} ghi chú · {verified} đã kiểm chứng · {kb.gaps.length} mục còn thiếu ·
+      <a href={url('ai/')}>Kết nối AI agent →</a>
+    </p>
+  </section>
+
+  {showIssues && (
+    <div class={`callout ${errors.length ? 'callout-bad' : 'callout-warn'} issues`}>
+      <strong>Chỉ hiện khi chạy dev:</strong> {errors.length} lỗi, {kb.issues.length - errors.length} cảnh báo trong kho. Chạy <code>npm run check</code> để xem chi tiết.
+      <ul>
+        {kb.issues.slice(0, 8).map((i) => <li><code>{i.path}</code> — {i.message}</li>)}
+      </ul>
+    </div>
+  )}
+
+  <section class="section">
+    <h2 class="section-title">Loại tri thức</h2>
+    <div class="grid">
+      {types.map((t) => (
+        <a class="card type-card" data-type={t.key} href={typeUrl(t.key)}>
+          <div class="count">{t.count}</div>
+          <div class="name">{t.label}</div>
+          <div class="desc">{t.description}</div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  {kb.inbox.length > 0 && (
+    <section class="section">
+      <h2 class="section-title">Chờ duyệt ({kb.inbox.length}) <span class="stat-line" style="margin:0">chỉ hiện khi chạy local · đăng bằng <code>npm run publish</code></span></h2>
+      <NoteList notes={kb.inbox} />
+    </section>
+  )}
+
+  {topics.length > 0 && (
+    <section class="section">
+      <h2 class="section-title">Trung tâm kiến thức <a href={url('kien-thuc/')}>Xem toàn bộ →</a></h2>
+      <div class="grid">
+        {topics.slice(0, 6).map((n, i) => (
+          <a class="card type-card" data-type="topic" href={url(`kien-thuc/#${n.slug}`)}>
+            <div class="count">{String(i + 1).padStart(2, '0')}</div>
+            <div class="name">{n.title}</div>
+            <div class="desc">{n.summary}</div>
+            <div class="desc" style="margin-top:0.5rem;font-weight:600">{n.links.length} ghi chú →</div>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {foundations.length > 0 && (
+    <section class="section">
+      <h2 class="section-title">Bắt đầu từ đây</h2>
+      <p class="stat-line" style="margin-top:-0.5rem">Những ghi chú nền tảng được nhiều ghi chú khác dẫn tới nhất.</p>
+      <NoteList notes={foundations} />
+    </section>
+  )}
+
+  <section class="section">
+    <h2 class="section-title">Mới cập nhật <a href={url('search/')}>Xem tất cả →</a></h2>
+    <NoteList notes={recent} empty="Kho còn trống. Tạo ghi chú đầu tiên bằng lệnh npm run new." />
+  </section>
+
+  {kb.tags.length > 0 && (
+    <section class="section">
+      <h2 class="section-title">Tag <a href={url('tags/')}>Tất cả →</a></h2>
+      <div class="tag-cloud">
+        {kb.tags.slice(0, 30).map((t) => <a class="tag" href={tagUrl(t.name)}>#{t.name}<small>{t.notes.length}</small></a>)}
+      </div>
+    </section>
+  )}
+</Base>

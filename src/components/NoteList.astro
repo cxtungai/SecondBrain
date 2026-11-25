@@ -1,0 +1,37 @@
+---
+import type { Note } from '../lib/knowledge';
+import { formatDate, noteUrl, tagUrl } from '../lib/urls';
+import StatusBadge from './StatusBadge.astro';
+import TypeBadge from './TypeBadge.astro';
+
+interface Props {
+  notes: Note[];
+  empty?: string;
+  showType?: boolean;
+}
+const { notes, empty = 'Chưa có ghi chú nào.', showType = true } = Astro.props;
+---
+
+{notes.length === 0 ? (
+  <p class="empty">{empty}</p>
+) : (
+  <ul class="note-list">
+    {notes.map((note) => (
+      <li class="note-item" data-type={note.type}>
+        <div class="meta-row">
+          {note.inbox && <span class="badge badge-inbox">Chờ duyệt</span>}
+          {showType && <TypeBadge type={note.type} />}
+          <StatusBadge status={note.status} />
+          <span>Cập nhật {formatDate(note.updated)}</span>
+        </div>
+        <h3><a href={noteUrl(note.slug)}>{note.title}</a></h3>
+        <p>{note.summary}</p>
+        {note.tags.length > 0 && (
+          <div class="meta-row" style="margin-top:0.5rem">
+            {note.tags.map((tag) => <a class="tag" href={tagUrl(tag)}>#{tag}</a>)}
+          </div>
+        )}
+      </li>
+    ))}
+  </ul>
+)}

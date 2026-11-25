@@ -1,0 +1,21 @@
+---
+import Base from '../../layouts/Base.astro';
+import NoteList from '../../components/NoteList.astro';
+import { kb } from '../../lib/knowledge';
+
+export function getStaticPaths() {
+  return kb.tags.map((tag) => ({ params: { tag: tag.slug }, props: { name: tag.name } }));
+}
+
+const { tag } = Astro.params;
+const { name } = Astro.props;
+const notes = kb.byTag(tag!);
+---
+
+<Base title={`#${name}`} section="tags">
+  <header class="page-head">
+    <h1>#{name}</h1>
+    <p class="lead">{notes.length} ghi chú</p>
+  </header>
+  <NoteList notes={notes} />
+</Base>
