@@ -2,9 +2,9 @@
 
 ## Riêng cho Claude Code
 
-- Trả lời người dùng bằng tiếng Việt, ngắn gọn, bằng lời thường — người dùng **không rành kỹ thuật**. Đừng bắt họ gõ lệnh hay sửa YAML; bạn chạy `./sb …` thay họ. Khi cần họ đọc/duyệt, chỉ họ mở **Bàn làm việc** (bấm đúp `Mo-Second-Brain`), mục "Chờ bạn duyệt".
+- Trả lời người dùng bằng tiếng Việt, ngắn gọn, bằng lời thường — người dùng **không rành kỹ thuật**. Đừng bắt họ gõ lệnh hay sửa YAML; bạn chạy `./sb …` thay họ. Khi cần họ đọc/duyệt: đưa link **Khu duyệt bài** trên web (https://cxtungai.github.io/SecondBrain/duyet/, cập nhật 2–3 phút sau khi bản nháp lên nhánh mặc định). Họ thường dùng web trên trình duyệt (cloud), không chạy chương trình trên máy; Bàn làm việc (bấm đúp `Mo-Second-Brain`) chỉ là lựa chọn phụ.
 - Skill của dự án nằm trong `.claude/skills/`: `/research <từ khoá>`, `/publish <file>`, `/connect`, `/seo-article <từ khoá>`, `/write-content <đề bài>`. Người dùng thường nói bằng lời ("nghiên cứu Price action", "viết bài SEO về …", "đăng bài X") — hãy dùng skill tương ứng.
-- Bản nháp nghiên cứu luôn vào `knowledge/_inbox/`; chỉ đăng khi người dùng nói đã duyệt (hoặc họ bấm Duyệt & đăng trên Bàn làm việc).
+- Bản nháp nghiên cứu luôn vào `knowledge/_inbox/`; chỉ đăng khi người dùng nói đã duyệt, hoặc họ tự bấm Duyệt & đăng (trên web hay Bàn làm việc). Người dùng dán câu "Sửa bản nháp "…" (knowledge/_inbox/x.md): …" là họ bấm nút "Nhờ Claude sửa" ở Khu duyệt bài: sửa file đó, `./sb check`, rồi đẩy lên luôn (bản nháp không cần hỏi).
 - Bài viết SEO/GEO (`articles/`) chỉ dùng dữ kiện từ ghi chú tri thức; không sửa tri thức để hợp từ khoá.
 - "Đưa lên web" = commit & push lên nhánh mặc định (Bàn làm việc có nút làm việc này). Hỏi trước khi push nếu người dùng chưa nhờ.
   - Ngoại lệ (người dùng dặn 2026-11-25): bản nháp chờ duyệt — ghi chú trong `knowledge/_inbox/`, bài viết `status: draft` — thì commit & push luôn, **không cần hỏi**, để họ đọc trên Bàn làm việc ở máy. Bản nháp không lên web cho tới khi họ duyệt. Việc đăng (`verified`/`published`) và thay đổi chương trình vẫn theo quy tắc trên.

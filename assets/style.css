@@ -1271,3 +1271,59 @@ mark {
   .desk-list li { flex-direction: column; }
   .desk-actions { justify-content: flex-start; }
 }
+
+/* ---------- Khu duyệt bài trên web (/duyet/) ---------- */
+.nav-review b,
+.review-summary b {
+  display: inline-block;
+  min-width: 1.4em;
+  padding: 0 0.35em;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--surface);
+  text-align: center;
+  font-size: 0.78rem;
+}
+.nav-review[hidden] { display: none; }
+.review-guide { margin-bottom: 1.5rem; }
+.review-guide h2 { margin-top: 0; font-size: 1.1rem; }
+.review-guide ol { margin: 0.25rem 0 0.75rem; padding-left: 1.25rem; }
+.review-guide li { margin: 0.35rem 0; }
+.review-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.review-summary p { margin: 0; }
+.review-list { list-style: none; padding: 0; margin: 0.5rem 0 1.5rem; display: grid; gap: 0.75rem; }
+.review-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1.25rem;
+  padding: 1rem 1.1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.review-main { flex: 1 1 22rem; min-width: 0; }
+.review-main h3 { margin: 0.4rem 0 0.25rem; font-size: 1.1rem; }
+.review-main p { margin: 0.25rem 0 0; }
+.review-item .review-actions { flex: 0 1 auto; }
+.review-broken { margin-bottom: 1.5rem; }
+.review-broken code { word-break: break-all; }
+@media (max-width: 640px) {
+  .review-item .review-actions { width: 100%; }
+  .review-item .review-actions .btn { flex: 1 1 auto; justify-content: center; text-align: center; }
+}
+.review-quick { margin: 0.75rem 0 0; padding: 0.6rem 0.85rem; border-radius: 10px; background: var(--accent-soft); font-size: 0.95rem; max-width: 46rem; }
+.review-guide { margin-top: 2rem; }
+.review-guide summary { cursor: pointer; list-style: none; }
+.review-guide summary::-webkit-details-marker { display: none; }
+.review-guide summary h2 { display: inline; }
+.review-guide summary h2::before { content: '▸ '; color: var(--muted); }
+.review-guide[open] summary h2::before { content: '▾ '; }

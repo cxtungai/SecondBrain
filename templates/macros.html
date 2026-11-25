@@ -72,3 +72,14 @@
 </details>
 {% endif %}
 {%- endmacro %}
+
+{% macro review_buttons(act, compact=false) -%}
+{% if act %}
+<div class="review-actions">
+  {% if act.approve %}<a class="btn btn-primary" href="{{ act.approve }}" target="_blank" rel="noopener">✅ Duyệt & đăng</a>{% endif %}
+  <button type="button" class="btn" data-copy-text="{{ act.prompt }}" data-copied="Đã chép — dán vào Claude, ghi điều muốn sửa">💬 Nhờ Claude sửa</button>
+  {% if act.edit and not compact %}<a class="btn" href="{{ act.edit }}" target="_blank" rel="noopener">✏️ Tự sửa trên GitHub</a>{% endif %}
+  {% if act.remove %}<a class="btn btn-ghost" href="{{ act.remove }}" target="_blank" rel="noopener">🗑 Bỏ</a>{% endif %}
+</div>
+{% endif %}
+{%- endmacro %}

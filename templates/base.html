@@ -6,7 +6,7 @@
     <title>{% if title %}{{ title }} · {{ site.name }}{% else %}{{ site.name }}{% endif %}</title>
     <meta name="description" content="{{ description or site.description }}" />
     {% if canonical %}<link rel="canonical" href="{{ canonical }}" />{% endif %}
-    {% if noindex or dev %}<meta name="robots" content="noindex" />{% endif %}
+    {% if noindex or dev or review %}<meta name="robots" content="noindex" />{% endif %}
     <meta property="og:site_name" content="{{ site.name }}" />
     <meta property="og:title" content="{{ title or site.name }}" />
     <meta property="og:description" content="{{ description or site.description }}" />
@@ -32,6 +32,14 @@
       </div>
     </div>
     {% endif %}
+    {% if review %}
+    <div class="dev-bar review-site-bar">
+      <div class="container">
+        <span>Khu duyệt bài — bản nháp chưa kiểm chứng, chưa đăng.</span>
+        <a href="{{ url('duyet/') }}" class="dev-bar-btn">Danh sách chờ duyệt{% if review_pending %} <b>{{ review_pending }}</b>{% endif %}</a>
+      </div>
+    </div>
+    {% endif %}
     <header class="site-header">
       <div class="container">
         <a class="brand" href="{{ url('') }}"><span class="brand-mark" aria-hidden="true"></span>{{ site.name }}</a>
@@ -39,6 +47,7 @@
           {% for key, href, label in [('hub', 'kien-thuc/', 'Kiến thức'), ('articles', 'bai-viet/', 'Bài viết'), ('glossary', 'tu-dien/', 'Từ điển'), ('graph', 'graph/', 'Đồ thị'), ('search', 'search/', 'Tìm kiếm'), ('ai', 'ai/', 'Cho AI')] %}
           <a href="{{ url(href) }}"{% if section == key %} aria-current="page"{% endif %}>{{ label }}</a>
           {% endfor %}
+          {% if review_pending is defined and not dev %}<a class="nav-review" href="{{ url('duyet/') }}" data-reviewer-link{% if not review %} hidden{% endif %}{% if section == 'review' %} aria-current="page"{% endif %}>Chờ duyệt{% if review_pending %} <b>{{ review_pending }}</b>{% endif %}</a>{% endif %}
         </nav>
         {% if section != 'search' %}
         <form class="header-search" action="{{ url('search/') }}" method="get" role="search">
@@ -53,7 +62,7 @@
     <footer class="site-footer">
       <div class="container">
         <span>{{ site.name }} — kho tri thức cho người và AI agent. <a href="{{ url('gioi-thieu/') }}">Giới thiệu & quy trình biên tập</a></span>
-        <span><a href="{{ url('llms.txt') }}">llms.txt</a> · <a href="{{ url('knowledge.json') }}">knowledge.json</a></span>
+        <span><a href="{{ url('llms.txt') }}">llms.txt</a> · <a href="{{ url('knowledge.json') }}">knowledge.json</a>{% if review_pending is defined and not dev %} · <a href="{{ url('duyet/') }}" rel="nofollow">Khu duyệt bài</a>{% endif %}</span>
         {% if site.disclaimer %}<small class="footer-disclaimer">{{ site.disclaimer }}</small>{% endif %}
       </div>
     </footer>

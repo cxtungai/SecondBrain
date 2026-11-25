@@ -2,9 +2,14 @@
 
 Second Brain là kho tri thức chuyên môn **đã được người dùng đọc, hiểu và duyệt**, đăng thành website và xuất thành dữ liệu cho AI agent viết content. Mọi tri thức nằm trong `knowledge/` dưới dạng Markdown, liên kết với nhau bằng `[[wikilink]]`.
 
-Nguyên tắc cốt lõi: **AI nghiên cứu và đề xuất, người dùng duyệt, chỉ tri thức đã duyệt mới lên web.** Không bao giờ tự đăng hay tự đổi `status` thành `verified` khi người dùng chưa duyệt.
+Nguyên tắc cốt lõi: **AI nghiên cứu và đề xuất, người dùng duyệt, chỉ tri thức đã duyệt mới lên web.** Không bao giờ tự đăng hay tự đổi `status` thành `verified` khi người dùng chưa duyệt. Bản nháp chỉ hiện ở **Khu duyệt bài** (`/duyet/` trên web): `noindex`, chặn trong `robots.txt`, không vào sitemap, `llms.txt`, `knowledge.json`, tìm kiếm hay đồ thị công khai.
 
-**Người dùng không rành kỹ thuật.** Họ làm việc qua hai nơi: nói chuyện với bạn (Claude) bằng tiếng Việt, và **Bàn làm việc** — trang web chạy trên máy họ (bấm đúp `Mo-Second-Brain.bat` trên Windows / `Mo-Second-Brain.command` trên macOS) để đọc bản nháp, sửa bằng form, bấm **Duyệt & đăng** và **Đưa lên web**. Đừng yêu cầu họ gõ lệnh hay sửa YAML; bạn chạy lệnh thay họ và giải thích kết quả bằng lời thường. Khi cần họ duyệt, chỉ họ mở Bàn làm việc.
+**Người dùng không rành kỹ thuật.** Họ làm việc qua: nói chuyện với bạn (Claude) bằng tiếng Việt, và duyệt bài ở một trong hai nơi:
+
+- **Khu duyệt bài trên web** — `<địa chỉ web>/duyet/` (vd. https://cxtungai.github.io/SecondBrain/duyet/), mở được trên mọi máy và điện thoại. Mỗi bản nháp có nút **✅ Duyệt & đăng**, **💬 Nhờ Claude sửa** (chép sẵn lời nhờ), **✏️ Tự sửa trên GitHub**, **🗑 Bỏ**. Duyệt/Bỏ mở trang tạo issue GitHub có tiêu đề điền sẵn (`Duyệt: <file>`, `Bỏ: <file>`, `Duyệt tất cả bản nháp`). Người dùng bấm **Create**, rồi workflow `.github/workflows/duyet.yml` (chỉ chạy khi chủ repo tạo issue) đăng hoặc bỏ bài, đẩy lên nhánh mặc định, chạy lại web và trả lời trong issue. Người dùng đang dùng web thì chỉ họ tới đây.
+- **Bàn làm việc** — trang chạy trên máy họ (bấm đúp `Mo-Second-Brain.bat` trên Windows / `Mo-Second-Brain.command` trên macOS): đọc bản nháp, sửa bằng form, bấm **Duyệt & đăng** và **Đưa lên web**.
+
+Đừng yêu cầu họ gõ lệnh hay sửa YAML; bạn chạy lệnh thay họ và giải thích kết quả bằng lời thường. Bản nháp làm xong phải được đẩy lên nhánh mặc định thì mới hiện ở Khu duyệt bài.
 
 Site có hai lớp nội dung: **tri thức** (`knowledge/`, nguồn sự thật) và **bài viết SEO/GEO** (`articles/`, lớp trình bày để kéo traffic, dẫn xuất từ tri thức). Xem mục "Bài viết SEO/GEO".
 
@@ -26,6 +31,8 @@ templates/  assets/     Giao diện web (minijinja) + CSS/JS — được nhúng
 cau-hinh.yml            Tên, mô tả, tác giả, miễn trừ, quy tắc cho AI agent
 sb                      Lệnh chạy chương trình cho agent: ./sb <lệnh> (cargo nếu có, không thì tải bản build sẵn)
 Mo-Second-Brain.*       File bấm đúp cho người dùng: tải chương trình lần đầu rồi mở Bàn làm việc
+.github/workflows/      deploy.yml (test + build + GitHub Pages), release.yml (file chạy), duyet.yml (nút duyệt trên web)
+.github/scripts/duyet.sh  Đăng/bỏ bản nháp theo tiêu đề issue (chạy thử được trên máy, xem đầu file)
 .claude/skills/         Skill cho Claude Code: research, publish, connect, seo-article, write-content
 ```
 
@@ -145,9 +152,9 @@ Quy tắc:
 ## Quy trình
 
 1. **Nghiên cứu** (`/research <từ khoá>`): agent tìm nguồn, chấm điểm uy tín, viết bài tổng hợp tiếng Việt có liên kết, lưu vào `knowledge/_inbox/<slug>.md` với `status: draft`, rồi báo cáo cho người dùng.
-2. **Duyệt** (người dùng): trên Bàn làm việc — đọc bản nháp, bấm **Sửa** (form có ô cho từng trường, xem trước ngay), hoặc nhờ bạn sửa bằng lời.
+2. **Duyệt** (người dùng): ở Khu duyệt bài trên web (`/duyet/`) hoặc Bàn làm việc — đọc bản nháp, nhờ bạn sửa bằng lời (nút "Nhờ Claude sửa" chép sẵn câu nhờ có tên file), hoặc tự sửa.
 3. **Đăng**: người dùng bấm **Duyệt & đăng** (hoặc bảo bạn `/publish <file>` → `./sb publish <file>`): chuyển vào thư mục đúng loại, `status: verified`, điền `reviewed`. Sau đó **kết nối**: thêm liên kết hai chiều với ghi chú liên quan và chủ đề trụ cột (`/connect`).
-4. **Đưa lên web**: nút **Đưa lên web** trên Bàn làm việc (git add/commit/push), hoặc bạn commit & push khi người dùng nhờ.
+4. **Đưa lên web**: bấm duyệt ở Khu duyệt bài thì GitHub tự đăng và đưa lên. Trên Bàn làm việc thì bấm nút **Đưa lên web** (git add/commit/push), hoặc bạn commit & push khi người dùng nhờ. Sau khi bài được duyệt trên web, người dùng có thể nhờ bạn "kết nối các bài vừa đăng" (`git pull` trước, rồi `/connect`).
 5. **Kết nối định kỳ** (`/connect`): thêm liên kết còn thiếu, nối ghi chú cô lập, liệt kê tri thức còn thiếu.
 6. **Bài viết SEO/GEO** (`/seo-article <từ khoá>`): agent kiểm tra trùng từ khoá, viết bài nháp vào `articles/` chỉ từ tri thức đã có; người dùng duyệt rồi `/publish articles/<file>.md`.
 7. **Viết content cho kênh khác** (`/write-content <đề bài>`): agent đọc kho và viết bài có trích nguồn (blog ngoài, mạng xã hội, email…).

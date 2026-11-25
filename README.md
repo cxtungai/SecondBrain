@@ -2,9 +2,26 @@
 
 Kho tri thức chuyên môn **đã được bạn đọc, hiểu và duyệt**. Nó vừa là website để tra cứu, vừa là nguồn dữ liệu để AI (Claude…) viết content chính xác, có nguồn.
 
-Bạn không cần biết lập trình: **nói chuyện với Claude** để nghiên cứu, viết, sửa; **bấm nút trên Bàn làm việc** để duyệt và đưa lên web.
+Bạn không cần biết lập trình: **nói chuyện với Claude** để nghiên cứu, viết, sửa; **bấm nút ở Khu duyệt bài trên web** để duyệt và đăng. Không cần cài gì.
 
-## Dùng hằng ngày
+## Dùng hằng ngày (trên web)
+
+```
+ 1. Nhờ Claude        "Nghiên cứu từ khoá: Price action"
+        │              Claude tìm nguồn uy tín, chấm điểm từng nguồn, viết bản nháp, đẩy lên GitHub
+        ▼
+ 2. Khu duyệt bài     mở  <địa chỉ web>/duyet/   (vd. https://cxtungai.github.io/SecondBrain/duyet/)
+        │              bấm tiêu đề để đọc · 💬 Nhờ Claude sửa · ✏️ Tự sửa trên GitHub · 🗑 Bỏ
+        ▼
+ 3. Duyệt & đăng      bấm ✅ Duyệt & đăng → trang GitHub mở ra → bấm nút xanh Create
+                       3–5 phút sau bài lên web; GitHub trả lời kèm link và tự đóng mục đó
+```
+
+- Đã mở Khu duyệt bài một lần thì trình duyệt đó có thêm nút **Chờ duyệt** trên thanh menu của web. Ở chân trang lúc nào cũng có link **Khu duyệt bài**.
+- Bản nháp không hiện trên Google và không vào dữ liệu cho AI. Ai có link vẫn xem được, vì kho GitHub đang công khai. Chỉ chủ kho mới duyệt hay bỏ được bài.
+- Lần đầu bấm Duyệt, GitHub có thể hỏi đăng nhập.
+
+## Dùng trên máy (tuỳ chọn): Bàn làm việc
 
 ```
  1. Nhờ Claude      "Nghiên cứu từ khoá: Price action"

@@ -43,7 +43,7 @@ Tạo file: `./sb new article "<Tiêu đề>" --keyword "<từ khoá>" --based-o
 
 - `./sb check` — không lỗi cho bài này (`based_on` tồn tại, có liên kết về ghi chú gốc, không trùng từ khoá).
 - `./sb seo <slug> --drafts` — sửa các tiêu chí chưa đạt khi hợp lý (không đánh đổi độ chính xác lấy điểm).
-- Xem trước: Bàn làm việc (`./sb mo`) → mục "Chờ bạn duyệt"; hộp "SEO / GEO" bên phải chỉ hiện khi xem trên máy.
+- Xem trước: Khu duyệt bài trên web (`/duyet/`, sau khi đẩy bản nháp lên) hoặc Bàn làm việc (`./sb mo`) → "Chờ bạn duyệt"; hộp "SEO / GEO" chỉ hiện trên Bàn làm việc.
 
 ## 5. Báo cáo cho người dùng
 

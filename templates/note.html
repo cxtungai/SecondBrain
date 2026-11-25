@@ -21,11 +21,13 @@
       {% if note.inbox %}
       <div class="callout callout-info review-bar">
         <div>
-          <strong>Bản nháp chờ bạn duyệt</strong> — chỉ hiện trên máy bạn, chưa lên web.
+          {% if review %}<strong>Bản nháp chờ duyệt</strong> — chưa đăng, chưa kiểm chứng; không hiện trên Google hay trong dữ liệu cho AI.
+          {% else %}<strong>Bản nháp chờ bạn duyệt</strong> — chỉ hiện trên máy bạn, chưa lên web.{% endif %}
           {% if original %}Đây là bản cập nhật cho <a href="{{ original.url }}">{{ original.title }}</a>.{% endif %}
           Đọc kỹ, sửa nếu cần, rồi bấm duyệt.
         </div>
-        {% if edit_url %}
+        {% if review %}{{ m.review_buttons(actions) }}
+        {% elif edit_url %}
         <div class="review-actions">
           <a class="btn" href="{{ edit_url }}">✏️ Sửa</a>
           <button class="btn btn-primary" data-action="publish" data-path="{{ note.path }}" data-status="verified">✅ Duyệt & đăng</button>

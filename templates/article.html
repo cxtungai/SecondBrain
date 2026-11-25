@@ -18,8 +18,9 @@
       <p class="note-summary">{{ a.description }}</p>
       {% if draft %}
       <div class="callout callout-info review-bar">
-        <div><strong>Bài viết nháp</strong> — chỉ hiện trên máy bạn, chưa lên web. Đọc, sửa nếu cần, rồi bấm đăng.</div>
-        {% if edit_url %}
+        <div><strong>Bài viết nháp</strong> — {% if review %}chưa đăng; không hiện trên Google hay trong dữ liệu cho AI.{% else %}chỉ hiện trên máy bạn, chưa lên web.{% endif %} Đọc, sửa nếu cần, rồi bấm đăng.</div>
+        {% if review %}{{ m.review_buttons(actions) }}
+        {% elif edit_url %}
         <div class="review-actions">
           <a class="btn" href="{{ edit_url }}">✏️ Sửa</a>
           <button class="btn btn-primary" data-action="publish" data-path="{{ path }}">✅ Duyệt & đăng</button>

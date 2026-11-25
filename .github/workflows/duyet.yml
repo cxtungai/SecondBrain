@@ -1,0 +1,79 @@
+name: Duyệt bài trên web
+
+# Nút "Duyệt & đăng" / "Bỏ" ở Khu duyệt bài (/duyet/) mở trang tạo issue với tiêu đề điền sẵn.
+# Workflow này chỉ chạy khi CHỦ REPO tạo issue đó: đăng hoặc bỏ bản nháp (.github/scripts/duyet.sh),
+# đẩy lên nhánh mặc định, chạy lại "Build & deploy", rồi trả lời và đóng issue.
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+  pages: read
+
+concurrency:
+  group: duyet-bai
+  cancel-in-progress: false
+
+jobs:
+  duyet:
+    if: >-
+      github.event.issue.author_association == 'OWNER' &&
+      (startsWith(github.event.issue.title, 'Duyệt') || startsWith(github.event.issue.title, 'Bỏ:'))
+    runs-on: ubuntu-latest
+    env:
+      TITLE: ${{ github.event.issue.title }}
+      ISSUE: ${{ github.event.issue.number }}
+      BRANCH: ${{ github.event.repository.default_branch }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - name: Báo đang làm
+        run: gh issue comment "$ISSUE" --body "⏳ Đang xử lý… (khoảng 3–5 phút, xong mình sẽ trả lời ở đây)"
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Build chương trình
+        run: cargo build --release --locked --quiet
+      - name: Địa chỉ web
+        run: |
+          url="$(gh api "repos/$GH_REPO/pages" --jq .html_url 2>/dev/null || true)"
+          if [ -z "$url" ]; then owner="${GH_REPO%%/*}"; url="https://${owner,,}.github.io/${GH_REPO#*/}/"; fi
+          echo "PAGES_URL=${url%/}/" >> "$GITHUB_ENV"
+      - name: Duyệt / bỏ bản nháp
+        id: run
+        env:
+          SB: ./target/release/secondbrain
+          OUT_DIR: ${{ runner.temp }}/duyet
+        run: bash .github/scripts/duyet.sh
+      - name: Đưa lên GitHub và chạy lại web
+        id: push
+        if: steps.run.outputs.changed == 'true'
+        run: |
+          git config user.name "Second Brain (duyệt trên web)"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A knowledge articles
+          git commit -q -F "$RUNNER_TEMP/duyet/commit-msg"
+          pushed=false
+          for i in 1 2 3; do
+            if git push -q origin "HEAD:$BRANCH"; then pushed=true; break; fi
+            git pull -q --rebase origin "$BRANCH" || exit 1
+          done
+          [ "$pushed" = true ] || exit 1
+          gh workflow run deploy.yml --ref "$BRANCH"
+      - name: Trả lời và đóng
+        if: always()
+        env:
+          PUSH: ${{ steps.push.outcome }}
+        run: |
+          f="$RUNNER_TEMP/duyet/comment.md"
+          if [ "$PUSH" = "failure" ] || [ ! -s "$f" ]; then
+            gh issue comment "$ISSUE" --body "❌ Có lỗi nên bài **chưa** được đăng. Nhờ Claude: “kiểm tra lần duyệt bài #$ISSUE bị lỗi”."
+          else
+            gh issue comment "$ISSUE" --body-file "$f"
+          fi
+          gh issue close "$ISSUE"

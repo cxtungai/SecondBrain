@@ -56,7 +56,16 @@ const TEMPLATES: &[(&str, &str)] = &[
     ("404.html", include_str!("../templates/404.html")),
     ("desk.html", include_str!("../templates/desk.html")),
     ("editor.html", include_str!("../templates/editor.html")),
+    ("review.html", include_str!("../templates/review.html")),
 ];
+
+/// Khu duyệt bài trên web (/duyet/): dựng trang cho bản nháp, nút bấm mở issue GitHub để duyệt/bỏ.
+pub struct Review {
+    /// "chủ/tên-repo" trên GitHub — không có thì ẩn các nút cần GitHub.
+    pub repo: Option<String>,
+    /// Nhánh chứa bản chính (để mở trình sửa của GitHub).
+    pub branch: Option<String>,
+}
 
 pub struct Site {
     pub data: Loaded,
@@ -66,6 +75,8 @@ pub struct Site {
     pub site_url: Option<String>,
     /// Chạy trên máy (Bàn làm việc): hiện bản nháp, gợi ý SEO, tự tải lại.
     pub dev: bool,
+    /// Có giá trị khi đây là bản dựng cho Khu duyệt bài (dữ liệu gồm bản nháp).
+    pub review: Option<Review>,
     env: Environment<'static>,
     today: String,
 }
@@ -121,7 +132,25 @@ impl Site {
         env.add_global("dev", dev);
         let pending = data.kb.inbox_idx.len() + data.articles.drafts().len();
         env.add_global("pending", pending);
-        Site { data, base, site_url: site_url.map(|s| s.trim_end_matches('/').to_string()), dev, env, today: today() }
+        Site { data, base, site_url: site_url.map(|s| s.trim_end_matches('/').to_string()), dev, review: None, env, today: today() }
+    }
+
+    /// Biến site (đã nạp cả bản nháp) thành bản dựng cho Khu duyệt bài: bản nháp nằm dưới /duyet/,
+    /// trang nào cũng noindex, nút duyệt mở issue GitHub (xem .github/workflows/duyet.yml).
+    pub fn into_review(mut self, review: Review) -> Site {
+        self.env.add_global("review", true);
+        self.env.add_global("review_pending", self.pending_count());
+        self.review = Some(review);
+        self
+    }
+
+    /// Số bản nháp chờ duyệt (ghi chú trong _inbox + bài viết nháp) — hiện ở nút "Chờ duyệt" trên web.
+    pub fn set_review_pending(&mut self, pending: usize) {
+        self.env.add_global("review_pending", pending);
+    }
+
+    fn pending_count(&self) -> usize {
+        self.data.kb.inbox_idx.len() + self.data.articles.drafts().len()
     }
 
     pub fn kb(&self) -> &Kb {
@@ -141,13 +170,27 @@ impl Site {
     }
 
     pub fn note_url(&self, slug: &str) -> String {
+        if self.review.is_some() && self.kb().get(slug).is_some_and(|n| n.inbox) {
+            return self.url(&format!("duyet/notes/{slug}/"));
+        }
         self.url(&format!("notes/{slug}/"))
     }
     fn article_url(&self, slug: &str) -> String {
+        if self.review.is_some() && self.data.articles.get(slug).is_some_and(|a| !a.is_published()) {
+            return self.url(&format!("duyet/bai-viet/{slug}/"));
+        }
         self.url(&format!("bai-viet/{slug}/"))
     }
     fn tag_url(&self, tag: &str) -> String {
         let s = slugify(tag);
+        // Khu duyệt bài: tag chỉ có ở bản nháp thì chưa có trang trên web — dẫn về danh sách chờ duyệt.
+        if self.review.is_some() {
+            let kb = self.kb();
+            let public = kb.tags.iter().find(|t| t.slug == s).is_some_and(|t| t.notes.iter().any(|n| kb.get(n).is_some_and(|x| !x.inbox)));
+            if !public {
+                return self.url("duyet/");
+            }
+        }
         self.url(&format!("tags/{}/", if s.is_empty() { "tag".into() } else { s }))
     }
     fn gap_href(&self, target: &str) -> String {
@@ -246,7 +289,7 @@ impl Site {
     }
 
     fn graph_data(&self, focus: Option<&str>) -> String {
-        let notes: Vec<&Note> = if self.dev { self.kb().all.iter().collect() } else { self.kb().notes() };
+        let notes: Vec<&Note> = if self.dev || self.review.is_some() { self.kb().all.iter().collect() } else { self.kb().notes() };
         let notes: Vec<&Note> = match focus.and_then(|f| self.kb().get(f)) {
             Some(center) => {
                 let ids: HashSet<&str> = std::iter::once(center.slug.as_str())
@@ -290,6 +333,14 @@ impl Site {
         r
     }
 
+    /// Đường dẫn của Khu duyệt bài (chỉ dùng với site đã `into_review`).
+    pub fn review_routes(&self) -> Vec<String> {
+        let mut r = vec!["duyet/".to_string()];
+        r.extend(self.kb().inbox().iter().map(|n| format!("duyet/notes/{}/", n.slug)));
+        r.extend(self.data.articles.drafts().iter().map(|a| format!("duyet/bai-viet/{}/", a.slug)));
+        r
+    }
+
     pub fn asset(&self, route: &str) -> Option<Page> {
         ASSETS.iter().find(|(p, _, _)| *p == route).map(|(_, ct, body)| Page { status: 200, content_type: ct, body: body.to_vec() })
     }
@@ -320,6 +371,13 @@ impl Site {
             r => {
                 let parts: Vec<&str> = r.trim_end_matches('/').split('/').collect();
                 match (parts.as_slice(), r.ends_with('/')) {
+                    (["duyet"], true) if self.review.is_some() => Page::html(self.review_index()),
+                    (["duyet", "notes", slug], true) if self.review.is_some() => {
+                        Page::html(self.note_page(self.kb().get(slug).filter(|n| n.inbox)?))
+                    }
+                    (["duyet", "bai-viet", slug], true) if self.review.is_some() => {
+                        Page::html(self.article_page(self.data.articles.get(slug).filter(|a| !a.is_published())?))
+                    }
                     (["notes", file], false) if file.ends_with(".md") => {
                         let n = self.kb().get(file.trim_end_matches(".md")).filter(|n| !n.inbox)?;
                         Page::text("text/markdown; charset=utf-8", self.note_markdown(n))
@@ -478,6 +536,7 @@ impl Site {
             "graph": if note.links.is_empty() && note.backlinks.is_empty() { Json::Null } else { json!(self.graph_data(Some(&note.slug))) },
             "hints": if self.dev { json!(seo::note_hints(note, &self.today)) } else { Json::Null },
             "edit_url": if self.dev { json!(self.url(&format!("ban-lam-viec/sua/?f={}", note.path))) } else { Json::Null },
+            "actions": if note.inbox { self.review_actions(&note.path, &note.title) } else { Json::Null },
         }))
     }
 
@@ -530,6 +589,69 @@ impl Site {
             "sources": basis.iter().map(|n| n.sources.len()).sum::<usize>(), "avg_cred": avg.map(|s| cred_view(Some(s), false, None)),
             "hints": if self.dev { json!(seo::article_hints(a, kb)) } else { Json::Null }, "hints_extra": extra,
             "edit_url": if self.dev { json!(self.url(&format!("ban-lam-viec/sua/?f={}", a.path))) } else { Json::Null },
+            "actions": if draft { self.review_actions(&a.path, &a.title) } else { Json::Null },
+        }))
+    }
+
+    // ---------- Khu duyệt bài trên web ----------
+
+    /// Nút cho một bản nháp ở Khu duyệt bài. Duyệt/Bỏ mở trang tạo issue GitHub có tiêu đề định sẵn;
+    /// workflow duyet.yml đọc tiêu đề đó (chỉ khi chủ repo tạo) để đăng hoặc bỏ bài.
+    fn review_actions(&self, path: &str, title: &str) -> Json {
+        let Some(r) = &self.review else { return Json::Null };
+        let prompt = format!("Sửa bản nháp \"{title}\" ({path}): ");
+        let Some(repo) = &r.repo else { return json!({"path": path, "prompt": prompt}) };
+        let approve_body = format!(
+            "Bấm nút **Create** (Tạo) màu xanh bên dưới để đăng bài **{title}** (`{path}`).\n\n\
+             GitHub sẽ tự đăng bài, đưa lên web (khoảng 3–5 phút) rồi trả lời và đóng mục này. Không cần làm gì thêm."
+        );
+        let remove_body = format!(
+            "Bấm nút **Create** (Tạo) màu xanh bên dưới để bỏ bản nháp **{title}** (`{path}`).\n\n\
+             Bản nháp bị xoá khỏi danh sách chờ duyệt; vẫn khôi phục được từ lịch sử GitHub nếu cần."
+        );
+        json!({
+            "path": path,
+            "prompt": prompt,
+            "approve": issue_url(repo, &format!("Duyệt: {path}"), &approve_body),
+            "remove": issue_url(repo, &format!("Bỏ: {path}"), &remove_body),
+            "edit": r.branch.as_ref().map(|b| format!("https://github.com/{repo}/edit/{}/{path}", url_encode_path(b))),
+        })
+    }
+
+    fn review_index(&self) -> String {
+        let kb = self.kb();
+        let card = |mut c: Json, path: &str, title: &str, errors: Vec<String>| {
+            c["actions"] = self.review_actions(path, title);
+            c["errors"] = json!(errors);
+            c
+        };
+        let errors_for = |path: &str| -> Vec<String> {
+            kb.issues.iter().chain(self.data.articles.issues.iter()).filter(|i| i.path == path && i.level == Level::Error).map(|i| i.message.clone()).collect()
+        };
+        let notes: Vec<Json> = kb.inbox().iter().map(|n| card(self.note_card(n), &n.path, &n.title, errors_for(&n.path))).collect();
+        let articles: Vec<Json> = self.data.articles.drafts().iter().map(|a| card(self.article_card(a), &a.path, &a.title, errors_for(&a.path))).collect();
+        // Bản nháp lỗi nặng tới mức không đọc được (không có trong danh sách trên).
+        let listed: HashSet<&str> = kb.inbox().iter().map(|n| n.path.as_str()).chain(self.data.articles.drafts().iter().map(|a| a.path.as_str())).collect();
+        let mut broken: Vec<Json> = vec![];
+        for i in kb.issues.iter().chain(self.data.articles.issues.iter()) {
+            if i.draft && i.level == Level::Error && !listed.contains(i.path.as_str()) {
+                broken.push(json!({"path": i.path, "message": i.message, "prompt": format!("Sửa lỗi bản nháp {}: {}", i.path, i.message)}));
+            }
+        }
+        let repo = self.review.as_ref().and_then(|r| r.repo.clone());
+        let total = notes.len() + articles.len();
+        let approve_all = repo.as_ref().filter(|_| total > 1).map(|repo| {
+            issue_url(repo, "Duyệt tất cả bản nháp", &format!(
+                "Bấm nút **Create** (Tạo) màu xanh bên dưới để đăng **tất cả {total} bản nháp** đang chờ duyệt.\n\n\
+                 GitHub sẽ tự đăng (ghi chú trước, bài viết sau), đưa lên web rồi trả lời và đóng mục này."
+            ))
+        });
+        self.render_template("review.html", json!({
+            "title": "Khu duyệt bài", "description": "Bản nháp chờ duyệt — chưa kiểm chứng.", "section": "review", "noindex": true,
+            "notes": notes, "articles": articles, "broken": broken, "total": total,
+            "approve_all": approve_all,
+            "repo_url": repo.as_ref().map(|r| format!("https://github.com/{r}")),
+            "issues_url": repo.as_ref().map(|r| format!("https://github.com/{r}/issues?q=is%3Aissue")),
         }))
     }
 
@@ -911,10 +1033,89 @@ impl Site {
 
     fn robots(&self) -> String {
         format!(
-            "User-agent: *\nAllow: /\nDisallow: {}\n\nSitemap: {}\n# Chỉ mục cho AI agent: {}\n",
+            "User-agent: *\nAllow: /\nDisallow: {}\nDisallow: {}\n\nSitemap: {}\n# Chỉ mục cho AI agent: {}\n",
             self.url("gaps/"),
+            self.url("duyet/"),
             self.abs("sitemap.xml"),
             self.abs("llms.txt")
         )
+    }
+}
+
+/// Mã hoá phần truy vấn URL (giữ chữ, số và - _ . ~).
+fn url_encode(s: &str) -> String {
+    let mut out = String::with_capacity(s.len() * 3);
+    for b in s.bytes() {
+        match b {
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => out.push(b as char),
+            _ => out.push_str(&format!("%{b:02X}")),
+        }
+    }
+    out
+}
+
+/// Như `url_encode` nhưng giữ "/" (cho tên nhánh trong đường dẫn).
+fn url_encode_path(s: &str) -> String {
+    s.split('/').map(url_encode).collect::<Vec<_>>().join("/")
+}
+
+/// Trang tạo issue GitHub với tiêu đề và nội dung điền sẵn.
+fn issue_url(repo: &str, title: &str, body: &str) -> String {
+    format!("https://github.com/{repo}/issues/new?title={}&body={}", url_encode(title), url_encode(body))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::articles::Articles;
+    use crate::config::Config;
+    use crate::kb::FileEntry;
+
+    fn load(include_drafts: bool) -> Loaded {
+        let files = vec![
+            FileEntry { path: "knowledge/topics/chu-de.md".into(), raw: "---\ntitle: Chủ đề\ntype: topic\nsummary: Chủ đề mẫu.\nstatus: verified\ncreated: 2026-01-01\n---\nXem [[nhap]].\n".into() },
+            FileEntry { path: "knowledge/_inbox/nhap.md".into(), raw: "---\ntitle: Bản nháp\ntype: concept\nsummary: Bản nháp mẫu.\ntags: [chi-nhap]\nstatus: draft\ncreated: 2026-01-01\n---\nBản nháp là gì. Xem [[chu-de]].\n".into() },
+        ];
+        let kb = Kb::build(&files, include_drafts);
+        let articles = Articles::build(&[], &kb, include_drafts);
+        Loaded { config: Config::default(), config_error: None, kb, articles }
+    }
+
+    fn review_site() -> Site {
+        Site::new(load(true), "/Repo", None, false).into_review(Review { repo: Some("chu/kho".into()), branch: Some("main".into()) })
+    }
+
+    #[test]
+    fn web_cong_khai_khong_co_ban_nhap() {
+        let site = Site::new(load(false), "/Repo", None, false);
+        assert!(site.routes().iter().all(|r| !r.contains("nhap") && !r.starts_with("duyet")));
+        let robots = site.render("robots.txt").unwrap();
+        assert!(String::from_utf8(robots.body).unwrap().contains("Disallow: /Repo/duyet/"));
+        let llms = String::from_utf8(site.render("llms-full.txt").unwrap().body).unwrap();
+        assert!(!llms.contains("Bản nháp mẫu"));
+    }
+
+    #[test]
+    fn khu_duyet_bai_dan_toi_ban_nhap() {
+        let site = review_site();
+        assert_eq!(site.review_routes(), vec!["duyet/".to_string(), "duyet/notes/nhap/".to_string()]);
+        assert_eq!(site.note_url("nhap"), "/Repo/duyet/notes/nhap/");
+        assert_eq!(site.note_url("chu-de"), "/Repo/notes/chu-de/");
+        // Tag chỉ có ở bản nháp chưa có trang công khai.
+        assert_eq!(site.tag_url("chi-nhap"), "/Repo/duyet/");
+        let page = String::from_utf8(site.render("duyet/notes/nhap/").unwrap().body).unwrap();
+        assert!(page.contains("noindex"));
+        assert!(page.contains("https://github.com/chu/kho/issues/new?title=Duy%E1%BB%87t%3A%20knowledge%2F_inbox%2Fnhap.md"));
+        assert!(page.contains("https://github.com/chu/kho/edit/main/knowledge/_inbox/nhap.md"));
+        let index = String::from_utf8(site.render("duyet/").unwrap().body).unwrap();
+        assert!(index.contains("/Repo/duyet/notes/nhap/"));
+        // Ghi chú đã đăng không có trang trong Khu duyệt bài.
+        assert!(site.render("duyet/notes/chu-de/").is_none());
+    }
+
+    #[test]
+    fn ma_hoa_url() {
+        assert_eq!(url_encode("Bỏ: a/b.md"), "B%E1%BB%8F%3A%20a%2Fb.md");
+        assert_eq!(url_encode_path("claude/nhanh-1"), "claude/nhanh-1");
     }
 }

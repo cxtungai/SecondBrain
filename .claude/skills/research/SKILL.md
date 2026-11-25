@@ -62,9 +62,9 @@ Nguồn điểm 1: không dùng làm căn cứ cho khẳng định. Nếu cần 
 
 Ngắn gọn, tiếng Việt:
 
-1. File bản nháp (và cách xem trước: Bàn làm việc — người dùng bấm đúp **Mo-Second-Brain**, hoặc `./sb mo`).
+1. File bản nháp. Commit & push bản nháp lên nhánh mặc định (không cần hỏi, xem CLAUDE.md) rồi đưa link **Khu duyệt bài**: `<địa chỉ web>/duyet/` (hiện sau 2–3 phút).
 2. 3–5 ý chính của bài.
 3. Bảng nguồn: `# | Nguồn | Loại | Điểm | Lý do`.
 4. Những điểm còn tranh cãi / chưa chắc chắn mà người dùng nên kiểm tra kỹ.
 5. Liên kết tới ghi chú sẵn có, và các ghi chú mới nên nghiên cứu tiếp.
-6. Bước tiếp theo (nói bằng lời thường): mở **Bàn làm việc** (bấm đúp Mo-Second-Brain) → mục "Chờ bạn duyệt" → đọc, bấm **Sửa** nếu cần, rồi **Duyệt & đăng**; hoặc bảo Claude sửa chỗ nào chưa ổn.
+6. Bước tiếp theo (nói bằng lời thường): mở **Khu duyệt bài** trên web → bấm tiêu đề để đọc → **✅ Duyệt & đăng** (trên GitHub bấm nút xanh **Create**), hoặc **💬 Nhờ Claude sửa** chỗ nào chưa ổn. Nếu họ chạy Bàn làm việc trên máy thì làm tương tự ở mục "Chờ bạn duyệt".

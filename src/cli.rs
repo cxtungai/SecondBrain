@@ -7,7 +7,7 @@ use crate::publish;
 use crate::schema::{self, NOTE_TYPES};
 use crate::seo;
 use crate::server;
-use crate::site::{Site, ASSETS};
+use crate::site::{Review, Site, ASSETS};
 use crate::text::{slugify, today};
 use serde_json::json;
 use std::collections::HashMap;
@@ -263,29 +263,83 @@ fn build(project: &Project, args: &Args, c: &C) -> i32 {
     let site_url = std::env::var("SITE_URL").ok().filter(|s| !s.is_empty());
     let base = std::env::var("BASE_PATH").unwrap_or_default();
     let out = project.abs(args.get("out").unwrap_or("dist"));
-    let site = Site::new(project.load(false), &base, site_url, false);
+    // Khu duyệt bài (/duyet/): bản nháp, noindex, nút duyệt qua issue GitHub.
+    let (repo, branch) = github_repo(project);
+    let review = Site::new(project.load(true), &base, site_url.clone(), false).into_review(Review { repo, branch });
+    let pending = review.kb().inbox_idx.len() + review.data.articles.drafts().len();
+    let mut site = Site::new(project.load(false), &base, site_url, false);
+    site.set_review_pending(pending);
     if out.exists() {
         let _ = std::fs::remove_dir_all(&out);
     }
     let mut pages = 0;
-    for route in site.routes() {
-        let Some(page) = site.render(&route) else { continue };
-        let file = if route.is_empty() || route.ends_with('/') { out.join(&route).join("index.html") } else { out.join(&route) };
-        if let Some(dir) = file.parent() {
-            std::fs::create_dir_all(dir).expect("tạo thư mục");
+    let mut write = |s: &Site, routes: Vec<String>| {
+        for route in routes {
+            let Some(page) = s.render(&route) else { continue };
+            let file = if route.is_empty() || route.ends_with('/') { out.join(&route).join("index.html") } else { out.join(&route) };
+            if let Some(dir) = file.parent() {
+                std::fs::create_dir_all(dir).expect("tạo thư mục");
+            }
+            std::fs::write(&file, &page.body).expect("ghi file");
+            if page.content_type.starts_with("text/html") {
+                pages += 1;
+            }
         }
-        std::fs::write(&file, &page.body).expect("ghi file");
-        if page.content_type.starts_with("text/html") {
-            pages += 1;
-        }
-    }
+    };
+    write(&site, site.routes());
+    write(&review, review.review_routes());
     for (path, _, body) in ASSETS {
         let file = out.join(path);
         std::fs::create_dir_all(file.parent().unwrap()).expect("tạo thư mục");
         std::fs::write(file, body).expect("ghi file");
     }
     println!("{}", c.green(&format!("✓ Đã xuất {pages} trang vào {}", project.rel(&out))));
+    if pending > 0 {
+        println!("{}", c.dim(&format!("  gồm Khu duyệt bài /duyet/ với {pending} bản nháp (noindex, không vào sitemap/llms)")));
+    }
     0
+}
+
+/// Repo GitHub ("chủ/tên") và nhánh chính, cho nút duyệt trên web.
+/// Trên GitHub Actions lấy từ GITHUB_REPOSITORY / SB_BRANCH; trên máy đoán từ `git remote` và nhánh hiện tại.
+fn github_repo(project: &Project) -> (Option<String>, Option<String>) {
+    let env = |k: &str| std::env::var(k).ok().filter(|s| !s.trim().is_empty());
+    let git = |args: &[&str]| -> Option<String> {
+        let out = std::process::Command::new("git").args(args).current_dir(project.abs("")).output().ok()?;
+        out.status.success().then(|| String::from_utf8_lossy(&out.stdout).trim().to_string()).filter(|s| !s.is_empty())
+    };
+    let repo = env("GITHUB_REPOSITORY").or_else(|| git(&["remote", "get-url", "origin"]).and_then(|u| repo_from_remote(&u)));
+    let branch = env("SB_BRANCH").or_else(|| env("GITHUB_REF_NAME")).or_else(|| git(&["rev-parse", "--abbrev-ref", "HEAD"])).filter(|b| b != "HEAD");
+    (repo, branch)
+}
+
+/// "https://github.com/a/b.git", "git@github.com:a/b.git", ".../git/a/b" → "a/b".
+fn repo_from_remote(url: &str) -> Option<String> {
+    let url = url.trim().trim_end_matches('/').trim_end_matches(".git");
+    let rest = if let Some(i) = url.find("github.com") {
+        url[i + "github.com".len()..].trim_start_matches([':', '/'])
+    } else if let Some(i) = url.find("/git/") {
+        &url[i + "/git/".len()..]
+    } else {
+        return None;
+    };
+    let parts: Vec<&str> = rest.split('/').filter(|p| !p.is_empty()).collect();
+    let ok = |p: &str| !p.is_empty() && p.chars().all(|c| c.is_ascii_alphanumeric() || "-_.".contains(c));
+    (parts.len() == 2 && ok(parts[0]) && ok(parts[1])).then(|| format!("{}/{}", parts[0], parts[1]))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::repo_from_remote;
+
+    #[test]
+    fn doan_repo_tu_remote() {
+        assert_eq!(repo_from_remote("https://github.com/cxtungai/SecondBrain.git").as_deref(), Some("cxtungai/SecondBrain"));
+        assert_eq!(repo_from_remote("git@github.com:cxtungai/SecondBrain.git").as_deref(), Some("cxtungai/SecondBrain"));
+        assert_eq!(repo_from_remote("http://proxy@127.0.0.1:1234/git/cxtungai/SecondBrain").as_deref(), Some("cxtungai/SecondBrain"));
+        assert_eq!(repo_from_remote("https://example.com/a/b"), None);
+        assert_eq!(repo_from_remote("https://github.com/a/b/c"), None);
+    }
 }
 
 // ---------- new ----------

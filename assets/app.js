@@ -29,3 +29,35 @@ if (document.body.dataset.dev && !document.body.dataset.noReload) {
   };
   poll();
 }
+
+// Nút chép một đoạn chữ có sẵn (vd. lời nhờ Claude sửa bản nháp).
+document.querySelectorAll('[data-copy-text]').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const original = btn.textContent;
+    try {
+      await navigator.clipboard.writeText(btn.dataset.copyText);
+      btn.textContent = btn.dataset.copied || 'Đã chép';
+    } catch {
+      window.prompt('Chép đoạn này rồi dán vào Claude:', btn.dataset.copyText);
+    }
+    setTimeout(() => (btn.textContent = original), 2500);
+  });
+});
+
+// Khu duyệt bài: ai đã mở /duyet/ trên trình duyệt này thì thấy nút "Chờ duyệt" trên mọi trang.
+try {
+  if (location.pathname.includes('/duyet/')) localStorage.setItem('sb-reviewer', '1');
+  if (localStorage.getItem('sb-reviewer') === '1') {
+    document.querySelectorAll('[data-reviewer-link]').forEach((el) => (el.hidden = false));
+  }
+} catch {
+  /* trình duyệt chặn bộ nhớ — nút vẫn có ở chân trang */
+}
+
+// Bấm "Hướng dẫn chi tiết" thì mở phần hướng dẫn đang thu gọn.
+document.querySelectorAll('a[href="#cach-duyet"]').forEach((a) =>
+  a.addEventListener('click', () => {
+    const d = document.getElementById('cach-duyet');
+    if (d) d.open = true;
+  })
+);

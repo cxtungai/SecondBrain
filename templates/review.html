@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+{% import "macros.html" as m %}
+<section class="page-head">
+  <h1>Khu duyệt bài</h1>
+  <p class="lead">Bản nháp do Claude nghiên cứu, chờ bạn đọc và duyệt. Chỉ bài bạn duyệt mới lên phần chính của web.</p>
+  <p class="review-quick">Đọc bài → bấm <b>✅ Duyệt & đăng</b> → trên GitHub bấm nút xanh <b>Create</b> → 3–5 phút sau bài lên web. <a href="#cach-duyet">Hướng dẫn chi tiết</a></p>
+</section>
+
+
+{% if broken %}
+<section class="card review-broken">
+  <h2>⚠️ Bản nháp bị lỗi ({{ broken|length }})</h2>
+  <p class="stat-line">Các file này lỗi nên chưa hiển thị được. Bấm "Nhờ Claude sửa" rồi dán vào Claude.</p>
+  <ul class="review-list">
+    {% for b in broken %}
+    <li class="review-item">
+      <div><code>{{ b.path }}</code><p class="callout callout-bad">{{ b.message }}</p></div>
+      <div class="review-actions"><button type="button" class="btn" data-copy-text="{{ b.prompt }}" data-copied="Đã chép — dán vào Claude">💬 Nhờ Claude sửa</button></div>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% if not total %}
+<div class="card">
+  <h2>Không có bản nháp nào đang chờ 🎉</h2>
+  <p>Muốn có bài mới, nhờ Claude: <em>"nghiên cứu Price action"</em> hoặc <em>"viết bài SEO về …"</em>. Bản nháp sẽ hiện ở đây.</p>
+</div>
+{% else %}
+<div class="review-summary">
+  <p><strong>{{ total }}</strong> bản nháp chờ duyệt.</p>
+  {% if approve_all %}<a class="btn" href="{{ approve_all }}" target="_blank" rel="noopener">✅ Duyệt tất cả ({{ total }})</a>{% endif %}
+</div>
+
+{% if notes %}
+<section>
+  <h2>Ghi chú tri thức ({{ notes|length }})</h2>
+  <ul class="review-list">
+    {% for n in notes %}
+    <li class="review-item" data-type="{{ n.type }}">
+      <div class="review-main">
+        <div class="meta-row">
+          {{ m.type_badge(n, false) }}
+          {% if n.rated %}{{ m.cred(n.cred) }}{% endif %}
+          <span>Cập nhật {{ n.updated }}</span>
+        </div>
+        <h3><a href="{{ n.url }}">{{ n.title }}</a></h3>
+        <p>{{ n.summary }}</p>
+        {% for e in n.errors %}<p class="callout callout-bad">Lỗi: {{ e }} — nhờ Claude sửa trước khi duyệt.</p>{% endfor %}
+      </div>
+      {{ m.review_buttons(n.actions, true) }}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% if articles %}
+<section>
+  <h2>Bài viết SEO/GEO ({{ articles|length }})</h2>
+  <p class="stat-line">Bài viết chỉ đăng được khi các ghi chú gốc của nó đã được duyệt.</p>
+  <ul class="review-list">
+    {% for a in articles %}
+    <li class="review-item" data-type="article">
+      <div class="review-main">
+        <div class="meta-row"><span class="badge badge-type">Bài viết · {{ a.intent_label }}</span><span>Cập nhật {{ a.updated }}</span></div>
+        <h3><a href="{{ a.url }}">{{ a.title }}</a></h3>
+        <p>{{ a.description }}</p>
+        {% if a.notes %}<p class="stat-line">Dựa trên: {{ a.notes|join(' · ') }}</p>{% endif %}
+        {% for e in a.errors %}<p class="callout callout-bad">Lỗi: {{ e }} — nhờ Claude sửa trước khi duyệt.</p>{% endfor %}
+      </div>
+      {{ m.review_buttons(a.actions, true) }}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endif %}
+
+<details class="card review-guide" id="cach-duyet">
+  <summary><h2>Cách duyệt — hướng dẫn chi tiết</h2></summary>
+  <ol>
+    <li><strong>Đọc:</strong> bấm vào tiêu đề để mở bản nháp.</li>
+    <li><strong>Ổn rồi:</strong> bấm <b>✅ Duyệt & đăng</b>. Trang GitHub mở ra với nội dung điền sẵn, bạn chỉ cần bấm nút xanh <b>Create</b> (Tạo). Lần đầu GitHub có thể hỏi đăng nhập.</li>
+    <li><strong>Chờ 3–5 phút:</strong> GitHub tự đăng bài, cập nhật web, rồi trả lời kèm đường link và tự đóng mục đó.</li>
+    <li><strong>Muốn sửa:</strong> bấm <b>💬 Nhờ Claude sửa</b> để chép sẵn lời nhờ, dán vào Claude và ghi điều muốn sửa. Sửa nhanh vài chữ thì dùng <b>✏️ Tự sửa trên GitHub</b>.</li>
+  </ol>
+  <p class="stat-line">Trang này không hiện trên Google và không có trong dữ liệu cho AI. Ai có đường link vẫn mở xem được, nhưng chỉ chủ kho trên GitHub mới duyệt hay bỏ được bài.{% if issues_url %} <a href="{{ issues_url }}" target="_blank" rel="noopener">Xem các lần duyệt gần đây</a>.{% endif %}</p>
+</details>
+{% endblock %}
