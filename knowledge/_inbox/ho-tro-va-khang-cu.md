@@ -24,6 +24,14 @@ sources:
     credibility: 4
     credibility_note: Báo cáo nghiên cứu của Fed New York dựa trên sổ lệnh thật của một ngân hàng ngoại hối lớn; là bản báo cáo nội bộ, chưa phải bản đăng tạp chí có bình duyệt.
     accessed: 2026-11-25
+  - title: "Price floors and ceilings: Areas of support and resistance in the markets"
+    url: https://www.britannica.com/money/what-are-support-resistance
+    author: Karl Montevirgen (kiểm chứng bởi Jennifer Agee)
+    publisher: Britannica Money (Encyclopædia Britannica)
+    kind: education
+    credibility: 3
+    credibility_note: Trang kiến thức có biên tập và người kiểm chứng ghi tên, không bán sản phẩm giao dịch; mô tả cách hiểu phổ biến, không đưa bằng chứng thống kê.
+    accessed: 2026-11-25
   - title: "Support and resistance"
     url: https://en.wikipedia.org/wiki/Support_and_resistance
     publisher: Wikipedia
@@ -41,7 +49,7 @@ research:
 
 ## Định nghĩa
 
-**Hỗ trợ** (support) là mức hoặc vùng giá mà tại đó lực mua thường đủ mạnh để chặn đà giảm, ít nhất là tạm thời. **Kháng cự** (resistance) là điều ngược lại: vùng giá nơi lực bán thường đủ mạnh để chặn đà tăng (Nguồn [1]). Khi rà các sách hướng dẫn phân tích kỹ thuật, Osler nhận thấy giới phân tích gần như thống nhất về định nghĩa này (Nguồn [1]).
+**Hỗ trợ** (support) là mức hoặc vùng giá mà tại đó lực mua thường đủ mạnh để chặn đà giảm, ít nhất là tạm thời. **Kháng cự** (resistance) là điều ngược lại: vùng giá nơi lực bán thường đủ mạnh để chặn đà tăng (Nguồn [1][3]). Khi rà các sách hướng dẫn phân tích kỹ thuật, Osler nhận thấy giới phân tích gần như thống nhất về định nghĩa này (Nguồn [1]).
 
 ## Giải thích
 
@@ -79,11 +87,11 @@ Trong một nghiên cứu tiếp theo, Osler xem sổ lệnh của một ngân h
 - **Lệnh chốt lời** (take-profit) dồn mạnh đúng tại các số tròn. Khối lệnh này có xu hướng làm giá "bật lại", nên giá hay đảo chiều tại hỗ trợ/kháng cự.
 - **Lệnh cắt lỗ mua** thường nằm ngay trên số tròn, **lệnh cắt lỗ bán** ngay dưới số tròn. Khi giá vượt qua số tròn, các lệnh cắt lỗ này được khớp và đẩy giá đi tiếp, nên giá hay chạy mạnh sau khi phá vỡ.
 
-Đây là một cách giải thích bằng dòng lệnh. Osler cũng nêu các khả năng khác, như lời tiên tri tự ứng nghiệm: nhiều người cùng tin vào một mức nên cùng hành động tại mức đó (Nguồn [1]).
+Đây là một cách giải thích bằng dòng lệnh. Osler cũng nêu các khả năng khác, như lời tiên tri tự ứng nghiệm: nhiều người cùng tin vào một mức nên cùng hành động tại mức đó (Nguồn [1]). Britannica cũng mô tả hỗ trợ – kháng cự chủ yếu dựa vào tâm lý và kỳ vọng chung của thị trường. Theo họ, tác dụng đó chỉ mạnh trong ngắn hạn; về lâu dài, yếu tố cơ bản của tài sản thường lấn át (Nguồn [3]).
 
 ### Kháng cự bị phá thành hỗ trợ
 
-Người giao dịch thường tin rằng một kháng cự khi bị phá vỡ sẽ trở thành hỗ trợ, và ngược lại (Nguồn [3]). Đây là **quan niệm phổ biến**. Các nguồn đã đọc chưa kiểm chứng riêng điều này.
+Người giao dịch thường tin rằng một kháng cự khi bị phá vỡ sẽ trở thành hỗ trợ, và ngược lại (Nguồn [4]). Đây là **quan niệm phổ biến**. Các nguồn đã đọc chưa kiểm chứng riêng điều này.
 
 ## Ví dụ
 
@@ -112,7 +120,11 @@ Với tỷ giá trong ngày, nghiên cứu của Fed New York cho thấy các m�
 
 ### Khi giá phá vỡ kháng cự thì chuyện gì thường xảy ra?
 
-Theo nghiên cứu sổ lệnh của Osler, lệnh cắt lỗ mua thường nằm ngay trên số tròn. Khi giá vượt qua, các lệnh này được khớp và đẩy giá lên nhanh hơn (Nguồn [2]). Nhiều người giao dịch còn tin rằng kháng cự cũ sẽ thành hỗ trợ mới, nhưng đây mới là quan niệm phổ biến (Nguồn [3]).
+Theo nghiên cứu sổ lệnh của Osler, lệnh cắt lỗ mua thường nằm ngay trên số tròn. Khi giá vượt qua, các lệnh này được khớp và đẩy giá lên nhanh hơn (Nguồn [2]). Nhiều người giao dịch còn tin rằng kháng cự cũ sẽ thành hỗ trợ mới, nhưng đây mới là quan niệm phổ biến (Nguồn [4]).
+
+### Hỗ trợ và kháng cự có tồn tại mãi không?
+
+Không. Britannica gọi chúng là "sàn và trần có điều kiện": sớm muộn giá cũng sẽ xuyên qua khi hoàn cảnh kinh tế thay đổi (Nguồn [3]). Nghiên cứu của Osler cho thấy tác dụng dự báo của các mức được công bố kéo dài khoảng ít nhất một tuần (Nguồn [1]).
 
 ## Liên quan
 

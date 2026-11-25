@@ -29,12 +29,31 @@ sources:
     credibility: 4
     credibility_note: Bài trên tạp chí có bình duyệt, dữ liệu cổ phiếu S&P 500; hạ 1 điểm vì chỉ đọc được phần tóm tắt và là một nghiên cứu đơn lẻ chưa đối chiếu được.
     accessed: 2026-11-25
-  - title: "Price action trading"
-    url: https://en.wikipedia.org/wiki/Price_action_trading
-    publisher: Wikipedia
-    kind: other
-    credibility: 2
-    credibility_note: Bài bách khoa mở bị gắn cảnh báo viết như tiểu luận; chỉ dùng để mô tả cách người giao dịch price action làm.
+  - title: "Candlestick technical trading strategies: can they create value for investors? (luận án tiến sĩ)"
+    url: https://mro.massey.ac.nz/handle/10179/1604
+    author: Benjamin R. Marshall
+    publisher: Đại học Massey, New Zealand (bản tạp chí — Marshall, Young & Rose, Journal of Banking & Finance 30(8), tr. 2303–2323, 2006)
+    date: 2005
+    kind: paper
+    credibility: 4
+    credibility_note: Luận án tiến sĩ, sau đăng tạp chí có bình duyệt; chỉ đọc được phần tóm tắt luận án, bản tạp chí cần trả phí.
+    accessed: 2026-11-25
+  - title: "Profitability of Candlestick Charting Patterns in the Stock Exchange of Thailand"
+    url: https://econpapers.repec.org/RePEc:sae:sagope:v:7:y:2017:i:4:p:2158244017736799
+    author: Piyapas Tharavanij, Vasan Siraprapasiri, Kittichai Rajchamaha
+    publisher: SAGE Open, tập 7 số 4
+    date: 2017
+    kind: paper
+    credibility: 4
+    credibility_note: Tạp chí truy cập mở có bình duyệt, dữ liệu cổ phiếu SET50 2006–2016; đọc phần tóm tắt.
+    accessed: 2026-11-25
+  - title: "Trading with price action analysis"
+    url: https://www.britannica.com/money/price-action-trading-explained
+    author: Karl Montevirgen (kiểm chứng bởi Doug Ashburn)
+    publisher: Britannica Money (Encyclopædia Britannica)
+    kind: education
+    credibility: 3
+    credibility_note: Trang kiến thức có biên tập và người kiểm chứng ghi tên; mô tả cách người thực hành dùng nến, không đưa bằng chứng về hiệu quả.
     accessed: 2026-11-25
 created: 2026-11-25
 updated: 2026-11-25
@@ -58,7 +77,7 @@ research:
 - **Màu:** thường thì phiên đóng cửa cao hơn mở cửa có thân rỗng hoặc màu xanh, phiên đóng cửa thấp hơn có thân đặc hoặc màu đỏ. Phần mềm cho phép đổi màu tuỳ ý, nên cần xem quy ước của từng nền tảng (Nguồn [1]).
 - Một cây nến có thể không có thân (giá mở bằng giá đóng) hoặc không có bóng (Nguồn [1]).
 
-Người giao dịch [[price-action]] quan sát kích thước, hình dạng và vị trí của các cây nến, thường kết hợp với [[ho-tro-va-khang-cu|hỗ trợ – kháng cự]], đường xu hướng và vùng đi ngang (Nguồn [4]).
+Người giao dịch [[price-action]] dùng nến để tìm mẫu hình của một nhóm vài phiên, như mô hình nến nhấn chìm tăng, rồi xem chúng xuất hiện ở đâu so với xu hướng, đường xu hướng và vùng [[ho-tro-va-khang-cu|hỗ trợ – kháng cự]] (Nguồn [6]).
 
 ### Lịch sử: Homma có phải người nghĩ ra biểu đồ nến?
 
@@ -69,9 +88,13 @@ Người giao dịch [[price-action]] quan sát kích thước, hình dạng và
 
 ### Bằng chứng về các mô hình nến
 
-Caginalp và Laurent (1998) kiểm định thống kê các mô hình nến ba phiên trên giá hằng ngày của toàn bộ cổ phiếu S&P 500 giai đoạn 1992–1996. Trong kiểm tra ngoài mẫu, kết quả có ý nghĩa thống kê rất cao, với lợi nhuận gần 1% cho thời gian nắm giữ hai ngày. Theo các tác giả, đây là bằng chứng cho thấy người giao dịch chịu ảnh hưởng của diễn biến giá (Nguồn [3]).
+Các nghiên cứu cho kết quả **trái ngược nhau**:
 
-Giới hạn: đây là một nghiên cứu đơn lẻ, trên cổ phiếu Mỹ những năm 1990. Phần tóm tắt không nói rõ lợi nhuận đã trừ chi phí giao dịch hay chưa. Xem thêm bức tranh chung ở [[nghien-cuu-hieu-qua-phan-tich-ky-thuat]].
+- **Tích cực:** Caginalp và Laurent (1998) kiểm định các mô hình nến ba phiên trên giá hằng ngày của toàn bộ cổ phiếu S&P 500 giai đoạn 1992–1996. Trong kiểm tra ngoài mẫu, kết quả có ý nghĩa thống kê rất cao, với lợi nhuận gần 1% cho thời gian nắm giữ hai ngày (Nguồn [3]). Phần tóm tắt không nói rõ lợi nhuận đã trừ chi phí giao dịch hay chưa.
+- **Tiêu cực:** Marshall (2005) kiểm định chiến lược nến trên cổ phiếu thuộc chỉ số Dow Jones giai đoạn 1992–2002. Vì nến được nghĩ ra từ giá gạo Nhật Bản, dữ liệu này hoàn toàn nằm ngoài mẫu. Kết luận: chiến lược nến **không có giá trị**, không có bằng chứng người theo nến thắng được thị trường (Nguồn [4]).
+- **Tiêu cực, ở Đông Nam Á:** trên 50 cổ phiếu lớn nhất sàn Thái Lan giai đoạn 2006–2016, lợi nhuận trung bình của phần lớn mô hình nến đảo chiều không khác 0. Mô hình nến không dự báo đáng tin được hướng giá, kể cả khi lọc thêm bằng RSI, MFI hay Stochastic (Nguồn [5]).
+
+Xem thêm bức tranh chung ở [[nghien-cuu-hieu-qua-phan-tich-ky-thuat]].
 
 ## Ví dụ
 
@@ -85,8 +108,8 @@ Một phiên mở cửa ở 100, lên cao nhất 108, xuống thấp nhất 97 v
 
 - **"Homma phát minh ra biểu đồ nến".** Điều này còn tranh cãi; chính Nison, người phổ biến nến ở phương Tây, nghi ngờ nó (Nguồn [1]).
 - **"Nến xanh luôn là phiên tăng".** Màu nến tuỳ phần mềm và có thể đổi (Nguồn [1]).
-- **"Mô hình nến có tỷ lệ thắng cố định".** Bằng chứng còn hạn chế: nghiên cứu đọc được chỉ là một nghiên cứu, trên một thị trường, trong một giai đoạn (Nguồn [3]).
-- **"Một cây nến đẹp là đủ để vào lệnh".** Nhiều tác giả viết về price action cho rằng một mẫu hình đơn lẻ hiếm khi đủ, và nên có ít nhất hai lý do để vào lệnh (Nguồn [4]).
+- **"Mô hình nến có tỷ lệ thắng cố định".** Bằng chứng trái chiều: có nghiên cứu thấy tích cực (Nguồn [3]), nhưng các nghiên cứu trên cổ phiếu Dow Jones và cổ phiếu Thái Lan không thấy mô hình nến có giá trị (Nguồn [4][5]).
+- **"Thêm chỉ báo sẽ làm mô hình nến chính xác hơn".** Nghiên cứu ở Thái Lan thấy lọc bằng RSI, MFI hay Stochastic nhìn chung không tăng lợi nhuận hay độ chính xác (Nguồn [5]).
 
 ## Câu hỏi thường gặp
 
@@ -104,7 +127,7 @@ Câu trả lời phổ biến là thương nhân gạo Munehisa Homma ở thế 
 
 ### Mô hình nến có dự báo được giá không?
 
-Có nghiên cứu cho kết quả tích cực, như Caginalp và Laurent (1998) trên cổ phiếu S&P 500 giai đoạn 1992–1996 (Nguồn [3]). Nhưng đó là một nghiên cứu đơn lẻ, nên chưa đủ để kết luận mô hình nến dự báo được giá ở mọi thị trường.
+Chưa có kết luận chung. Caginalp và Laurent (1998) thấy kết quả tích cực trên cổ phiếu S&P 500 giai đoạn 1992–1996 (Nguồn [3]). Ngược lại, nghiên cứu trên cổ phiếu Dow Jones (1992–2002) và cổ phiếu Thái Lan (2006–2016) không thấy mô hình nến giúp thắng thị trường hay dự báo được hướng giá (Nguồn [4][5]).
 
 ## Liên quan
 
