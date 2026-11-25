@@ -1,8 +1,9 @@
 name: Build & deploy
 
+# Mọi push / PR đều được build để kiểm tra.
+# Chỉ nhánh mặc định của repo (Settings → Branches) mới được deploy lên GitHub Pages.
 on:
   push:
-    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -14,6 +15,9 @@ permissions:
 concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
+
+env:
+  DEPLOY: ${{ github.event_name != 'pull_request' && github.ref_name == github.event.repository.default_branch }}
 
 jobs:
   build:
@@ -27,7 +31,7 @@ jobs:
       - run: npm ci
       - name: Configure GitHub Pages
         id: pages
-        if: github.event_name != 'pull_request'
+        if: env.DEPLOY == 'true'
         uses: actions/configure-pages@v5
       - name: Check & build
         run: npm run build
@@ -35,12 +39,12 @@ jobs:
           SITE_URL: ${{ steps.pages.outputs.origin }}
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
       - uses: actions/upload-pages-artifact@v3
-        if: github.event_name != 'pull_request'
+        if: env.DEPLOY == 'true'
         with:
           path: dist
 
   deploy:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && github.ref_name == github.event.repository.default_branch
     needs: build
     runs-on: ubuntu-latest
     environment:
