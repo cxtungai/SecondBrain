@@ -20,6 +20,7 @@
   --t-framework: #1f7a4d;
   --t-case-study: #a1306b;
   --t-source: #5c6670;
+  --t-article: #0b7285;
 
   --radius: 10px;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 2px 8px rgb(0 0 0 / 0.04);
@@ -51,6 +52,7 @@
     --t-framework: #6fd3a0;
     --t-case-study: #f08ac0;
     --t-source: #aab4bd;
+    --t-article: #66d2e0;
     --shadow: none;
     color-scheme: dark;
   }
@@ -422,6 +424,7 @@ a.card:hover {
 [data-type='framework'] { --type-color: var(--t-framework); }
 [data-type='case-study'] { --type-color: var(--t-case-study); }
 [data-type='source'] { --type-color: var(--t-source); }
+[data-type='article'] { --type-color: var(--t-article); }
 
 /* ---------- Note page ---------- */
 .note-layout {
@@ -983,4 +986,69 @@ mark {
 .next-steps {
   max-width: 44rem;
   margin-top: 2rem;
+}
+
+/* ---------- Bài viết SEO/GEO ---------- */
+.basis {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.basis > .stat-line {
+  margin-top: -0.5rem;
+}
+
+.disclaimer {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.footer-disclaimer {
+  flex-basis: 100%;
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.seo-hints summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.seo-hints summary::-webkit-details-marker {
+  display: none;
+}
+
+.seo-hints summary h2 {
+  display: inline;
+}
+
+.seo-hints summary h2::after {
+  content: ' ▾';
+  color: var(--muted);
+}
+
+.seo-hints ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.seo-hints li {
+  font-size: 0.88rem;
+}
+
+.seo-hints li.ok span {
+  color: var(--ok);
+}
+
+.seo-hints li.todo span {
+  color: var(--warn);
+}
+
+.seo-hints li small {
+  display: block;
+  color: var(--muted);
+  margin: 0.1rem 0 0 1.1rem;
 }

@@ -4,26 +4,92 @@
 //       npm run publish -- <file|slug>         (đăng, status mặc định: verified)
 //       npm run publish -- <slug> --status draft   (đăng nhưng giữ trạng thái nháp)
 //       npm run publish -- <slug> --dry-run    (xem trước, không ghi file)
+//       npm run publish -- articles/<file>.md  (đăng bài viết SEO/GEO — cần tri thức gốc đã verified, hoặc --force)
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseDocument } from 'yaml';
+import { buildArticles } from '../src/lib/articles.mjs';
 import { buildKnowledge, parseNote, splitFrontmatter } from '../src/lib/kb.mjs';
+import { articleSeoHints } from '../src/lib/seo.mjs';
 import { NOTE_TYPES, STATUSES } from '../src/lib/schema.mjs';
 import { c, parseArgs, today } from './args.mjs';
-import { INBOX_ABS, KNOWLEDGE_DIR, ROOT, readKnowledgeFiles, toRepoPath } from './load.mjs';
+import { ARTICLES_ABS, INBOX_ABS, KNOWLEDGE_DIR, ROOT, readArticleFiles, readKnowledgeFiles, toRepoPath } from './load.mjs';
 
 const { positional, flags } = parseArgs();
 const arg = positional[0];
 
 const inboxFiles = fs.existsSync(INBOX_ABS) ? fs.readdirSync(INBOX_ABS).filter((f) => f.endsWith('.md')) : [];
 if (!arg) {
+  const draftArticles = buildArticles(readArticleFiles(), buildKnowledge(readKnowledgeFiles()), { includeDrafts: true }).drafts;
   if (!inboxFiles.length) console.log('Không có bản nháp nào trong knowledge/_inbox.');
   else {
     console.log(c.bold('Bản nháp chờ duyệt:'));
     for (const f of inboxFiles) console.log(`  ${f}`);
     console.log(c.dim('\nĐăng: npm run publish -- <tên-file>'));
   }
+  if (draftArticles.length) {
+    console.log(c.bold('\nBài viết nháp:'));
+    for (const a of draftArticles) console.log(`  ${a.path}`);
+    console.log(c.dim('\nĐăng: npm run publish -- articles/<tên-file>.md'));
+  }
   process.exit(0);
+}
+
+// ---------- Bài viết SEO/GEO ----------
+const articleCandidates = [path.resolve(ROOT, arg), path.join(ARTICLES_ABS, arg), path.join(ARTICLES_ABS, `${arg}.md`)];
+const articleSource = articleCandidates.find((p) => p.startsWith(ARTICLES_ABS + path.sep) && fs.existsSync(p) && fs.statSync(p).isFile());
+if (articleSource) {
+  publishArticle(articleSource);
+  process.exit(0);
+}
+
+function publishArticle(abs) {
+  const repoPath = toRepoPath(abs);
+  const raw = fs.readFileSync(abs, 'utf8');
+  const { yaml, body } = splitFrontmatter(raw);
+  if (yaml === undefined) {
+    console.error(c.red(`${repoPath}: không có frontmatter`));
+    process.exit(1);
+  }
+  const doc = parseDocument(yaml);
+  doc.set('status', 'published');
+  doc.set('updated', today());
+  if (!doc.get('published_on')) doc.set('published_on', today());
+  const output = `---\n${doc.toString().trimEnd()}\n---\n\n${body.replace(/^\s*\n/, '')}`;
+
+  // Kiểm tra như thể đã đăng (dựa trên tri thức đã đăng, không tính _inbox).
+  const kb = buildKnowledge(readKnowledgeFiles());
+  const posts = buildArticles([...readArticleFiles().filter((f) => f.path !== repoPath), { path: repoPath, raw: output }], kb);
+  const own = posts.issues.filter((i) => i.path === repoPath);
+  const article = posts.list.find((a) => a.path === repoPath);
+  const blocking = own.filter((i) => i.level === 'error');
+  if (blocking.length || !article) {
+    console.error(c.red('Chưa thể đăng bài — còn lỗi:'));
+    for (const i of blocking) console.error(`  - ${i.message}`);
+    process.exit(1);
+  }
+  const unverified = article.notes.filter((n) => n.status !== 'verified');
+  if (unverified.length && !flags.force) {
+    console.error(c.red('Chưa thể đăng bài — tri thức gốc chưa được kiểm chứng:'));
+    for (const n of unverified) console.error(`  - ${n.title} (${n.path}, status: ${n.status})`);
+    console.error(c.dim('  Duyệt ghi chú gốc trước (npm run publish -- <ghi-chú>), hoặc thêm --force nếu chấp nhận đăng khi tri thức còn là nháp.'));
+    process.exit(1);
+  }
+
+  console.log(`Đăng bài viết: ${c.bold(article.title)}  ${c.dim(`(${repoPath}, status: published, updated: ${today()})`)}`);
+  for (const i of own) console.log(c.yellow(`  cảnh báo: ${i.message}`));
+  const hints = articleSeoHints(article);
+  const todo = hints.filter((h) => !h.ok);
+  console.log(`  SEO/GEO: ${hints.length - todo.length}/${hints.length} tiêu chí đạt`);
+  for (const h of todo) console.log(c.yellow(`  ○ ${h.label}`) + c.dim(` — ${h.tip}`));
+
+  if (flags['dry-run']) console.log(c.dim('(dry-run: chưa ghi file)'));
+  else {
+    fs.writeFileSync(abs, output);
+    console.log(c.green('✓ Đã đăng'));
+  }
+  console.log(c.dim(`Tri thức gốc: ${article.notes.map((n) => n.slug).join(', ')} — trang ghi chú sẽ tự hiện "Bài viết về chủ đề này".`));
+  console.log(c.dim('Xong thì commit & push lên nhánh chính để site tự cập nhật.'));
 }
 
 const candidates = [path.resolve(ROOT, arg), path.join(INBOX_ABS, arg), path.join(INBOX_ABS, `${arg}.md`)];

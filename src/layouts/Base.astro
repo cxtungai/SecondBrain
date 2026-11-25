@@ -7,7 +7,7 @@ interface Props {
   title?: string;
   description?: string;
   /** Dùng để đánh dấu mục menu đang mở */
-  section?: 'home' | 'hub' | 'glossary' | 'graph' | 'types' | 'tags' | 'search' | 'ai';
+  section?: 'home' | 'hub' | 'articles' | 'glossary' | 'graph' | 'types' | 'tags' | 'search' | 'ai' | 'about';
   /** og:type — "article" cho trang ghi chú */
   ogType?: 'website' | 'article';
   /** Dữ liệu có cấu trúc schema.org (JSON-LD) */
@@ -22,6 +22,7 @@ const pageTitle = title ? `${title} · ${SITE_NAME}` : SITE_NAME;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 const nav = [
   { key: 'hub', href: url('kien-thuc/'), label: 'Kiến thức' },
+  { key: 'articles', href: url('bai-viet/'), label: 'Bài viết' },
   { key: 'glossary', href: url('tu-dien/'), label: 'Từ điển' },
   { key: 'graph', href: url('graph/'), label: 'Đồ thị' },
   { key: 'search', href: url('search/'), label: 'Tìm kiếm' },
@@ -75,8 +76,9 @@ const nav = [
     </main>
     <footer class="site-footer">
       <div class="container">
-        <span>Second Brain — kho tri thức cho người và AI agent.</span>
+        <span>{SITE_NAME} — kho tri thức cho người và AI agent. <a href={url('gioi-thieu/')}>Giới thiệu & quy trình biên tập</a></span>
         <span><a href={url('llms.txt')}>llms.txt</a> · <a href={url('knowledge.json')}>knowledge.json</a></span>
+        {SITE.disclaimer && <small class="footer-disclaimer">{SITE.disclaimer}</small>}
       </div>
     </footer>
   </body>

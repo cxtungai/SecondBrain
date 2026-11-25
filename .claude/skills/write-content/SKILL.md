@@ -8,6 +8,8 @@ argument-hint: <đề bài, kênh đăng, độ dài, giọng văn>
 
 Đề bài: **$ARGUMENTS** (thiếu kênh/độ dài/giọng văn thì dùng mặc định: bài blog ~1.200 từ, giọng chuyên gia thân thiện, tiếng Việt).
 
+Bài để đăng lên **chính website Second Brain** (kéo traffic, SEO/GEO) → dùng skill `/seo-article` (lưu vào `articles/`). Skill này dành cho content đăng ở kênh khác (blog ngoài, mạng xã hội, email, video…).
+
 ## 1. Thu thập tri thức
 
 - `npm run kb -- search "<chủ đề>"`, bắt đầu từ ghi chú loại `topic`, đi theo liên kết (`npm run kb -- show <slug>`) và đọc file `.md` của các ghi chú liên quan.

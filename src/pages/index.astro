@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import NoteList from '../components/NoteList.astro';
+import ArticleList from '../components/ArticleList.astro';
+import { posts } from '../lib/posts';
 import { SITE } from '../config.mjs';
 import { kb } from '../lib/knowledge';
 import { NOTE_TYPES } from '../lib/schema.mjs';
@@ -14,8 +16,9 @@ const foundations = [...kb.notes]
   .sort((a, b) => b.backlinks.length - a.backlinks.length)
   .slice(0, 3);
 const verified = kb.notes.filter((n) => n.status === 'verified').length;
-const errors = kb.issues.filter((i) => i.level === 'error');
-const showIssues = import.meta.env.DEV && kb.issues.length > 0;
+const issues = [...kb.issues, ...posts.issues];
+const errors = issues.filter((i) => i.level === 'error');
+const showIssues = import.meta.env.DEV && issues.length > 0;
 ---
 
 <Base section="home">
@@ -26,16 +29,16 @@ const showIssues = import.meta.env.DEV && kb.issues.length > 0;
       <input type="search" name="q" placeholder="Tìm khái niệm, số liệu, phương pháp… (gõ không dấu cũng được)" aria-label="Tìm trong kho tri thức" />
     </form>
     <p class="stat-line">
-      {kb.notes.length} ghi chú · {verified} đã kiểm chứng · {kb.gaps.length} mục còn thiếu ·
+      {kb.notes.length} ghi chú · {verified} đã kiểm chứng · {posts.list.length} bài viết · {kb.gaps.length} mục còn thiếu ·
       <a href={url('ai/')}>Kết nối AI agent →</a>
     </p>
   </section>
 
   {showIssues && (
     <div class={`callout ${errors.length ? 'callout-bad' : 'callout-warn'} issues`}>
-      <strong>Chỉ hiện khi chạy dev:</strong> {errors.length} lỗi, {kb.issues.length - errors.length} cảnh báo trong kho. Chạy <code>npm run check</code> để xem chi tiết.
+      <strong>Chỉ hiện khi chạy dev:</strong> {errors.length} lỗi, {issues.length - errors.length} cảnh báo trong kho. Chạy <code>npm run check</code> để xem chi tiết.
       <ul>
-        {kb.issues.slice(0, 8).map((i) => <li><code>{i.path}</code> — {i.message}</li>)}
+        {issues.slice(0, 8).map((i) => <li><code>{i.path}</code> — {i.message}</li>)}
       </ul>
     </div>
   )}
@@ -60,6 +63,13 @@ const showIssues = import.meta.env.DEV && kb.issues.length > 0;
     </section>
   )}
 
+  {posts.drafts.length > 0 && (
+    <section class="section">
+      <h2 class="section-title">Bài viết nháp ({posts.drafts.length}) <span class="stat-line" style="margin:0">chỉ hiện khi chạy local · đăng bằng <code>npm run publish -- articles/&lt;file&gt;</code></span></h2>
+      <ArticleList articles={posts.drafts} />
+    </section>
+  )}
+
   {topics.length > 0 && (
     <section class="section">
       <h2 class="section-title">Trung tâm kiến thức <a href={url('kien-thuc/')}>Xem toàn bộ →</a></h2>
@@ -81,6 +91,13 @@ const showIssues = import.meta.env.DEV && kb.issues.length > 0;
       <h2 class="section-title">Bắt đầu từ đây</h2>
       <p class="stat-line" style="margin-top:-0.5rem">Những ghi chú nền tảng được nhiều ghi chú khác dẫn tới nhất.</p>
       <NoteList notes={foundations} />
+    </section>
+  )}
+
+  {posts.list.length > 0 && (
+    <section class="section">
+      <h2 class="section-title">Bài viết mới <a href={url('bai-viet/')}>Tất cả bài viết →</a></h2>
+      <ArticleList articles={posts.list.slice(0, 4)} />
     </section>
   )}
 

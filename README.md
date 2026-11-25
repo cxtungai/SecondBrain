@@ -19,7 +19,13 @@ Kho tri thức chuyên môn **đã được đọc, hiểu và duyệt** — v�
         ▼
  Website (Trung tâm kiến thức · Từ điển A–Z · Đồ thị · Tìm kiếm)
  + llms.txt / knowledge.json  ─►  AI agent viết content (/write-content)
+        │  /seo-article "cách vẽ hỗ trợ kháng cự"
+        ▼
+ articles/*.md — bài viết SEO/GEO kéo traffic, chỉ dùng dữ kiện từ tri thức,
+                 link về ghi chú gốc → /bai-viet/…
 ```
+
+**Tri thức là chính, bài viết là bài con.** Ghi chú tri thức là nguồn sự thật (có nguồn, điểm uy tín, viết để chính xác). Bài viết trình bày lại tri thức theo câu hỏi người đọc hay tìm trên Google / AI search, dẫn liên kết về ghi chú gốc — không thêm dữ kiện mới, không sửa tri thức để hợp từ khoá. Chi tiết: mục "Bài viết SEO/GEO" trong [`AGENTS.md`](AGENTS.md).
 
 ## Bắt đầu
 
@@ -44,6 +50,7 @@ Mở repo này trong Claude Code, các lệnh sau có sẵn (định nghĩa tron
 | `/research Price action` | Nghiên cứu từ khoá, chấm điểm uy tín nguồn, viết bản nháp vào `knowledge/_inbox/` |
 | `/publish price-action.md` | Đăng bản nháp bạn đã duyệt và kết nối nó với tri thức sẵn có |
 | `/connect` | Rà soát toàn kho: thêm liên kết còn thiếu, nối ghi chú cô lập, liệt kê tri thức còn thiếu |
+| `/seo-article cách vẽ hỗ trợ kháng cự` | Viết bài SEO/GEO vào `articles/` từ tri thức đã có, kiểm tra trùng từ khoá |
 | `/write-content Bài blog 1.000 từ về price action cho người mới` | Viết content từ kho, có trích nguồn |
 
 Agent khác (Cursor, Codex, …) đọc hướng dẫn trong [`AGENTS.md`](AGENTS.md).
@@ -68,7 +75,9 @@ Cấu trúc frontmatter, thang điểm uy tín nguồn và quy tắc liên kết
 - **Trang ghi chú**: mục lục, breadcrumb, nguồn kèm điểm uy tín, backlinks, "Đọc tiếp", câu hỏi thường gặp.
 - **Tri thức còn thiếu** (`/gaps/`): các `[[liên kết]]` chưa có ghi chú — hàng đợi nghiên cứu.
 - **Tìm kiếm** gõ có dấu hay không dấu đều được.
-- **SEO / AI search**: dữ liệu có cấu trúc (Article, FAQPage, BreadcrumbList, DefinedTermSet), `sitemap.xml`, `robots.txt`.
+- **Bài viết** (`/bai-viet/`): bài SEO/GEO theo ý định tìm kiếm, mỗi bài có mục "Tri thức gốc"; trang ghi chú tự hiện "Bài viết về chủ đề này".
+- **Giới thiệu & quy trình biên tập** (`/gioi-thieu/`): minh bạch cách nghiên cứu, chấm điểm nguồn, duyệt — tín hiệu tin cậy cho người đọc, Google và AI.
+- **SEO / AI search**: dữ liệu có cấu trúc (Article + isBasedOn, FAQPage, BreadcrumbList, DefinedTermSet, AboutPage), `sitemap.xml`, `robots.txt`. Khi chạy `npm run dev`, mỗi trang có hộp gợi ý **SEO / GEO** (không lên web).
 
 ## Cho AI agent
 
@@ -101,6 +110,9 @@ npm run build        # check + build site tĩnh vào dist/
 npm run new -- <type> "Tiêu đề" [--inbox] [--tags a,b]
 npm run publish -- <file> [--status draft] [--dry-run]
 npm run kb -- search "từ khoá" | show <slug> | list | gaps | orphans | mentions | stats
+npm run new -- article "Tiêu đề" --keyword "từ khoá" --based-on slug-a,slug-b
+npm run publish -- articles/<file>.md   # đăng bài viết (ghi chú gốc phải verified)
+npm run seo [-- <slug> | --keyword "từ khoá"]   # gợi ý SEO/GEO, kiểm tra trùng từ khoá
 ```
 
 ## Ghi chú ví dụ

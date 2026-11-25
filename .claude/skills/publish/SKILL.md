@@ -1,12 +1,14 @@
 ---
 name: publish
-description: Đăng bản nháp đã được người dùng đọc và duyệt từ knowledge/_inbox lên Second Brain, rồi kết nối nó với tri thức sẵn có (liên kết hai chiều, cập nhật ghi chú chủ đề). Dùng khi người dùng nói đã duyệt/sửa xong bài và muốn đăng, post hoặc publish một bản nháp.
-argument-hint: [tên file trong knowledge/_inbox]
+description: Đăng bản nháp đã được người dùng đọc và duyệt lên Second Brain — ghi chú tri thức từ knowledge/_inbox (rồi kết nối với tri thức sẵn có) hoặc bài viết SEO/GEO trong articles/. Dùng khi người dùng nói đã duyệt/sửa xong bài và muốn đăng, post hoặc publish một bản nháp.
+argument-hint: [tên file trong knowledge/_inbox hoặc articles/<file>.md]
 ---
 
 # Đăng bản nháp đã duyệt
 
 Bản nháp: **$ARGUMENTS** (trống → chạy `npm run publish` để liệt kê; nếu có nhiều bản nháp, hỏi người dùng muốn đăng bản nào).
+
+**Bài viết SEO/GEO** (`articles/…`): chỉ cần `npm run publish -- articles/<file>.md` — script đặt `status: published`, `published_on`, `updated` và **từ chối** nếu ghi chú gốc (`based_on`) chưa `verified` (khi đó đăng ghi chú gốc trước; chỉ dùng `--force` khi người dùng chấp nhận rõ ràng). Sau đó `npm run check && npm run build`, commit `Đăng bài: <tiêu đề>`. Không cần bước kết nối: trang ghi chú tự hiện "Bài viết về chủ đề này". Phần dưới dành cho ghi chú tri thức.
 
 ## 1. Kiểm tra
 

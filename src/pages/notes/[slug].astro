@@ -2,14 +2,18 @@
 import Base from '../../layouts/Base.astro';
 import Credibility from '../../components/Credibility.astro';
 import Graph from '../../components/Graph.astro';
+import SeoHints from '../../components/SeoHints.astro';
 import StatusBadge from '../../components/StatusBadge.astro';
 import TypeBadge from '../../components/TypeBadge.astro';
 import { kb, type Note } from '../../lib/knowledge';
+import { posts } from '../../lib/posts';
+import { ARTICLE_INTENTS } from '../../lib/articles.mjs';
+import { noteSeoHints } from '../../lib/seo.mjs';
 import { SITE } from '../../config.mjs';
 import { extractFaq, extractHeadings, renderNoteHtml } from '../../lib/render.mjs';
 import { NOTE_TYPES, SOURCE_KINDS } from '../../lib/schema.mjs';
 import { slugify } from '../../lib/text.mjs';
-import { absolute, formatDate, noteMdUrl, noteUrl, tagUrl, typeUrl, url } from '../../lib/urls';
+import { absolute, articleUrl, formatDate, noteMdUrl, noteUrl, tagUrl, typeUrl, url } from '../../lib/urls';
 
 export function getStaticPaths() {
   return kb.all.map((note) => ({ params: { slug: note.slug }, props: { note } }));
@@ -31,6 +35,8 @@ const related = kb.notes
   .slice(0, 5)
   .map((r) => r.n);
 const original = note.updates ? kb.get(note.updates) : null;
+// Bài viết SEO/GEO dẫn xuất từ ghi chú này (ghi chú không tự liên kết sang bài viết).
+const articles = note.inbox ? [] : posts.forNote(note.slug);
 const kindLabel = (k?: string) => (k ? SOURCE_KINDS[k as keyof typeof SOURCE_KINDS] : undefined);
 const typeInfo = NOTE_TYPES[note.type as keyof typeof NOTE_TYPES];
 
@@ -103,6 +109,7 @@ const nextReads = parentTopic
           <TypeBadge type={note.type} />
           <StatusBadge status={note.status} />
           {note.credibility.rated > 0 && <Credibility score={note.credibility.average} title={`Uy tín nguồn trung bình ${note.credibility.average}/5 (${note.credibility.rated} nguồn đã chấm)`} />}
+          <span>Cập nhật {formatDate(note.updated)}</span>
         </div>
         <h1>{note.title}</h1>
         <p class="note-summary">{note.summary}</p>
@@ -221,12 +228,28 @@ const nextReads = parentTopic
         </div>
       )}
 
+      {articles.length > 0 && (
+        <div class="card aside-block" data-type="article">
+          <h2>Bài viết về chủ đề này ({articles.length})</h2>
+          <ul>
+            {articles.map((a) => (
+              <li>
+                <a href={articleUrl(a.slug)}>{a.title}</a>
+                <small class="stat-line" style="display:block">{ARTICLE_INTENTS[a.intent as keyof typeof ARTICLE_INTENTS].label}{a.status !== 'published' && ' · bản nháp'}</small>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {related.length > 0 && (
         <div class="card aside-block">
           <h2>Cùng chủ đề</h2>
           <ul>{related.map((n) => <li><a href={noteUrl(n.slug)}>{n.title}</a></li>)}</ul>
         </div>
       )}
+
+      <SeoHints hints={noteSeoHints(note)} extra="Gợi ý chỉ nhằm làm tri thức rõ và đáng tin hơn — không nhồi từ khoá vào ghi chú." />
 
       {!note.inbox && (
         <div class="card aside-block">

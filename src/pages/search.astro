@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import { NOTE_TYPES, STATUSES } from '../lib/schema.mjs';
 import { url } from '../lib/urls';
 
-const types = Object.entries(NOTE_TYPES).map(([key, info]) => ({ key, label: info.label }));
+const types = [...Object.entries(NOTE_TYPES).map(([key, info]) => ({ key, label: info.label })), { key: 'article', label: 'Bài viết' }];
 ---
 
 <Base title="Tìm kiếm" section="search">
@@ -15,7 +15,6 @@ const types = Object.entries(NOTE_TYPES).map(([key, info]) => ({ key, label: inf
   <div
     id="search"
     data-index={url('search-index.json')}
-    data-notes={url('notes/')}
     data-types={JSON.stringify(Object.fromEntries(types.map((t) => [t.key, t.label])))}
     data-statuses={JSON.stringify(Object.fromEntries(Object.entries(STATUSES).map(([k, v]) => [k, v.label])))}
   >
@@ -33,7 +32,7 @@ const types = Object.entries(NOTE_TYPES).map(([key, info]) => ({ key, label: inf
 
 <script>
   type Entry = {
-    slug: string; title: string; aliases: string[]; type: string; status: string;
+    url: string; slug: string; title: string; aliases: string[]; type: string; status: string;
     updated: string; summary: string; tags: string[]; text: string;
     _title?: string; _meta?: string; _text?: string;
   };
@@ -45,7 +44,6 @@ const types = Object.entries(NOTE_TYPES).map(([key, info]) => ({ key, label: inf
   const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-filter]')];
   const TYPE_LABELS: Record<string, string> = JSON.parse(root.dataset.types!);
   const STATUS_LABELS: Record<string, string> = JSON.parse(root.dataset.statuses!);
-  const NOTES_BASE = root.dataset.notes!;
 
   const norm = (s: string) =>
     s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
@@ -113,7 +111,7 @@ const types = Object.entries(NOTE_TYPES).map(([key, info]) => ({ key, label: inf
 
     statusEl.textContent = terms.length
       ? `${scored.length} kết quả cho “${raw}”`
-      : `${scored.length} ghi chú${typeFilter ? ` loại ${TYPE_LABELS[typeFilter]}` : ''}`;
+      : `${scored.length} kết quả${typeFilter ? ` loại ${TYPE_LABELS[typeFilter]}` : ''}`;
 
     results.innerHTML = scored
       .slice(0, 100)
@@ -122,10 +120,10 @@ const types = Object.entries(NOTE_TYPES).map(([key, info]) => ({ key, label: inf
         return `<li class="note-item" data-type="${esc(e.type)}">
           <div class="meta-row">
             <span class="badge badge-type">${esc(TYPE_LABELS[e.type] ?? e.type)}</span>
-            <span class="badge badge-status-${esc(e.status)}">${esc(STATUS_LABELS[e.status] ?? e.status)}</span>
+            ${e.status ? `<span class="badge badge-status-${esc(e.status)}">${esc(STATUS_LABELS[e.status] ?? e.status)}</span>` : ''}
             <span>Cập nhật ${fmt(e.updated)}</span>
           </div>
-          <h3><a href="${NOTES_BASE}${encodeURIComponent(e.slug)}/">${highlight(e.title, terms)}</a></h3>
+          <h3><a href="${esc(e.url)}">${highlight(e.title, terms)}</a></h3>
           <p>${highlight(e.summary, terms)}</p>
           ${snip ? `<p style="margin-top:.4rem;font-size:.88rem">${highlight(snip, terms)}</p>` : ''}
           ${e.tags.length ? `<div class="meta-row" style="margin-top:.5rem">${e.tags.map((t) => `<span class="tag">#${esc(t)}</span>`).join('')}</div>` : ''}

@@ -1,9 +1,10 @@
 import type { APIRoute } from 'astro';
 import { AGENT_RULES, SITE } from '../config.mjs';
 import { exporter } from '../lib/export';
+import { posts } from '../lib/posts';
 import { kb } from '../lib/knowledge';
 import { NOTE_TYPES } from '../lib/schema.mjs';
-import { absolute, url } from '../lib/urls';
+import { absolute, articleUrl, url } from '../lib/urls';
 
 // Chỉ mục theo chuẩn https://llmstxt.org — điểm vào đầu tiên cho mọi AI agent.
 export const GET: APIRoute = ({ site }) => {
@@ -27,6 +28,19 @@ export const GET: APIRoute = ({ site }) => {
     for (const n of notes) {
       const meta = [ex.statusText(n), `cập nhật ${n.updated}`, n.tags.length ? `tags: ${n.tags.join(', ')}` : ''].filter(Boolean).join('; ');
       lines.push(`- [${n.title}](${ex.mdUrl(n)}): ${n.summary} (${meta})`);
+    }
+  }
+
+  if (posts.list.length) {
+    lines.push(
+      '',
+      '## Bài viết',
+      '',
+      'Bài viết dễ đọc, dẫn xuất từ các ghi chú trên. Khi cần sự thật và nguồn, trích dẫn ghi chú gốc (based on) thay vì bài viết.',
+      '',
+    );
+    for (const a of posts.list) {
+      lines.push(`- [${a.title}](${absolute(articleUrl(a.slug), site)}): ${a.description} (based on: ${a.notes.map((n) => n.slug).join(', ')})`);
     }
   }
 

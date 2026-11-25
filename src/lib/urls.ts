@@ -7,6 +7,7 @@ export const url = (path = '') => `${BASE}/${path.replace(/^\/+/, '')}`;
 
 export const noteUrl = (slug: string, heading?: string) => url(`notes/${slug}/`) + (heading ? `#${heading}` : '');
 export const noteMdUrl = (slug: string) => url(`notes/${slug}.md`);
+export const articleUrl = (slug: string) => url(`bai-viet/${slug}/`);
 export const typeUrl = (type: string) => url(`types/${type}/`);
 export const tagSlug = (tag: string) => slugify(tag) || 'tag';
 export const tagUrl = (tag: string) => url(`tags/${tagSlug(tag)}/`);

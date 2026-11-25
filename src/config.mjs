@@ -8,6 +8,12 @@ export const SITE = {
   locale: 'vi_VN',
   /** Tên tác giả/thương hiệu hiển thị trong dữ liệu có cấu trúc (JSON-LD). Để trống nếu chưa muốn công khai. */
   author: '',
+  /**
+   * Miễn trừ trách nhiệm hiện ở chân trang và cuối mỗi bài viết. Để trống nếu không cần.
+   * Với chủ đề tài chính/đầu tư/sức khoẻ nên giữ.
+   */
+  disclaimer:
+    'Nội dung nhằm mục đích tham khảo và học tập, không phải lời khuyên đầu tư, tài chính hay chuyên môn cho trường hợp cụ thể của bạn.',
 };
 
 /** Quy tắc bắt buộc với AI agent khi dùng kho này để viết content. Xuất hiện trong llms.txt, llms-full.txt, knowledge.json. */

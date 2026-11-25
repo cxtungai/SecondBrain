@@ -93,15 +93,15 @@ export const KNOWN_FIELDS = ['title', 'type', 'summary', 'tags', 'status', 'sour
 const SOURCE_KIND_KEYS = /** @type {[string, ...string[]]} */ (Object.keys(SOURCE_KINDS));
 
 // YAML để trống (vd. `updated:`) cho ra null — coi như không khai báo.
-const blankToUndefined = (v) => (v === null || v === '' ? undefined : v);
-const optional = (schema) => z.preprocess(blankToUndefined, schema.optional());
+export const blankToUndefined = (v) => (v === null || v === '' ? undefined : v);
+export const optional = (schema) => z.preprocess(blankToUndefined, schema.optional());
 
-const dateString = z.preprocess(
+export const dateString = z.preprocess(
   (v) => (v instanceof Date ? v.toISOString().slice(0, 10) : v),
   z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Ngày phải có dạng YYYY-MM-DD'),
 );
 
-const stringList = z.preprocess((v) => {
+export const stringList = z.preprocess((v) => {
   v = blankToUndefined(v);
   if (v === undefined) return [];
   if (typeof v === 'string') return v.split(',');

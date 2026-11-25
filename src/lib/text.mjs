@@ -23,6 +23,18 @@ export function normalizeForSearch(input) {
 }
 
 /**
+ * Lõi của một từ khoá tìm kiếm để so trùng: bỏ dấu, hoa thường, dấu câu và cụm hỏi như "là gì".
+ * "Price action là gì?" -> "price action"
+ */
+export function keywordCore(input) {
+  return normalizeForSearch(input)
+    .replace(/[?!.,:;"'“”()]/g, ' ')
+    .replace(/\b(nghia la gi|la gi|la sao|what is|what are|what's)\b/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
  * Cú pháp liên kết kiểu Obsidian:
  *   [[slug]]  [[slug|nhãn hiển thị]]  [[slug#tiêu-đề]]  [[Tiêu đề ghi chú]]
  * Nhóm: 1 = đích, 2 = heading (tuỳ chọn), 3 = nhãn (tuỳ chọn).

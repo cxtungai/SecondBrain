@@ -1,15 +1,16 @@
-// Kiểm tra toàn bộ kho tri thức: schema, liên kết, chất lượng nguồn, gợi ý kết nối.
-// Dùng: npm run check            (lỗi ở ghi chú đã đăng → exit 1; bản nháp trong _inbox chỉ cảnh báo)
+// Kiểm tra toàn bộ kho tri thức và bài viết: schema, liên kết, chất lượng nguồn, trùng từ khoá, gợi ý kết nối.
+// Dùng: npm run check            (lỗi ở ghi chú/bài đã đăng → exit 1; bản nháp chỉ cảnh báo)
 //       npm run check -- --inbox (coi lỗi trong _inbox cũng là lỗi — dùng trước khi publish)
 //       npm run check -- --verbose (liệt kê mọi gợi ý liên kết)
 import { c, parseArgs } from './args.mjs';
-import { loadKnowledge } from './load.mjs';
+import { loadArticles, loadKnowledge } from './load.mjs';
 
 const { flags } = parseArgs();
 const kb = loadKnowledge({ includeInbox: true });
+const posts = loadArticles(kb, { includeDrafts: true });
 
 const byFile = new Map();
-for (const issue of kb.issues) {
+for (const issue of [...kb.issues, ...posts.issues]) {
   if (!byFile.has(issue.path)) byFile.set(issue.path, []);
   byFile.get(issue.path).push(issue);
 }
@@ -17,7 +18,7 @@ for (const issue of kb.issues) {
 let errors = 0;
 let warnings = 0;
 for (const [file, issues] of [...byFile].sort()) {
-  console.log(`\n${c.bold(file)}${issues[0].inbox ? c.cyan(' (chờ duyệt)') : ''}`);
+  console.log(`\n${c.bold(file)}${issues[0].inbox ? c.cyan(file.startsWith('articles/') ? ' (bài nháp)' : ' (chờ duyệt)') : ''}`);
   for (const i of issues) {
     const fatal = i.level === 'error' && (!i.inbox || flags.inbox);
     if (fatal) errors++;
@@ -31,6 +32,7 @@ const mentions = kb.mentions();
 const orphans = kb.orphans();
 console.log(`\n${c.bold('Tổng quan')}`);
 console.log(`  ${kb.notes.length} ghi chú đã đăng, ${kb.inbox.length} bản nháp chờ duyệt, ${kb.tags.length} tag`);
+console.log(`  ${posts.list.length} bài viết đã đăng, ${posts.drafts.length} bài nháp`);
 console.log(`  ${kb.notes.filter((n) => n.status === 'verified').length} verified · ${kb.notes.filter((n) => n.status === 'draft').length} draft · ${kb.notes.filter((n) => n.status === 'outdated').length} outdated`);
 
 if (kb.gaps.length) {
@@ -54,4 +56,6 @@ if (errors) {
   process.exit(1);
 }
 console.log(c.green(`✓ Không có lỗi${warnings ? ` (${warnings} cảnh báo)` : ''}`));
-if (kb.issues.some((i) => i.level === 'error' && i.inbox)) console.log(c.dim('  lỗi* = lỗi trong bản nháp _inbox, không chặn build; sửa trước khi publish.'));
+if ([...kb.issues, ...posts.issues].some((i) => i.level === 'error' && i.inbox)) {
+  console.log(c.dim('  lỗi* = lỗi trong bản nháp (_inbox hoặc bài viết nháp), không chặn build; sửa trước khi publish.'));
+}
