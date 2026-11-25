@@ -1,24 +1,19 @@
 ---
 title: Xu hướng giá
 type: concept
-summary: Xu hướng tăng là chuỗi đỉnh cao dần và đáy cao dần, xu hướng giảm là đỉnh thấp dần và đáy thấp dần; không có hai điều đó thì thị trường đang đi ngang.
+summary: Theo lý thuyết Dow, thị trường tăng khi đỉnh sau vượt đỉnh trước, giảm khi đáy sau thủng đáy trước, với ba cấp chuyển động chồng lên nhau; không có xu hướng thì giá đi ngang, đang tích luỹ hoặc phân phối.
 tags: [trading, phan-tich-ky-thuat]
 status: draft
-aliases: [Xu hướng, Trend, Cấu trúc thị trường, Market structure, Uptrend, Downtrend, Đi ngang, Trading range]
+aliases: [Xu hướng, Trend, Cấu trúc thị trường, Market structure, Uptrend, Downtrend, Đi ngang, Trading range, Lý thuyết Dow]
 sources:
-  - title: "Dow Theory"
-    url: https://chartschool.stockcharts.com/table-of-contents/market-analysis/dow-theory
-    publisher: StockCharts.com — ChartSchool
-    kind: education
-    credibility: 3
-    credibility_note: Trang kiến thức có hệ thống của nhà cung cấp phần mềm biểu đồ, không ghi tác giả; trình bày lại sách của Rhea (1932) và tự nêu các phê bình.
-    accessed: 2026-11-25
-  - title: "Trend Lines"
-    url: https://chartschool.stockcharts.com/table-of-contents/chart-analysis/trend-lines
-    publisher: StockCharts.com — ChartSchool
-    kind: education
-    credibility: 3
-    credibility_note: Cùng nhà cung cấp; hướng dẫn cách vẽ và đánh giá đường xu hướng, không dẫn số liệu.
+  - title: "The Stock Market Barometer: A Study of its Forecast Value Based on Charles H. Dow's Theory of the Price Movement"
+    url: https://distantreader.org/stacks/trust/uc2/uc2_ark+=13960=t42r3r118.txt
+    author: William Peter Hamilton (tổng biên tập The Wall Street Journal)
+    publisher: Harper & Brothers
+    date: 1922
+    kind: book
+    credibility: 4
+    credibility_note: Tài liệu gốc của lý thuyết Dow, có trích nguyên văn xã luận của Dow; phạm vi công cộng, đọc nguyên văn chương I–X.
     accessed: 2026-11-25
   - title: "Trading Price Action Trends — Chapter 1 (trích đoạn của nhà xuất bản)"
     url: https://media.wiley.com/product_data/excerpt/10/11180665/1118066510-72.pdf
@@ -27,7 +22,7 @@ sources:
     date: 2011
     kind: book
     credibility: 3
-    credibility_note: Đọc toàn văn chương 1; sách của người thực hành có biên tập, tác giả bán khoá học.
+    credibility_note: Tài liệu gốc của tác giả price action hiện đại, đọc toàn văn chương 1; tác giả bán khoá học.
     accessed: 2026-11-25
   - title: "Price Action Trading Terms Glossary"
     url: https://www.brookstradingcourse.com/price-action-trading-terms-glossary/
@@ -35,7 +30,7 @@ sources:
     publisher: Brooks Trading Course
     kind: blog
     credibility: 2
-    credibility_note: Bảng thuật ngữ trên trang bán khoá học của tác giả; dùng cho định nghĩa thuật ngữ của Brooks.
+    credibility_note: Bảng thuật ngữ của chính tác giả, trên trang bán khoá học; dùng cho định nghĩa thuật ngữ của Brooks.
     accessed: 2026-11-25
   - title: "What is price action? 6 aspects"
     url: https://www.brookstradingcourse.com/price-action/what-is-price-action-6-aspects/
@@ -44,7 +39,25 @@ sources:
     date: 2020-08-30
     kind: blog
     credibility: 2
-    credibility_note: Bài trên trang bán khoá học của tác giả; tỷ lệ nêu trong bài là ước tính cá nhân.
+    credibility_note: Bài của chính tác giả trên trang bán khoá học; tỷ lệ nêu trong bài là ước tính cá nhân.
+    accessed: 2026-11-25
+  - title: "How I Trade and Invest in Stocks and Bonds"
+    url: https://archive.org/details/cu31924031269552
+    author: Richard D. Wyckoff
+    publisher: The Magazine of Wall Street
+    date: 1922
+    kind: book
+    credibility: 4
+    credibility_note: Tài liệu gốc của Wyckoff, bản quét thư viện Cornell không còn hạn chế bản quyền; đọc nguyên văn chương I–VIII.
+    accessed: 2026-11-25
+  - title: "Reading Price Charts Bar by Bar — Chapter 1: Price Action (trích đoạn của nhà xuất bản)"
+    url: https://media.wiley.com/product_data/excerpt/52/04704439/0470443952.pdf
+    author: Al Brooks
+    publisher: Wiley
+    date: 2009
+    kind: book
+    credibility: 3
+    credibility_note: Tài liệu gốc, đọc toàn văn chương 1.
     accessed: 2026-11-25
 created: 2026-11-25
 updated: 2026-11-25
@@ -56,81 +69,84 @@ research:
 
 ## Định nghĩa
 
-**Xu hướng tăng** là khi giá tạo chuỗi đỉnh sau cao hơn đỉnh trước và đáy sau cao hơn đáy trước. **Xu hướng giảm** là chuỗi đỉnh thấp dần và đáy thấp dần (Nguồn [1]). Khi giá không tạo được chuỗi đó mà dao động lên xuống trong một khoảng, thị trường đang **đi ngang** (vùng giá, trading range). Khi đó người mua và người bán gần cân bằng (Nguồn [3]).
+Theo định nghĩa của Dow mà Hamilton thuật lại, thị trường đang **tăng** khi các đỉnh sau vượt lên trên các đỉnh trước, và đang **giảm** khi các đáy sau thủng xuống dưới các đáy trước (Nguồn [1]). Khi giá không làm được điều đó mà dao động trong một khoảng hẹp, thị trường đang **đi ngang**. Lý thuyết Dow gọi đó là "tạo một đường" (making a line), và coi đó là giai đoạn tích luỹ hoặc phân phối (Nguồn [1]).
 
 ## Giải thích
 
-### Xác định xu hướng trên biểu đồ
+### Ba cấp chuyển động diễn ra cùng lúc (lý thuyết Dow)
 
-- Đánh dấu các **đỉnh sóng** (swing high) và **đáy sóng** (swing low) gần nhất, rồi so sánh từng cặp.
-- Theo lý thuyết Dow, xu hướng được coi là **còn hiệu lực cho tới khi có bằng chứng ngược lại** (Nguồn [1]):
-  - Xu hướng giảm chỉ kết thúc khi giá tạo một đáy cao hơn đáy trước, **và** nhịp tăng sau đó vượt qua đỉnh hồi gần nhất.
-  - Xu hướng tăng đổi chiều khi giá tạo một đáy thấp hơn và phá xuống dưới đáy trước.
-- Hamilton, người kế tục Dow, gợi ý bỏ qua các dao động nhỏ (khoảng dưới 3%) để tránh tín hiệu giả. Đây là gợi ý, không phải quy tắc (Nguồn [1]).
+Hamilton viết rằng Dow đã chỉ ra ba chuyển động diễn ra đồng thời (Nguồn [1]):
 
-### Ba cấp xu hướng
-
-Lý thuyết Dow chia chuyển động giá thành ba cấp (Nguồn [1]):
-
-| Cấp | Thời gian | Vai trò |
+| Cấp | Mô tả trong tài liệu gốc | Thời gian |
 | --- | --- | --- |
-| Chính | vài tháng tới vài năm | thị trường tăng hoặc giảm dài hạn |
-| Thứ cấp | vài tuần tới vài tháng | nhịp điều chỉnh ngược xu hướng chính, thường lấy lại 1/3 tới 2/3 đợt chạy trước (hay gặp khoảng 50%) |
-| Nhỏ | vài giờ tới khoảng một tuần | dao động hằng ngày, phần lớn là nhiễu |
+| **Chính** (primary) | Thị trường tăng hoặc giảm lớn | Ít nhất một năm, thường lâu hơn. Theo số liệu Hamilton tổng hợp (1900–1923), thị trường tăng kéo dài trung bình khoảng 25 tháng, thị trường giảm khoảng 15 tháng |
+| **Thứ cấp** (secondary) | Nhịp hồi mạnh trong thị trường giảm, nhịp điều chỉnh mạnh trong thị trường tăng | Dow viết: từ 10 tới 60 ngày |
+| **Hằng ngày** (daily) | Dao động từ ngày này sang ngày khác | Hamilton coi là khó tính toán và gần như không đáng để ý |
 
-Brooks mô tả cùng ý ở khung thời gian ngắn: mọi xu hướng chứa những vùng đi ngang nhỏ hơn, và phần lớn xu hướng chỉ là một phần của vùng đi ngang ở khung lớn hơn (Nguồn [3]). Vì vậy luôn xem **khung lớn hơn** trước khi giao dịch ở khung nhỏ.
+- **Nhịp điều chỉnh sâu bao nhiêu?** Dow viết rằng một chuyển động chính thường kèm một chuyển động thứ cấp ngược chiều **ít nhất ba phần tám** đợt chạy chính. Ví dụ của ông: tăng 10 điểm thì hay điều chỉnh khoảng 4 điểm (Nguồn [1]).
+- **Không biết trước độ dài.** Dow viết không thể biết trước một chuyển động chính sẽ kéo dài bao lâu (Nguồn [1]).
+- **Khó phân biệt điều chỉnh với đảo chiều.** Theo Dow, khó đánh giá đợt tăng đã kết thúc chưa, vì một nhịp giảm có thể chỉ là chuyển động thứ cấp mạnh bất thường. Hamilton thêm rằng nhịp thứ cấp rất dễ bị nhầm là khởi đầu của một xu hướng chính mới (Nguồn [1]).
+- **Xác nhận chéo.** Trong lý thuyết Dow gốc, hai chỉ số (công nghiệp và đường sắt) phải xác nhận lẫn nhau; hầu như không có chuyển động chính nào mà hai chỉ số không cùng hướng (Nguồn [1]). Người giao dịch price action ngày nay hay áp dụng ý này bằng cách xem khung thời gian lớn hơn hoặc chỉ số chung của thị trường.
 
-### Xu hướng và đi ngang là một dải liên tục
+### "Đường đi ngang": tích luỹ hay phân phối
 
-Theo Brooks, hành vi giá trải dài từ xu hướng cực mạnh (gần như mọi nhịp đều cao hơn nhịp trước) tới đi ngang cực hẹp (mỗi nhịp lên liền theo một nhịp xuống). Hai trạng thái cực đoan này hiếm và ngắn. Phần lớn thời gian thị trường nằm ở giữa (Nguồn [3]). Ông lưu ý xu hướng tạo cảm giác chắc chắn và gấp gáp, còn vùng đi ngang làm người giao dịch bối rối (Nguồn [3]).
+- Giá đi ngang trong biên độ hẹp nghĩa là đang có tích luỹ hoặc phân phối, và chưa biết là bên nào cho tới khi giá thoát ra (Nguồn [1]).
+- **Giá vượt lên trên đường** là tín hiệu tăng mạnh: có thể chỉ là nhịp hồi thứ cấp trong thị trường giảm, hoặc là khởi đầu một xu hướng tăng chính. **Giá thủng xuống dưới đường** cho thấy thị trường đã "bão hoà" (Nguồn [1]).
+- Wyckoff mô tả cùng hiện tượng ở cấp từng cổ phiếu: các nhóm đầu cơ lớn gom cổ phiếu mà không làm giá tăng, rồi mới đẩy giá lên (Nguồn [5]).
 
-### Quán tính: xu hướng thường tiếp diễn
+### Brooks: xu hướng và đi ngang là một dải liên tục
 
-- Brooks cho rằng xu hướng có khuynh hướng tiếp diễn, và phần lớn nỗ lực đảo chiều xu hướng thất bại. Trong vùng đi ngang thì phần lớn nỗ lực phá vỡ ra ngoài thất bại. Ông nêu con số khoảng 80% cho cả hai, như một ước tính từ kinh nghiệm (Nguồn [5]).
-- Hệ quả thực hành: trong xu hướng mạnh, giao dịch **thuận xu hướng** (mua ở nhịp điều chỉnh), tránh bắt đỉnh, bắt đáy. Brooks gọi giao dịch ngược xu hướng là cách thua lỗ của phần lớn người giao dịch (Nguồn [4]).
+- Hành vi giá trải từ xu hướng cực mạnh (gần như mọi tick đều cao hơn tick trước) tới đi ngang cực hẹp (mỗi nhịp lên một hai tick liền theo một nhịp xuống). Hai trạng thái cực đoan này hiếm và ngắn (Nguồn [2]).
+- Mọi xu hướng chứa những vùng đi ngang nhỏ hơn, và mọi vùng đi ngang chứa những xu hướng nhỏ hơn. Phần lớn xu hướng chỉ là một phần của vùng đi ngang ở khung lớn hơn (Nguồn [2]). Vì vậy luôn xem **khung lớn hơn** trước khi giao dịch ở khung nhỏ.
+- Ở cấp một thanh, thanh hoặc là thanh xu hướng (một bên kiểm soát), hoặc là thanh đi ngang (hai bên cân bằng) (Nguồn [6]).
+- Xu hướng tạo cảm giác chắc chắn và gấp gáp; vùng đi ngang làm người giao dịch bối rối (Nguồn [2]).
+
+### Giao dịch thuận xu hướng
+
+- Wyckoff: "yếu tố chính là xu hướng". Thuận xu hướng thì cơ hội thành công gấp ba, bốn lần đi ngược nó. Mua trong thị trường giảm thì lối thoát duy nhất là chờ một nhịp hồi (Nguồn [5]).
+- Brooks: xu hướng có khuynh hướng tiếp diễn; phần lớn nỗ lực đảo chiều xu hướng thất bại, và trong vùng đi ngang thì phần lớn nỗ lực phá vỡ thất bại. Ông nêu con số khoảng 80% như một ước tính từ kinh nghiệm (Nguồn [4]). Ông gọi giao dịch ngược xu hướng là cách thua lỗ của phần lớn người giao dịch (Nguồn [3]).
+- Brooks khuyên người mới đứng ngoài khi giá đi ngang chồng chéo, chờ tới khi có phá vỡ rõ ràng (Nguồn [3]).
 
 ### Thuật ngữ của Brooks
 
-- **Pullback** (nhịp điều chỉnh): một quãng tạm dừng hoặc đi ngược xu hướng nhưng không vượt qua điểm bắt đầu của xu hướng hay của con sóng. Thường là một vùng đi ngang nhỏ (Nguồn [4]).
-- **High 1 / High 2** (H1/H2): trong một nhịp điều chỉnh của xu hướng tăng, H1 là thanh đầu tiên có đỉnh cao hơn đỉnh thanh trước; H2 là lần thứ hai điều đó xảy ra. Với xu hướng giảm thì đối xứng là L1/L2 (Nguồn [4]). Đây là cách đếm để tìm điểm vào lệnh thuận xu hướng.
-- **Always in** (luôn có vị thế): hướng mà bạn buộc phải chọn nếu lúc nào cũng phải có lệnh. Brooks dùng nó để tóm tắt xu hướng hiện tại (Nguồn [4]).
-- **Micro channel** (kênh siêu hẹp): xu hướng rất mạnh, gần như không có nhịp điều chỉnh, hầu hết thanh chạm đường xu hướng (Nguồn [4]).
-
-### Đường xu hướng
-
-- **Đường xu hướng tăng** nối hai hay nhiều đáy cao dần và đóng vai trò hỗ trợ. **Đường xu hướng giảm** nối các đỉnh thấp dần và đóng vai trò kháng cự (Nguồn [2]).
-- Hai điểm vẽ được đường, điểm thứ ba xác nhận nó. ChartSchool coi ba lần chạm là tối thiểu để đường có giá trị (Nguồn [2]).
-- Đường càng **dốc** thì càng kém tin cậy làm hỗ trợ/kháng cự. Các điểm chạm không nên quá sát hoặc quá xa nhau (Nguồn [2]).
-- Giá phá đường xu hướng là **cảnh báo** xu hướng có thể sắp đổi, chưa phải quyết định cuối cùng. Nên xác nhận thêm bằng [[ho-tro-va-khang-cu|hỗ trợ – kháng cự]] ngang hoặc bằng chuỗi đỉnh – đáy (Nguồn [2]).
+- **Pullback** (nhịp điều chỉnh): quãng tạm dừng hoặc đi ngược xu hướng nhưng không vượt qua điểm bắt đầu của xu hướng hay con sóng; thường là một vùng đi ngang nhỏ (Nguồn [3]).
+- **High 1 / High 2** (H1/H2): trong một nhịp điều chỉnh của xu hướng tăng, H1 là thanh đầu tiên có đỉnh cao hơn đỉnh thanh trước; H2 là lần thứ hai điều đó xảy ra. Xu hướng giảm thì đối xứng là L1/L2 (Nguồn [3]). Đây là cách đếm để tìm điểm vào lệnh thuận xu hướng.
+- **Always in** (luôn có vị thế): hướng mà bạn buộc phải chọn nếu lúc nào cũng phải có lệnh; dùng để tóm tắt xu hướng hiện tại (Nguồn [3]).
+- **Micro channel** (kênh siêu hẹp): xu hướng rất mạnh, gần như không có nhịp điều chỉnh, hầu hết thanh chạm đường xu hướng (Nguồn [3]).
+- **Phá đường xu hướng trước, rồi mới đảo chiều.** Muốn giao dịch ngược một xu hướng mạnh, phải chờ giá phá đường xu hướng, rồi xuất hiện thanh đảo chiều mạnh khi giá quay lại kiểm tra đỉnh/đáy cũ (Nguồn [6]).
 
 ## Ví dụ
 
-Giá tạo đáy ở 100, lên đỉnh 110, điều chỉnh về 104, rồi vượt 110 lên 115. Chuỗi đáy 100 → 104 và đỉnh 110 → 115 là **xu hướng tăng**. Người giao dịch thuận xu hướng sẽ chờ nhịp điều chỉnh tiếp theo (vd. về quanh 109–110, đỉnh cũ) để tìm tín hiệu mua. Nếu giá rơi xuống dưới 104 (đáy gần nhất), cấu trúc tăng bị phá vỡ và xu hướng có thể đã đổi (Nguồn [1]).
+Giá tạo đáy ở 100, lên đỉnh 110, điều chỉnh về 106, rồi vượt 110 lên 115. Đỉnh sau (115) vượt đỉnh trước (110), nên theo định nghĩa của Dow đây là **thị trường tăng** (Nguồn [1]). Nhịp điều chỉnh từ 110 về 106 lấy lại 4/10 đợt tăng, khớp mô tả "ít nhất ba phần tám" của Dow (Nguồn [1]). Người giao dịch thuận xu hướng sẽ chờ nhịp điều chỉnh tiếp theo để tìm tín hiệu mua (Nguồn [5]). Nếu giá thủng xuống dưới 106, đáy gần nhất, thì cần coi chừng xu hướng đã đổi (Nguồn [1]).
 
 ## Hiểu sai thường gặp
 
-- **"Giá phá đường xu hướng là xu hướng đã đảo chiều."** Đó chỉ là cảnh báo; cần xác nhận thêm (Nguồn [2]).
-- **"Xu hướng ở khung 5 phút là xu hướng thật."** Nó có thể chỉ là một nhịp trong vùng đi ngang của khung lớn hơn (Nguồn [3]).
-- **"Xu hướng đã đi xa thì sắp đảo chiều."** Brooks cho rằng phần lớn nỗ lực đảo chiều thất bại; xu hướng có quán tính (Nguồn [5]).
-- **"Vùng đi ngang sắp phá vỡ thì vào lệnh trước cho sớm."** Hamilton khuyên không đoán trước hướng phá vỡ (Nguồn [1]); Brooks khuyên người mới đứng ngoài khi giá đi ngang chồng chéo, chờ phá vỡ rõ ràng (Nguồn [4]).
+- **"Nhịp giảm mạnh nghĩa là xu hướng tăng đã kết thúc."** Có thể chỉ là chuyển động thứ cấp. Dow và Hamilton đều thừa nhận rất khó phân biệt hai trường hợp này (Nguồn [1]).
+- **"Xu hướng ở khung 5 phút là xu hướng thật."** Nó có thể chỉ là một nhịp trong vùng đi ngang của khung lớn hơn (Nguồn [2]).
+- **"Xu hướng đã đi xa thì sắp đảo chiều."** Brooks cho rằng phần lớn nỗ lực đảo chiều thất bại (Nguồn [4]).
+- **"Lý thuyết Dow là hệ thống để thắng thị trường."** Hamilton viết rõ nó không phải hệ thống kiểu cờ bạc để thắng nhà cái (Nguồn [1]).
 
 ## Câu hỏi thường gặp
 
 ### Làm sao biết thị trường đang có xu hướng?
 
-So sánh các đỉnh và đáy gần nhất. Đỉnh và đáy cùng cao dần là xu hướng tăng, cùng thấp dần là xu hướng giảm. Không theo chuỗi nào thì thị trường đang đi ngang (Nguồn [1]).
+Theo định nghĩa của Dow, thị trường tăng khi các đỉnh sau vượt các đỉnh trước, và giảm khi các đáy sau thủng các đáy trước (Nguồn [1]). Không có hai điều đó thì giá đang đi ngang.
 
-### Khi nào xu hướng được coi là đã đảo chiều?
+### Lý thuyết Dow chia xu hướng thành mấy cấp?
 
-Theo lý thuyết Dow, xu hướng giảm kết thúc khi giá tạo đáy cao hơn và nhịp tăng sau đó vượt qua đỉnh hồi gần nhất. Xu hướng tăng thì ngược lại (Nguồn [1]).
+Ba cấp diễn ra cùng lúc: chính (ít nhất một năm), thứ cấp (nhịp điều chỉnh hay hồi mạnh, theo Dow từ 10 tới 60 ngày) và hằng ngày (dao động gần như không đáng để ý) (Nguồn [1]).
 
 ### Nhịp điều chỉnh thường sâu bao nhiêu?
 
-Lý thuyết Dow cho rằng nhịp điều chỉnh thứ cấp thường lấy lại 1/3 tới 2/3 đợt chạy trước, hay gặp khoảng 50% (Nguồn [1]). Đây là mô tả kinh nghiệm, không phải quy luật cố định.
+Dow viết nhịp thứ cấp thường lấy lại ít nhất ba phần tám đợt chạy chính, ví dụ tăng 10 điểm thì điều chỉnh khoảng 4 điểm (Nguồn [1]). Đây là quan sát kinh nghiệm của Dow, không phải quy luật cố định.
+
+### Giai đoạn đi ngang nghĩa là gì?
+
+Lý thuyết Dow coi giá đi ngang trong biên độ hẹp là giai đoạn tích luỹ hoặc phân phối. Giá vượt lên trên là tín hiệu tăng, thủng xuống dưới là tín hiệu giảm (Nguồn [1]).
 
 ### Nên giao dịch thuận hay ngược xu hướng?
 
-Người theo price action thường ưu tiên thuận xu hướng. Brooks cho rằng giao dịch ngược xu hướng là cách thua lỗ của phần lớn người giao dịch (Nguồn [4]).
+Thuận xu hướng. Wyckoff viết rằng cơ hội thành công khi thuận xu hướng gấp ba, bốn lần khi đi ngược nó (Nguồn [5]).
 
 ## Liên quan
 

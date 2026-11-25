@@ -11,21 +11,21 @@ sources:
     publisher: StockCharts.com — ChartSchool
     kind: education
     credibility: 3
-    credibility_note: Trang kiến thức có hệ thống của nhà cung cấp phần mềm biểu đồ, dựa trên sách của Nison và Morris; không dẫn số liệu về tỷ lệ thành công.
+    credibility_note: Nguồn thứ cấp (trang giáo dục của nhà cung cấp phần mềm biểu đồ) tóm theo sách gốc của Nison và Morris; dùng vì chưa đọc được phần mô hình trong sách gốc.
     accessed: 2026-11-25
   - title: "Candlestick Bullish Reversal Patterns"
     url: https://chartschool.stockcharts.com/table-of-contents/chart-analysis/candlestick-charts/candlestick-bullish-reversal-patterns
     publisher: StockCharts.com — ChartSchool
     kind: education
     credibility: 3
-    credibility_note: Cùng nhà cung cấp; nêu điều kiện hình thành và xác nhận từng mô hình.
+    credibility_note: Nguồn thứ cấp, cùng nhà cung cấp; nêu điều kiện hình thành và xác nhận từng mô hình theo Nison và Morris.
     accessed: 2026-11-25
   - title: "Candlestick Bearish Reversal Patterns"
     url: https://chartschool.stockcharts.com/table-of-contents/chart-analysis/candlestick-charts/candlestick-bearish-reversal-patterns
     publisher: StockCharts.com — ChartSchool
     kind: education
     credibility: 3
-    credibility_note: Cùng nhà cung cấp; phiên bản giảm của các mô hình trên.
+    credibility_note: Nguồn thứ cấp, cùng nhà cung cấp; phiên bản giảm của các mô hình trên.
     accessed: 2026-11-25
   - title: "Reading Price Charts Bar by Bar — Chapter 1: Price Action (trích đoạn của nhà xuất bản)"
     url: https://media.wiley.com/product_data/excerpt/52/04704439/0470443952.pdf
@@ -34,7 +34,7 @@ sources:
     date: 2009
     kind: book
     credibility: 3
-    credibility_note: Đọc toàn văn chương 1; sách của người thực hành có biên tập, tác giả bán khoá học.
+    credibility_note: Tài liệu gốc của tác giả price action hiện đại, đọc toàn văn chương 1; tác giả bán khoá học.
     accessed: 2026-11-25
   - title: "Candlestick technical trading strategies: can they create value for investors? (luận án tiến sĩ)"
     url: https://mro.massey.ac.nz/handle/10179/1604
@@ -44,6 +44,14 @@ sources:
     kind: paper
     credibility: 4
     credibility_note: Luận án sau đăng tạp chí có bình duyệt; chỉ đọc được phần tóm tắt.
+    accessed: 2026-11-25
+  - title: "Technische Analyse mit Candlesticks — Kapitel 1: Einleitung (bản đọc thử của nhà xuất bản)"
+    url: https://www.m-vg.de/mediafiles/Leseprobe/9783898798433.pdf
+    author: Steve Nison
+    publisher: FinanzBuch Verlag (bản tiếng Đức của Japanese Candlestick Charting Techniques)
+    kind: book
+    credibility: 3
+    credibility_note: Tài liệu gốc của người đưa nến Nhật sang phương Tây, nhưng chỉ đọc được chương mở đầu bản dịch tiếng Đức; phần tiêu chí từng mô hình chưa đọc được.
     accessed: 2026-11-25
 created: 2026-11-25
 updated: 2026-11-25
@@ -61,7 +69,7 @@ research:
 2. **Ở vị trí có ý nghĩa**, ví dụ chạm [[ho-tro-va-khang-cu|hỗ trợ – kháng cự]] hoặc đường xu hướng. Một mô hình nhấn chìm tăng ở đỉnh mới không phải tín hiệu đảo chiều; nó có thể chỉ là tiếp diễn (Nguồn [2]).
 3. **Được xác nhận.** Phần lớn mô hình cần xác nhận trong 1–3 phiên tiếp theo: với mô hình tăng là khoảng trống giá tăng, một nến tăng dài, hoặc một phiên tăng với khối lượng lớn; với mô hình giảm thì ngược lại (Nguồn [2][3]).
 
-ChartSchool nhắc nhiều lần rằng không nên dùng nến một mình, mà kết hợp với hỗ trợ – kháng cự, động lượng và khối lượng (Nguồn [1][2]).
+Chính Nison, người đưa nến Nhật sang phương Tây, dành nửa sau cuốn sách của mình cho việc **kết hợp nến với công cụ phân tích phương Tây**. Ông cũng nhắc rằng mô hình ngoài thực tế không cần giống hệt hình minh hoạ mới cho tín hiệu đáng tin, và các biến thể của mô hình gốc vẫn cho biết nhiều điều về trạng thái thị trường (Nguồn [6]). Brooks nói cùng ý: "gần đúng là đủ" (Nguồn [4]). Các trang tóm tắt sách Nison cũng nhắc không nên dùng nến một mình (Nguồn [1][2]).
 
 ## Các bước / thành phần
 
@@ -120,6 +128,7 @@ Người giao dịch chưa mua ngay mà chờ **xác nhận**: phiên sau tăng 
 - **Bằng chứng học thuật trái chiều.** Một nghiên cứu trên cổ phiếu Dow Jones 1992–2002 không thấy chiến lược nến giúp thắng thị trường (Nguồn [5]). Xem thêm [[nghien-cuu-hieu-qua-phan-tich-ky-thuat]].
 - Các trang hướng dẫn **không đưa số liệu** về tỷ lệ thành công của từng mô hình. Những con số "mô hình X thắng 70%" trên mạng cần nguồn kiểm chứng.
 - Quy tắc xác nhận không hoàn toàn thống nhất. Ví dụ, có ví dụ trong ChartSchool cho rằng sao mai doji không cần xác nhận thêm ngoài nến thứ ba, trong khi quy tắc chung là phần lớn mô hình cần xác nhận (Nguồn [2]).
+- **Tài liệu gốc chưa đọc được:** phần mô tả từng mô hình trong sách của Nison (chỉ đọc được chương mở đầu), nên tiêu chí hình thành ở trên lấy qua bản tóm tắt thứ cấp của ChartSchool. Cần đối chiếu với sách gốc trước khi đăng.
 - Tên gọi khác nhau giữa các tác giả: "pin bar" và "inside bar" là tên của người giao dịch price action, gần với búa/sao băng và harami trong hệ thống nến Nhật.
 
 ## Câu hỏi thường gặp

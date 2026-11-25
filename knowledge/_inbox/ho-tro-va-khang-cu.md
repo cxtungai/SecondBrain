@@ -29,7 +29,7 @@ sources:
     publisher: StockCharts.com — ChartSchool
     kind: education
     credibility: 3
-    credibility_note: Trang kiến thức có hệ thống của nhà cung cấp phần mềm biểu đồ, không ghi tác giả, không dẫn số liệu.
+    credibility_note: Nguồn thứ cấp (trang giáo dục của nhà cung cấp phần mềm biểu đồ, không ghi tác giả); chỉ dùng bổ trợ cho các quy tắc chưa đọc được tài liệu gốc.
     accessed: 2026-11-25
   - title: "Price floors and ceilings: Areas of support and resistance in the markets"
     url: https://www.britannica.com/money/what-are-support-resistance
@@ -37,7 +37,7 @@ sources:
     publisher: Britannica Money (Encyclopædia Britannica)
     kind: education
     credibility: 3
-    credibility_note: Trang kiến thức có biên tập và người kiểm chứng ghi tên, không bán sản phẩm giao dịch.
+    credibility_note: Nguồn thứ cấp có biên tập và người kiểm chứng ghi tên, không bán sản phẩm giao dịch; chỉ dùng bổ trợ.
     accessed: 2026-11-25
   - title: "Identifying Chart Patterns with Technical Analysis (webinar)"
     url: https://www.fidelity.com/bin-public/060_www_fidelity_com/documents/learning-center/Idenitfying-Chart-Patterns.pdf
@@ -45,7 +45,34 @@ sources:
     publisher: Fidelity Investments
     kind: education
     credibility: 3
-    credibility_note: Đọc toàn văn; đồng tác giả giáo trình chính của chương trình CMT, nhưng là tài liệu của công ty môi giới.
+    credibility_note: Nguồn thứ cấp (giáo trình phân tích kỹ thuật cổ điển của đồng tác giả sách giáo khoa CMT, tài liệu của công ty môi giới); đọc toàn văn.
+    accessed: 2026-11-25
+  - title: "Studies in Tape Reading"
+    url: https://archive.org/details/studiesintapere00wyckgoog
+    author: Richard D. Wyckoff (bút danh Rollo Tape)
+    publisher: The Ticker Publishing Company (bản quét là bản tái bản của Traders Press)
+    date: 1910
+    kind: book
+    credibility: 4
+    credibility_note: Tài liệu gốc của Wyckoff, phạm vi công cộng; đã đối chiếu trực tiếp đoạn về "điểm kháng cự".
+    accessed: 2026-11-25
+  - title: "The Stock Market Barometer: A Study of its Forecast Value Based on Charles H. Dow's Theory of the Price Movement"
+    url: https://distantreader.org/stacks/trust/uc2/uc2_ark+=13960=t42r3r118.txt
+    author: William Peter Hamilton (tổng biên tập The Wall Street Journal)
+    publisher: Harper & Brothers
+    date: 1922
+    kind: book
+    credibility: 4
+    credibility_note: Tài liệu gốc của lý thuyết Dow; phạm vi công cộng, đọc nguyên văn chương I–X.
+    accessed: 2026-11-25
+  - title: "Reading Price Charts Bar by Bar — Chapter 1: Price Action (trích đoạn của nhà xuất bản)"
+    url: https://media.wiley.com/product_data/excerpt/52/04704439/0470443952.pdf
+    author: Al Brooks
+    publisher: Wiley
+    date: 2009
+    kind: book
+    credibility: 3
+    credibility_note: Tài liệu gốc của tác giả price action hiện đại, đọc toàn văn chương 1.
     accessed: 2026-11-25
 created: 2026-11-25
 updated: 2026-11-25
@@ -61,9 +88,15 @@ research:
 
 ## Giải thích
 
+### Trong tài liệu gốc của các phương pháp
+
+- **Wyckoff (1910):** "điểm kháng cự" là mức giá mà thị trường quay đầu sau một nhịp hồi. Ví dụ của ông: cổ phiếu bị bán khống ở 130, giảm về 128, hồi lên 129 rồi quay xuống, thì 129 là điểm kháng cự. Ông dùng các điểm này để đặt dừng lỗ sát hơn (Nguồn [6]).
+- **Lý thuyết Dow (Hamilton, 1922):** khi chỉ số đi ngang trong biên độ hẹp ("tạo một đường"), cạnh trên và cạnh dưới của đường là ranh giới của giai đoạn tích luỹ hoặc phân phối. Giá vượt lên trên là tín hiệu tăng mạnh, thủng xuống dưới là thị trường đã "bão hoà" (Nguồn [7]).
+- **Brooks (2009):** trong vùng đi ngang, không mua ở đỉnh vùng, không bán ở đáy vùng (Nguồn [8]).
+
 ### Vì sao hỗ trợ và kháng cự hình thành
 
-- **Cung – cầu.** Hỗ trợ và kháng cự là nơi cung và cầu gặp nhau. Tại hỗ trợ, cầu được cho là đủ mạnh để chặn đà giảm; tại kháng cự, nguồn bán đủ mạnh để chặn đà tăng (Nguồn [3]).
+- **Cung – cầu.** Các nguồn giáo dục thứ cấp giải thích hỗ trợ và kháng cự là nơi cung và cầu gặp nhau. Tại hỗ trợ, cầu được cho là đủ mạnh để chặn đà giảm; tại kháng cự, nguồn bán đủ mạnh để chặn đà tăng (Nguồn [3]).
 - **Người kẹt hàng muốn hoà vốn.** Những người đã mua ở một đỉnh cũ rồi bị lỗ thường muốn bán khi giá quay lại mức mua của họ. Lượng bán này tạo kháng cự (ChartSchool gọi là "nguồn cung phía trên") (Nguồn [3]).
 - **Kỳ vọng chung, tự ứng nghiệm.** Nhiều người cùng nhìn một mức giá và cùng hành động ở đó, nên mức giá đó có tác dụng thật (Nguồn [1][4]). Theo Britannica, tác dụng này chủ yếu trong ngắn hạn; về lâu dài, yếu tố cơ bản của tài sản thường lấn át (Nguồn [4]).
 - **Lệnh dồn quanh số tròn.** Trên thị trường ngoại hối, lệnh chốt lời dồn mạnh đúng tại số tròn nên giá hay bật lại ở đó. Lệnh cắt lỗ thì nằm ngay bên kia số tròn, nên khi giá vượt qua, các lệnh này khớp và đẩy giá chạy tiếp (Nguồn [2]). Trong dữ liệu của Osler, 96% mức hỗ trợ/kháng cự được công bố tận cùng bằng 0 hoặc 5 (Nguồn [1]).
@@ -78,7 +111,7 @@ research:
 
 ### Đổi vai khi bị phá
 
-Khi giá phá qua, **kháng cự cũ thường trở thành hỗ trợ mới, và hỗ trợ cũ thành kháng cự** (Nguồn [3]). Một lần phá vỡ nghĩa là tương quan cung – cầu đã thay đổi (Nguồn [3]). Đây là quy tắc phổ biến trong sách hướng dẫn. Nghiên cứu đã đọc chưa kiểm chứng riêng quy tắc này.
+Khi giá phá qua, **kháng cự cũ thường trở thành hỗ trợ mới, và hỗ trợ cũ thành kháng cự** (Nguồn [3]). Một lần phá vỡ nghĩa là tương quan cung – cầu đã thay đổi (Nguồn [3]). Quy tắc này lấy từ nguồn thứ cấp; tài liệu gốc về nó (Schabacker 1932, Edwards & Magee 1948) chưa đọc được, và nghiên cứu đã đọc chưa kiểm chứng riêng.
 
 ### Cách dùng trong giao dịch price action
 

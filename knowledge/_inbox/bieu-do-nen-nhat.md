@@ -11,7 +11,7 @@ sources:
     publisher: StockCharts.com — ChartSchool
     kind: education
     credibility: 3
-    credibility_note: Trang kiến thức có hệ thống của nhà cung cấp phần mềm biểu đồ, dựa trên sách của Nison và Morris; không dẫn số liệu.
+    credibility_note: Nguồn thứ cấp (trang giáo dục của nhà cung cấp phần mềm biểu đồ) tóm theo sách gốc của Nison và Morris; dùng vì chưa đọc được phần mô hình trong sách gốc.
     accessed: 2026-11-25
   - title: "Reading Price Charts Bar by Bar — Chapter 1: Price Action (trích đoạn của nhà xuất bản)"
     url: https://media.wiley.com/product_data/excerpt/52/04704439/0470443952.pdf
@@ -20,7 +20,7 @@ sources:
     date: 2009
     kind: book
     credibility: 3
-    credibility_note: Đọc toàn văn chương 1; sách của người thực hành có biên tập, tác giả bán khoá học.
+    credibility_note: Tài liệu gốc của tác giả price action hiện đại, đọc toàn văn chương 1; tác giả bán khoá học.
     accessed: 2026-11-25
   - title: "Candlestick chart"
     url: https://en.wikipedia.org/wiki/Candlestick_chart
@@ -35,6 +35,14 @@ sources:
     kind: other
     credibility: 2
     credibility_note: Bách khoa mở; một số câu dẫn từ trang hướng dẫn của sàn môi giới và có chi tiết khó kiểm chứng.
+    accessed: 2026-11-25
+  - title: "Technische Analyse mit Candlesticks — Kapitel 1: Einleitung (bản đọc thử của nhà xuất bản)"
+    url: https://www.m-vg.de/mediafiles/Leseprobe/9783898798433.pdf
+    author: Steve Nison
+    publisher: FinanzBuch Verlag (bản tiếng Đức của Japanese Candlestick Charting Techniques)
+    kind: book
+    credibility: 3
+    credibility_note: Tài liệu gốc của người đưa nến Nhật sang phương Tây, nhưng chỉ đọc được chương mở đầu bản dịch tiếng Đức; phần tiêu chí từng mô hình chưa đọc được.
     accessed: 2026-11-25
 created: 2026-11-25
 updated: 2026-11-25
@@ -82,7 +90,7 @@ Một cây nến chỉ là một phần thông tin. Brooks nhắc: một thanh �
 ### Lịch sử (tóm tắt)
 
 - Câu chuyện thường được kể: thương nhân gạo Munehisa Homma (1724–1803) ở Sakata, Nhật Bản là "cha đẻ" của biểu đồ nến. Ngay Wikipedia cũng chỉ viết là ông "đôi khi được coi là" như vậy (Nguồn [3][4]).
-- Steve Nison giới thiệu biểu đồ nến với phương Tây qua cuốn *Japanese Candlestick Charting Techniques* (1991). Trong cuốn *Beyond Candlesticks* (1994), chính ông viết rằng ít có khả năng Homma đã dùng biểu đồ nến, và nhiều khả năng nó ra đời đầu thời Minh Trị, cuối thế kỷ 19 (Nguồn [3]).
+- Theo chính Nison, kỹ thuật nến được người Viễn Đông hoàn thiện qua nhiều thế hệ bằng kinh nghiệm, và đã bị che giấu với phương Tây hơn một trăm năm. Cuốn *Japanese Candlestick Charting Techniques* (1991) của ông lần đầu giới thiệu chi tiết nến Nhật cho phương Tây. Ông kể đã biết tới nến năm 1987 qua một nữ môi giới người Nhật, người dùng từ "cửa sổ" cho thứ mà phương Tây gọi là khoảng trống giá (Nguồn [5]). Trong cuốn *Beyond Candlesticks* (1994), chính ông viết rằng ít có khả năng Homma đã dùng biểu đồ nến, và nhiều khả năng nó ra đời đầu thời Minh Trị, cuối thế kỷ 19 (Nguồn [3]).
 
 ## Ví dụ
 
