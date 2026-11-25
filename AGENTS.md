@@ -174,7 +174,7 @@ Chạy từ thư mục gốc repo. `./sb` dùng `cargo run --release` nếu máy
 ./sb seo --keyword "<từ khoá>"      # trang nào đã nhắm từ khoá này
 ```
 
-Đưa lên web = commit & push lên nhánh mặc định của repo (người dùng có nút **Đưa lên web** trên Bàn làm việc làm đúng việc này). GitHub Actions tự build và đăng lên GitHub Pages.
+Đưa lên web = commit & push lên nhánh mặc định của repo (người dùng có nút **Đưa lên web** trên Bàn làm việc làm đúng việc này: commit, gộp với bản mới trên GitHub nếu có, rồi push; nút **Lấy bản mới** chỉ lấy về). GitHub Actions tự build và đăng lên GitHub Pages. Kho có thể được sửa song song từ nhiều nơi (máy người dùng, phiên cloud): luôn `git pull` trước khi sửa.
 
 ## Dùng kho để viết content (agent bên ngoài repo)
 

@@ -38,8 +38,12 @@
     <h2>🚀 Đưa lên Internet</h2>
     {% if git.available %}
     <p>{% if git.changes %}Có <strong>{{ git.changes }}</strong> thay đổi trên máy chưa đưa lên web.{% else %}Mọi thay đổi đã được đưa lên web.{% endif %}</p>
-    <button class="btn btn-primary" data-action="push"{% if not git.changes %} disabled{% endif %}>🚀 Đưa lên web</button>
-    <p class="stat-line">Lưu thay đổi lên GitHub; trang web tự cập nhật sau 1–2 phút.{% if git.branch %} Nhánh: <code>{{ git.branch }}</code>.{% endif %}</p>
+    <div class="btn-row">
+      <button class="btn btn-primary" data-action="push"{% if not git.changes %} disabled{% endif %}>🚀 Đưa lên web</button>
+      <button class="btn" data-action="pull">🔄 Lấy bản mới</button>
+    </div>
+    {% if sync_note %}<p class="stat-line" id="sync-note">{{ sync_note }}</p>{% endif %}
+    <p class="stat-line"><strong>Đưa lên web</strong>: lưu thay đổi lên GitHub, trang web tự cập nhật sau 1–2 phút. <strong>Lấy bản mới</strong>: tải về những gì mới trên GitHub, vd. bản nháp Claude viết trên cloud (chương trình cũng tự lấy mỗi lần mở).{% if git.branch %} Nhánh: <code>{{ git.branch }}</code>.{% endif %}</p>
     <pre class="desk-log" id="push-log" hidden></pre>
     {% else %}
     <p class="stat-line">Chưa tìm thấy Git trên máy, hoặc thư mục này chưa kết nối GitHub. Nhờ Claude: <em>“đưa thay đổi lên GitHub giúp tôi”</em>.</p>

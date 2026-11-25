@@ -96,6 +96,27 @@
         btn.disabled = false;
         toast('<strong>Chưa đưa lên được.</strong> ' + esc(res.message || '') + ' Có thể nhờ Claude: “đưa thay đổi lên GitHub giúp tôi”.', 'bad', 0);
       }
+    } else if (action === 'pull') {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.textContent = 'Đang lấy…';
+      const log = document.getElementById('push-log');
+      const res = await post('lay-ban-moi', {});
+      btn.disabled = false;
+      btn.textContent = '🔄 Lấy bản mới';
+      if (res.ok && res.pulled) {
+        try {
+          sessionStorage.setItem('sb-toast', '<strong>' + esc(res.message) + '</strong> Bản nháp mới (nếu có) nằm ở mục “Chờ bạn duyệt”.');
+        } catch {}
+        window.__dirty = true;
+        location.reload();
+      } else if (res.ok) {
+        toast(esc(res.message), 'ok');
+      } else {
+        log.hidden = false;
+        log.textContent = res.log || '';
+        toast('<strong>Chưa lấy được bản mới.</strong> ' + esc(res.message || ''), 'bad', 0);
+      }
     } else if (action === 'add-source') {
       const tpl = document.getElementById('source-template');
       document.getElementById('sources').appendChild(tpl.content.cloneNode(true));

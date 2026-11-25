@@ -1127,6 +1127,7 @@ mark {
 .btn-primary:hover { filter: brightness(1.08); }
 .btn-ghost { background: transparent; }
 .btn-small { font-size: 0.82rem; padding: 0.3rem 0.65rem; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0; }
 
 .toast {
   position: fixed;

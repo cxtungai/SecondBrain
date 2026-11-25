@@ -28,13 +28,22 @@ Lần đầu chương trình tự tải về (khoảng 5 MB). Một cửa sổ �
 | | |
 | --- | --- |
 | 📥 Chờ bạn duyệt | Bản nháp Claude viết hoặc bạn tự viết: Sửa · Duyệt & đăng · Bỏ (vào thùng rác, lấy lại được) |
-| 🚀 Đưa lên Internet | Lưu mọi thay đổi lên GitHub; website tự cập nhật |
+| 🚀 Đưa lên Internet | **Đưa lên web**: lưu mọi thay đổi lên GitHub, website tự cập nhật. **Lấy bản mới**: tải về bản nháp Claude viết trên cloud |
 | ✍️ Tự viết ghi chú | Ghi lại điều bạn vừa đọc: nhập tiêu đề, chọn loại, rồi viết trong ô soạn thảo có xem trước |
 | 🤖 Nhờ Claude làm | Câu mẫu để chép vào Claude: nghiên cứu, nạp tài liệu đã đọc, viết bài SEO, sửa bản nháp… |
 | 🔧 Cần chú ý | Lỗi và gợi ý cải thiện, bấm vào để sửa |
 | ⚙️ Cài đặt trang | Tên trang, mô tả, tác giả, dòng miễn trừ trách nhiệm |
 
 Bạn cũng có thể nói thẳng với Claude: *"đăng bài Price action"*, *"sửa đoạn mở đầu bài X cho dễ hiểu hơn"*, *"đưa thay đổi lên web"*.
+
+## Dùng song song máy tính và cloud
+
+Kho trên GitHub là bản chính; máy tính và Claude trên cloud cùng làm trên đó.
+
+- **Trên cloud** (điện thoại, trình duyệt): nhờ Claude nghiên cứu, viết nháp, rồi nói *"đưa lên web"* để bản nháp về GitHub.
+- **Trên máy**: mở Bàn làm việc — chương trình tự lấy bản mới, bản nháp từ cloud hiện ở "Chờ bạn duyệt". Đang mở mà muốn lấy ngay: bấm **🔄 Lấy bản mới**.
+- Đừng sửa cùng một bài ở hai nơi cùng lúc. Lỡ sửa thì Bàn làm việc không ghi đè gì, chỉ báo; nhờ Claude *"gộp thay đổi từ GitHub giúp tôi"*.
+- Skill bạn cài riêng trên máy không có trên cloud. Muốn dùng cả hai nơi: nhờ Claude trên máy *"chép các skill của tôi vào dự án để dùng được trên cloud"*.
 
 ## Cài đặt lần đầu (một lần)
 

@@ -21,11 +21,15 @@ use tiny_http::{Header, Request, Response, Server};
 struct State {
     site: Site,
     version: u64,
+    /// Kết quả lần lấy bản mới từ GitHub gần nhất — hiện trên Bàn làm việc.
+    sync_note: String,
+    /// Dấu vân tay các file lúc dựng gần nhất — để không dựng lại (và tải lại trình duyệt) hai lần cho cùng một thay đổi.
+    fingerprint: u128,
 }
 
 pub fn serve(project: Project, port: u16, open: bool) -> i32 {
     let project = Arc::new(project);
-    let state = Arc::new(RwLock::new(State { site: build_site(&project), version: 1 }));
+    let state = Arc::new(RwLock::new(State { fingerprint: project.fingerprint(), site: build_site(&project), version: 1, sync_note: String::new() }));
     let lock = Arc::new(Mutex::new(())); // tránh dựng lại đồng thời
 
     let (server, port) = match (port..port + 10).find_map(|p| Server::http(("127.0.0.1", p)).ok().map(|s| (s, p))) {
@@ -44,16 +48,29 @@ pub fn serve(project: Project, port: u16, open: bool) -> i32 {
         open_browser(&address);
     }
 
+    // Lấy bản mới từ GitHub (vd. bản nháp Claude viết trên cloud). Chạy nền để không làm chậm lúc mở;
+    // file đổi → trình duyệt tự tải lại.
+    {
+        let (project, state) = (project.clone(), state.clone());
+        std::thread::spawn(move || {
+            let r = sync(&project);
+            let msg = r["message"].as_str().unwrap_or("").to_string();
+            if r["ok"] == true && r["pulled"] == true {
+                println!("  ↓ {msg}");
+            } else if r["ok"] == false {
+                println!("  ! Chưa lấy được bản mới từ GitHub: {msg}");
+            }
+            set_sync_note(&state, &msg);
+        });
+    }
+
     // Theo dõi thay đổi file → dựng lại → trình duyệt tự tải lại.
     {
         let (project, state, lock) = (project.clone(), state.clone(), lock.clone());
         std::thread::spawn(move || {
-            let mut last = project.fingerprint();
             loop {
                 std::thread::sleep(Duration::from_millis(700));
-                let fp = project.fingerprint();
-                if fp != last {
-                    last = fp;
+                if project.fingerprint() != state.read().unwrap().fingerprint {
                     rebuild(&project, &state, &lock);
                     println!("  ↻ Đã cập nhật ({})", chrono::Local::now().format("%H:%M:%S"));
                 }
@@ -68,15 +85,22 @@ pub fn serve(project: Project, port: u16, open: bool) -> i32 {
     0
 }
 
+fn set_sync_note(state: &RwLock<State>, msg: &str) {
+    let mut st = state.write().unwrap();
+    st.sync_note = if msg.is_empty() { String::new() } else { format!("{} — {msg}", chrono::Local::now().format("%H:%M")) };
+}
+
 fn build_site(project: &Project) -> Site {
     Site::new(project.load(true), "", None, true)
 }
 
 fn rebuild(project: &Project, state: &RwLock<State>, lock: &Mutex<()>) {
     let _guard = lock.lock().unwrap();
+    let fingerprint = project.fingerprint();
     let site = build_site(project);
     let mut s = state.write().unwrap();
     s.site = site;
+    s.fingerprint = fingerprint;
     s.version += 1;
 }
 
@@ -185,7 +209,7 @@ fn handle(mut req: Request, project: &Project, state: &RwLock<State>, lock: &Mut
     }
     let s = state.read().unwrap();
     if route == "ban-lam-viec/" {
-        let html = desk(&s.site, project);
+        let html = desk(&s.site, project, &s.sync_note);
         drop(s);
         return respond(req, 200, "text/html; charset=utf-8", html.into_bytes());
     }
@@ -216,7 +240,15 @@ fn handle(mut req: Request, project: &Project, state: &RwLock<State>, lock: &Mut
 // ---------- Trang Bàn làm việc ----------
 
 fn run_git(root: &Path, args: &[&str]) -> Result<String, String> {
-    match Command::new("git").args(args).current_dir(root).output() {
+    // Không bao giờ chờ gõ mật khẩu trong cửa sổ đen (người dùng đang ở trình duyệt, sẽ tưởng treo):
+    // thiếu đăng nhập thì báo lỗi ngay. Thông báo Git bằng tiếng Anh để nhận diện lỗi ổn định.
+    let out = Command::new("git")
+        .args(args)
+        .current_dir(root)
+        .env("GIT_TERMINAL_PROMPT", "0")
+        .env("LANGUAGE", "en")
+        .output();
+    match out {
         Ok(o) if o.status.success() => Ok(String::from_utf8_lossy(&o.stdout).to_string()),
         Ok(o) => Err(format!("{}{}", String::from_utf8_lossy(&o.stdout), String::from_utf8_lossy(&o.stderr))),
         Err(e) => Err(e.to_string()),
@@ -233,7 +265,7 @@ fn git_info(root: &Path) -> Json {
     json!({"available": has_remote, "changes": status.lines().filter(|l| !l.trim().is_empty()).count() + ahead, "branch": branch})
 }
 
-fn desk(site: &Site, project: &Project) -> String {
+fn desk(site: &Site, project: &Project, sync_note: &str) -> String {
     let kb = site.kb();
     let errors_for = |path: &str| -> Vec<String> {
         kb.issues
@@ -274,7 +306,7 @@ fn desk(site: &Site, project: &Project) -> String {
     ];
     site.render_template("desk.html", json!({
         "title": "Bàn làm việc", "section": "", "noindex": true,
-        "pending_items": pending, "issues": issues, "git": git_info(&project.root),
+        "pending_items": pending, "issues": issues, "git": git_info(&project.root), "sync_note": sync_note,
         "types": NOTE_TYPES.iter().map(|t| json!({"key": t.key, "label": t.label})).collect::<Vec<_>>(),
         "prompts": prompts.iter().map(|(t, p)| json!({"title": t, "text": p})).collect::<Vec<_>>(),
         "gaps": kb.gaps.iter().take(8).map(|g| json!({"name": g.name, "count": g.from.len()})).collect::<Vec<_>>(),
@@ -488,7 +520,21 @@ fn api(name: &str, data: &Json, project: &Project, state: &RwLock<State>, lock: 
                 Err(e) => json!({"ok": false, "errors": [e.to_string()]}),
             }
         }
-        "day-len-web" => push(project),
+        "day-len-web" => {
+            let r = push(project);
+            if r["ok"] == true {
+                set_sync_note(state, "Đã đưa lên GitHub.");
+            }
+            r
+        }
+        "lay-ban-moi" => {
+            let r = sync(project);
+            if r["pulled"] == true {
+                rebuild(project, state, lock);
+            }
+            set_sync_note(state, r["message"].as_str().unwrap_or(""));
+            r
+        }
         _ => err(&["Không có chức năng này"]),
     }
 }
@@ -609,41 +655,112 @@ pub fn default_config_yaml() -> String {
     config_yaml(&Config::default())
 }
 
-/// Lưu mọi thay đổi và đẩy lên GitHub.
+fn git_step(root: &Path, log: &mut String, args: &[&str]) -> Result<String, String> {
+    log.push_str(&format!("$ git {}\n", args.join(" ")));
+    let r = run_git(root, args);
+    match &r {
+        Ok(out) | Err(out) => log.push_str(out),
+    }
+    r
+}
+
+/// Commit/merge cần tên + email. Máy mới cài Git thường chưa đặt → dùng tên tạm thay vì báo lỗi.
+fn with_identity<'a>(root: &Path, args: &[&'a str]) -> Vec<&'a str> {
+    let has = run_git(root, &["config", "user.email"]).map(|s| !s.trim().is_empty()).unwrap_or(false);
+    let mut v: Vec<&str> = if has { vec![] } else { vec!["-c", "user.name=Second Brain", "-c", "user.email=second-brain@localhost"] };
+    v.extend_from_slice(args);
+    v
+}
+
+fn network_hint(out: &str) -> &'static str {
+    if ["Authentication", "could not read Username", "terminal prompts disabled", "403", "Permission denied"].iter().any(|k| out.contains(k)) {
+        "Máy chưa đăng nhập GitHub. Nhờ Claude: “đăng nhập GitHub trên máy giúp tôi”."
+    } else if ["Could not resolve host", "unable to access", "timed out"].iter().any(|k| out.contains(k)) {
+        "Không kết nối được GitHub — kiểm tra mạng rồi thử lại."
+    } else {
+        "Không kết nối được GitHub."
+    }
+}
+
+enum Pull {
+    NoUpstream,
+    UpToDate,
+    Pulled(usize),
+}
+
+/// Lấy về những gì mới trên GitHub (vd. bản nháp Claude viết trên cloud).
+/// Không bao giờ ghi đè bài đang sửa trên máy: chỗ nào không tự gộp được thì dừng, giữ nguyên, và báo.
+fn pull(root: &Path, log: &mut String) -> Result<Pull, String> {
+    if run_git(root, &["rev-parse", "--abbrev-ref", "@{u}"]).is_err() {
+        return Ok(Pull::NoUpstream);
+    }
+    if let Err(out) = git_step(root, log, &["fetch", "--quiet"]) {
+        return Err(network_hint(&out).to_string());
+    }
+    let behind = run_git(root, &["rev-list", "--count", "HEAD..@{u}"]).ok().and_then(|s| s.trim().parse::<usize>().ok()).unwrap_or(0);
+    if behind == 0 {
+        return Ok(Pull::UpToDate);
+    }
+    if git_step(root, log, &["merge", "--ff-only", "@{u}"]).is_ok() {
+        return Ok(Pull::Pulled(behind));
+    }
+    // Hai bên cùng có thay đổi mới. Chỉ gộp khi máy không có bài đang sửa dở (gộp lỗi thì quay lại được nguyên vẹn).
+    let clean = run_git(root, &["status", "--porcelain", "--untracked-files=no"]).map(|s| s.trim().is_empty()).unwrap_or(false);
+    if !clean {
+        return Err("Trên GitHub có bản mới, mà máy bạn cũng có bài đang sửa chưa đưa lên. Bấm 🚀 Đưa lên web để gộp hai bên.".into());
+    }
+    if git_step(root, log, &with_identity(root, &["merge", "--no-edit", "@{u}"])).is_ok() {
+        return Ok(Pull::Pulled(behind));
+    }
+    let _ = run_git(root, &["merge", "--abort"]);
+    Err("Máy bạn và GitHub cùng sửa một chỗ trong cùng một bài nên chưa tự gộp được. Không mất gì cả — nhờ Claude: “gộp thay đổi từ GitHub giúp tôi”.".into())
+}
+
+fn pull_message(p: &Pull) -> String {
+    match p {
+        Pull::NoUpstream => "Thư mục này chưa nối với nhánh nào trên GitHub.".into(),
+        Pull::UpToDate => "Máy đã có bản mới nhất.".into(),
+        Pull::Pulled(n) => format!("Đã lấy {n} thay đổi mới từ GitHub."),
+    }
+}
+
+/// Nút “Lấy bản mới” và lúc mở chương trình.
+fn sync(project: &Project) -> Json {
+    let mut log = String::new();
+    match pull(&project.root, &mut log) {
+        Ok(p) => json!({"ok": true, "pulled": matches!(p, Pull::Pulled(_)), "message": pull_message(&p), "log": log}),
+        Err(m) => json!({"ok": false, "message": m, "log": log}),
+    }
+}
+
+/// Lưu mọi thay đổi, gộp với bản mới trên GitHub (nếu có), rồi đẩy lên.
 fn push(project: &Project) -> Json {
     let root = &project.root;
     let mut log = String::new();
-    fn step(root: &Path, log: &mut String, args: &[&str]) -> Result<String, String> {
-        log.push_str(&format!("$ git {}\n", args.join(" ")));
-        let r = run_git(root, args);
-        match &r {
-            Ok(out) | Err(out) => log.push_str(out),
-        }
-        r
-    }
-    if let Err(e) = step(root, &mut log, &["add", "-A"]) {
+    if let Err(e) = git_step(root, &mut log, &["add", "-A"]) {
         return json!({"ok": false, "message": "Không chạy được Git.", "log": e});
     }
     let message = format!("Cập nhật tri thức ({})", today());
-    let commit = step(root, &mut log, &["commit", "-m", &message]);
+    let commit = git_step(root, &mut log, &with_identity(root, &["commit", "-m", &message]));
     if let Err(out) = &commit {
         if !out.contains("nothing to commit") && !out.contains("không có gì") {
             return json!({"ok": false, "message": "Không lưu được thay đổi (commit).", "log": log});
         }
     }
-    let pushed = match step(root, &mut log, &["push"]) {
+    if let Err(m) = pull(root, &mut log) {
+        return json!({"ok": false, "message": m, "log": log});
+    }
+    let pushed = match git_step(root, &mut log, &["push"]) {
         Ok(o) => Ok(o),
-        Err(_) => step(root, &mut log, &["push", "-u", "origin", "HEAD"]),
+        Err(_) => git_step(root, &mut log, &["push", "-u", "origin", "HEAD"]),
     };
     match pushed {
         Ok(_) => json!({"ok": true, "log": log}),
         Err(out) => {
-            let hint = if out.contains("Authentication") || out.contains("could not read Username") || out.contains("403") {
-                "Máy chưa đăng nhập GitHub."
-            } else if out.contains("rejected") {
-                "Trên GitHub có thay đổi mới hơn — cần lấy về trước."
+            let hint = if out.contains("rejected") {
+                "Trên GitHub vừa có thay đổi mới hơn — bấm lại 🚀 Đưa lên web.".to_string()
             } else {
-                "Gửi lên GitHub không thành công."
+                network_hint(&out).to_string()
             };
             json!({"ok": false, "message": hint, "log": log})
         }
