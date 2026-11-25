@@ -11,6 +11,7 @@
         {"name": "Second Brain: ./sb check (liên kết, nguồn, frontmatter, bài viết)", "argv": ["{node}", "{workspace}/.harness/checks/check_secondbrain.mjs", "check"], "timeout_ms": 600000},
         {"name": "Second Brain: ./sb build (dựng toàn bộ trang web, bắt lỗi giao diện/template)", "argv": ["{node}", "{workspace}/.harness/checks/check_secondbrain.mjs", "build"], "timeout_ms": 600000},
         {"name": "Rust: cargo test (máy không có Rust: bỏ qua nếu không đổi code, báo lỗi nếu có)", "argv": ["{node}", "{workspace}/.harness/checks/check_rust_tests.mjs"], "timeout_ms": 900000},
+        {"name": "Dung lượng: chỉ .md trong knowledge/articles, giới hạn cỡ file", "argv": ["{node}", "{workspace}/.harness/checks/check_repo_size.mjs"], "timeout_ms": 60000},
         {"name": "Harness: test vòng đời", "argv": ["{node}", "--test", "{workspace}/.harness/tests/harness.test.mjs"], "timeout_ms": 60000}
       ],
       "manual_gates": [

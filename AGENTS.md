@@ -151,13 +151,22 @@ Quy tắc:
 
 ## Quy trình
 
-1. **Nghiên cứu** (`/research <từ khoá>`): agent tìm nguồn, chấm điểm uy tín, viết bài tổng hợp tiếng Việt có liên kết, lưu vào `knowledge/_inbox/<slug>.md` với `status: draft`, rồi báo cáo cho người dùng.
+1. **Nghiên cứu** (`/research <từ khoá>`): agent lập kế hoạch câu hỏi theo nhiều góc nhìn, tìm và đọc nguồn gốc, chấm điểm uy tín, kiểm chứng từng khẳng định, viết bài tổng hợp tiếng Việt có liên kết, lưu vào `knowledge/_inbox/<slug>.md` với `status: draft`, rồi báo cáo cho người dùng (gồm cả những gì chưa đọc được).
 2. **Duyệt** (người dùng): ở Khu duyệt bài trên web (`/duyet/`) hoặc Bàn làm việc — đọc bản nháp, nhờ bạn sửa bằng lời (nút "Nhờ Claude sửa" chép sẵn câu nhờ có tên file), hoặc tự sửa.
 3. **Đăng**: người dùng bấm **Duyệt & đăng** (hoặc bảo bạn `/publish <file>` → `./sb publish <file>`): chuyển vào thư mục đúng loại, `status: verified`, điền `reviewed`. Sau đó **kết nối**: thêm liên kết hai chiều với ghi chú liên quan và chủ đề trụ cột (`/connect`).
 4. **Đưa lên web**: bấm duyệt ở Khu duyệt bài thì GitHub tự đăng và đưa lên. Trên Bàn làm việc thì bấm nút **Đưa lên web** (git add/commit/push), hoặc bạn commit & push khi người dùng nhờ. Sau khi bài được duyệt trên web, người dùng có thể nhờ bạn "kết nối các bài vừa đăng" (`git pull` trước, rồi `/connect`).
 5. **Kết nối định kỳ** (`/connect`): thêm liên kết còn thiếu, nối ghi chú cô lập, liệt kê tri thức còn thiếu.
 6. **Bài viết SEO/GEO** (`/seo-article <từ khoá>`): agent kiểm tra trùng từ khoá, viết bài nháp vào `articles/` chỉ từ tri thức đã có; người dùng duyệt rồi `/publish articles/<file>.md`.
 7. **Viết content cho kênh khác** (`/write-content <đề bài>`): agent đọc kho và viết bài có trích nguồn (blog ngoài, mạng xã hội, email…).
+
+## Giữ kho nhẹ
+
+Git giữ mọi phiên bản mãi mãi, nên file lớn đã commit thì không thu nhỏ lại được.
+
+- `knowledge/` và `articles/` **chỉ chứa Markdown**. Không lưu PDF, ảnh hay bản lưu trang web; ghi link trong `sources`.
+- Mỗi ghi chú một ý, dưới ~25 KB (tối đa 40 KB). Dài hơn thì tách thành chủ đề + ghi chú con.
+- Không chép lại nội dung đã có ở ghi chú khác: tóm một câu rồi `[[liên kết]]` sang. Một tài liệu được nhiều ghi chú dùng và cần mô tả dài thì tạo ghi chú `source` cho nó.
+- Bước `verify` của harness chạy `.harness/checks/check_repo_size.mjs` để kiểm các quy tắc này. Thư mục `bin/`, `target/`, `dist/` đã bỏ khỏi git; web được dựng lại trên GitHub Actions mỗi lần đưa lên.
 
 ## Lệnh
 
