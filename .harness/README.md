@@ -16,7 +16,7 @@ node .harness/harness.mjs finish --task TASK_ID
 node .harness/harness.mjs status
 ```
 
-- `verify` chạy `./sb check` (qua `.harness/checks/check_secondbrain.mjs`, tự chọn cargo / `bin/secondbrain.exe` / `bash sb`) và test của harness, ghi log và dấu vân tay (SHA-256) của mã nguồn + tri thức. Sửa file sau khi verify/review thì `finish` từ chối — phải chạy lại.
+- `verify` chạy 4 kiểm tra: `./sb check` và `./sb build` (qua `.harness/checks/check_secondbrain.mjs`, tự chọn cargo / `bin/secondbrain.exe` / `bash sb`), `cargo test` (qua `check_rust_tests.mjs`; máy không có Rust thì bỏ qua khi không đổi code, báo lỗi khi có đổi — vì bản tải sẵn không phản ánh code vừa sửa) và test của harness, ghi log và dấu vân tay (SHA-256) của mã nguồn + tri thức. Sửa file sau khi verify/review thì `finish` từ chối — phải chạy lại.
 - `review` cần file bằng chứng có thật (`review-evidence.md`), ghi kết quả các kiểm tra thủ công trong `projects.json`.
 - `finish` chỉ đánh dấu `local-complete`; không commit, không push. Đưa lên web vẫn theo CLAUDE.md (chỉ khi người dùng nhờ).
 - `runs/` và `reports/` chỉ nằm trên từng máy (đã bỏ khỏi git). Muốn tiếp tục một việc ở nơi khác, ghi điểm dừng vào bản nháp / commit, không dựa vào `runs/`.

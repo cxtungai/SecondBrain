@@ -30,6 +30,8 @@ jobs:
         id: pages
         if: env.DEPLOY == 'true'
         uses: actions/configure-pages@v5
+      - name: Test chương trình
+        run: cargo test --locked
       - name: Kiểm tra & xuất web
         run: cargo run --locked -- build
         env:

@@ -189,4 +189,4 @@ Site xuất sẵn: `/llms.txt` (chỉ mục + quy tắc), `/llms-full.txt` (toà
 - Chương trình là một crate Rust (`Cargo.toml`): `text.rs` (bỏ dấu, slug, wikilink), `schema.rs` (loại, trạng thái, thang điểm, đọc frontmatter), `kb.rs` (dựng kho, liên kết, backlinks, gaps), `mentions.rs`, `articles.rs`, `seo.rs`, `render.rs` (Markdown → HTML, FAQ, mục lục), `site.rs` (mọi trang + llms.txt, knowledge.json, sitemap…), `server.rs` (Bàn làm việc + API), `publish.rs`, `cli.rs`.
 - Giao diện: `templates/*.html` (minijinja) và `assets/` (CSS/JS thuần, không thư viện) — nhúng vào chương trình khi build, nên sửa xong phải build lại.
 - Đổi cấu trúc ghi chú → sửa `src/schema.rs`, templates trong `knowledge/_templates/`, và tài liệu này.
-- Trước khi kết thúc: `cargo test`, `./sb check` và `./sb build` phải chạy thành công.
+- Trước khi kết thúc: `cargo test`, `./sb check` và `./sb build` phải chạy thành công — `node .harness/harness.mjs verify --task …` chạy đủ cả ba (GitHub Actions cũng chạy `cargo test` mỗi lần đưa lên).
