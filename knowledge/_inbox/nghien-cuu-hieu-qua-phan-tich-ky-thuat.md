@@ -102,10 +102,10 @@ Bản báo cáo năm 2004 của cùng hai tác giả đếm 92 nghiên cứu: 58
 | Nghiên cứu | Thị trường, giai đoạn | Kết quả chính |
 | --- | --- | --- |
 | Lo, Mamaysky & Wang (2000) | Cổ phiếu Mỹ, 1962–1996 | Dùng thuật toán tự nhận diện mẫu hình (vai–đầu–vai, hai đáy…). Một số mẫu hình mang thêm thông tin, nhất là với cổ phiếu Nasdaq. Tác giả nói rõ điều này **không có nghĩa** là chúng tạo được lợi nhuận vượt trội (Nguồn [3]). |
-| Osler (2000) | Tỷ giá USD trong ngày, 1996–1998 | Mức [[ho-tro-va-khang-cu|hỗ trợ – kháng cự]] do 6 công ty công bố báo trước điểm dừng của xu hướng tốt hơn mức ngẫu nhiên. Nghiên cứu không kiểm tra lợi nhuận (Nguồn [4]). |
+| Osler (2000) | Tỷ giá USD trong ngày, 1996–1998 | Mức [[ho-tro-va-khang-cu|hỗ trợ – kháng cự]] do 6 công ty công bố báo trước điểm dừng của [[xu-huong-gia|xu hướng]] tốt hơn mức ngẫu nhiên. Nghiên cứu không kiểm tra lợi nhuận (Nguồn [4]). |
 | Caginalp & Laurent (1998) | Cổ phiếu S&P 500, 1992–1996 | Mô hình [[bieu-do-nen-nhat|nến]] ba phiên có ý nghĩa thống kê ngoài mẫu, lợi nhuận gần 1% khi nắm giữ hai ngày. Phần tóm tắt không nói đã trừ chi phí chưa (Nguồn [5]). |
 | Marshall (2005); Marshall, Young & Rose (2006) | Cổ phiếu Dow Jones, 1992–2002 | Kiểm định bootstrap cho thấy chiến lược nến **không có giá trị**; không có bằng chứng người theo nến thắng được thị trường (Nguồn [6]). |
-| Tharavanij và cộng sự (2017) | Cổ phiếu SET50 Thái Lan, 2006–2016 | Lợi nhuận trung bình của phần lớn mô hình nến đảo chiều **không khác 0** về thống kê; mô hình nến không dự báo đáng tin được hướng giá; thêm bộ lọc RSI, MFI, Stochastic cũng không cải thiện (Nguồn [7]). |
+| Tharavanij và cộng sự (2017) | Cổ phiếu SET50 Thái Lan, 2006–2016 | Lợi nhuận trung bình của phần lớn [[mau-hinh-nen|mô hình nến]] đảo chiều **không khác 0** về thống kê; mô hình nến không dự báo đáng tin được hướng giá; thêm bộ lọc RSI, MFI, Stochastic cũng không cải thiện (Nguồn [7]). |
 
 ### Vì sao price action khó kiểm chứng trực tiếp
 

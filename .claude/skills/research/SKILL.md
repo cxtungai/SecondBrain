@@ -27,13 +27,15 @@ Ba file đi kèm, đọc khi tới bước tương ứng:
 Viết ra (trong đầu hoặc trong `brief.md` của harness), **chưa** viết bài:
 
 1. **Câu hỏi chính** nói lại bằng một câu, và phạm vi: thị trường/quốc gia, giai đoạn, đối tượng đọc.
+   - **Giữ trọng tâm.** Nghiên cứu một *phương pháp, kỹ thuật, khái niệm* (vd. Price action) thì phần chính phải trả lời: nó **là gì**, **hoạt động thế nào**, **dựa trên nguyên lý gì**, **dùng từng bước ra sao**, và có những biến thể hay lỗi thường gặp nào. Số liệu thống kê (hiệu quả, tỷ lệ thua lỗ), pháp lý, lịch sử là **phần phụ**: tóm 2–4 dòng ở cuối bài, chi tiết để ở ghi chú `fact` riêng. Người dùng đã nhắc điều này (2026-11-25), vì bản Price action đầu tiên sa vào thống kê và pháp lý.
 2. **Mức độ** (chọn một):
    - **Nhanh:** 1 khái niệm, 3–5 nguồn.
    - **Chuẩn:** 1 chủ đề + 2–4 ghi chú con, 8–15 nguồn.
    - **Sâu:** chủ đề gây tranh cãi hoặc liên quan tiền bạc/sức khoẻ/pháp lý, 15+ nguồn, bắt buộc vòng phản biện.
-3. **Câu hỏi con theo góc nhìn.** Mỗi góc nhìn là một người hỏi khác nhau. Chọn những góc hợp chủ đề:
+3. **Câu hỏi con theo góc nhìn.** Mỗi góc nhìn là một người hỏi khác nhau. Chọn những góc hợp chủ đề; với phương pháp, **hai góc đầu chiếm phần lớn công sức**:
+   - *Cơ chế & nguyên lý:* nó hoạt động dựa trên điều gì? Vì sao nó được cho là có tác dụng? Gồm những thành phần nào?
+   - *Người thực hành:* họ làm cụ thể từng bước thế nào? Dùng công cụ, thuật ngữ gì? Lỗi thường gặp? Đọc **tài liệu gốc của tác giả chính** (sách, chương mẫu của nhà xuất bản, trang của tác giả), không chỉ bài tóm tắt.
    - *Định nghĩa & nguồn gốc:* ai đặt ra khái niệm, tài liệu gốc nào?
-   - *Người thực hành:* họ làm cụ thể thế nào?
    - *Nhà nghiên cứu:* có dữ liệu, nghiên cứu, tổng quan nào? Kết quả ra sao?
    - *Người phản biện:* hạn chế, cách hiểu sai, ai nói nó không đúng?
    - *Cơ quan quản lý / pháp lý:* quy định, cảnh báo chính thức?
@@ -65,7 +67,7 @@ Mức **Sâu**: nói ngắn kế hoạch cho người dùng trước khi làm ti
 
 ## 4. Viết bài tổng hợp
 
-- **Chọn loại ghi chú:** chủ đề rộng (vd. "Price action") → `topic` làm trụ cột kèm 2–4 ghi chú con; một khái niệm → `concept`; phương pháp, setup, quy trình → `framework`; số liệu → `fact`; ví dụ thực tế → `case-study`; tóm tắt một tài liệu → `source`.
+- **Chọn loại ghi chú:** chủ đề rộng (vd. "Price action") → `topic` làm trụ cột kèm 2–4 ghi chú con, trong đó **ít nhất một ghi chú `framework` hướng dẫn cách dùng từng bước**; một khái niệm → `concept`; phương pháp, setup, quy trình → `framework`; số liệu → `fact`; ví dụ thực tế → `case-study`; tóm tắt một tài liệu → `source`.
 - Theo template `knowledge/_templates/<type>.md`; xoá các chú thích `<!-- -->` khi đã viết xong phần đó.
 - Viết tiếng Việt, rõ ràng, có cấu trúc. **Câu đầu tiên trả lời thẳng "X là gì?"**: Google/AI hay trích câu này.
 - Gắn nguồn sau mỗi khẳng định quan trọng: `(Nguồn [2])` hoặc `[2][4]`, số là vị trí trong danh sách `sources`.

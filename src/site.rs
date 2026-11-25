@@ -20,12 +20,15 @@ pub struct Page {
 
 impl Page {
     fn html(body: String) -> Page {
-        Page { status: 200, content_type: "text/html; charset=utf-8", body: body.into_bytes() }
+        Page { status: 200, content_type: "text/html; charset=utf-8", body: compact_html(&body).into_bytes() }
     }
     fn text(content_type: &'static str, body: String) -> Page {
         Page { status: 200, content_type, body: body.into_bytes() }
     }
 }
+
+/// Số ký tự nội dung mỗi bài đưa vào search-index.json (giữ file tìm kiếm nhẹ khi kho lớn).
+const SEARCH_TEXT_CHARS: usize = 1000;
 
 /// File tĩnh nhúng sẵn trong chương trình (không cần thư mục ngoài).
 pub const ASSETS: &[(&str, &str, &[u8])] = &[
@@ -774,7 +777,7 @@ impl Site {
         let endpoints = [
             ("llms.txt", "llms.txt — chỉ mục", "Danh sách mọi ghi chú theo loại, kèm tóm tắt, trạng thái và quy tắc sử dụng. Agent nên đọc file này đầu tiên."),
             ("llms-full.txt", "llms-full.txt — toàn bộ nội dung", "Tất cả ghi chú trong một file, phù hợp khi kho còn nhỏ hoặc agent có context lớn."),
-            ("knowledge.json", "knowledge.json — dữ liệu có cấu trúc", "Metadata, liên kết, backlinks và nội dung từng ghi chú — dùng cho tool/script tự lọc theo type, status, tags."),
+            ("knowledge.json", "knowledge.json — dữ liệu có cấu trúc", "Metadata, nguồn, liên kết, backlinks và link tới bản .md của từng ghi chú — dùng cho tool/script tự lọc theo type, status, tags rồi chỉ tải các ghi chú cần."),
             (&format!("notes/{example}.md"), "notes/<slug>.md — từng ghi chú", "Markdown thuần của một ghi chú (wikilink đã đổi thành link chuẩn). Mỗi trang ghi chú đều có bản này."),
         ];
         let prompt = format!(
@@ -918,7 +921,7 @@ impl Site {
             "## Optional".into(),
             String::new(),
             format!("- [Toàn bộ nội dung kho]({}): tất cả ghi chú trong một file văn bản", self.abs("llms-full.txt")),
-            format!("- [Chỉ mục JSON]({}): dữ liệu có cấu trúc gồm metadata, liên kết và nội dung từng ghi chú", self.abs("knowledge.json")),
+            format!("- [Chỉ mục JSON]({}): dữ liệu có cấu trúc gồm metadata, liên kết và link tới bản .md của từng ghi chú", self.abs("knowledge.json")),
             String::new(),
         ]);
         lines.join("\n")
@@ -982,18 +985,20 @@ impl Site {
             "types": NOTE_TYPES.iter().map(|t| (t.key.to_string(), json!({"label": t.label, "folder": t.folder, "description": t.description}))).collect::<serde_json::Map<_, _>>(),
             "statuses": STATUSES.iter().map(|s| (s.key.to_string(), json!({"label": s.label, "description": s.description}))).collect::<serde_json::Map<_, _>>(),
             "tags": kb.tags,
-            "notes": kb.notes().iter().map(|n| { let mut m = self.metadata(n); m["content"] = json!(self.portable(n)); m }).collect::<Vec<_>>(),
+            // Không chép nội dung vào đây: đã có ở notes/<slug>.md (markdown_url) và llms-full.txt.
+            "notes": kb.notes().iter().map(|n| self.metadata(n)).collect::<Vec<_>>(),
             "articles": self.data.articles.published().iter().map(|a| json!({
                 "slug": a.slug, "title": a.title, "description": a.description, "keyword": a.keyword, "intent": a.intent,
                 "based_on": a.notes, "created": a.published_on.clone().unwrap_or_else(|| a.created.clone()), "updated": a.updated,
                 "url": self.abs(&format!("bai-viet/{}/", a.slug)),
             })).collect::<Vec<_>>(),
         });
-        serde_json::to_string_pretty(&data).unwrap_or_default()
+        serde_json::to_string(&data).unwrap_or_default()
     }
 
     fn search_index(&self) -> String {
-        let clip = |s: String| s.chars().take(6000).collect::<String>();
+        // Người xem tải cả file này khi tìm kiếm: chỉ giữ đoạn đầu bài (tiêu đề, tên khác, tóm tắt, tag đã có riêng).
+        let clip = |s: String| s.chars().take(SEARCH_TEXT_CHARS).collect::<String>();
         let mut list: Vec<Json> = self
             .kb()
             .notes()
@@ -1059,6 +1064,30 @@ fn url_encode_path(s: &str) -> String {
     s.split('/').map(url_encode).collect::<Vec<_>>().join("/")
 }
 
+/// Thu gọn HTML cho nhẹ: bỏ thụt đầu dòng và dòng trống do template sinh ra.
+/// Giữ nguyên từng ký tự bên trong `<pre>` và `<textarea>` (khối code, ô soạn thảo).
+fn compact_html(html: &str) -> String {
+    let mut out = String::with_capacity(html.len());
+    let mut keep = 0usize; // số thẻ <pre>/<textarea> đang mở
+    for line in html.lines() {
+        if keep > 0 {
+            out.push_str(line);
+            out.push('\n');
+        } else {
+            let t = line.trim_start();
+            if !t.trim_end().is_empty() {
+                out.push_str(t);
+                out.push('\n');
+            }
+        }
+        let lower = line.to_ascii_lowercase();
+        let opens = lower.matches("<pre").count() + lower.matches("<textarea").count();
+        let closes = lower.matches("</pre>").count() + lower.matches("</textarea>").count();
+        keep = (keep + opens).saturating_sub(closes);
+    }
+    out
+}
+
 /// Trang tạo issue GitHub với tiêu đề và nội dung điền sẵn.
 fn issue_url(repo: &str, title: &str, body: &str) -> String {
     format!("https://github.com/{repo}/issues/new?title={}&body={}", url_encode(title), url_encode(body))
@@ -1111,6 +1140,28 @@ mod tests {
         assert!(index.contains("/Repo/duyet/notes/nhap/"));
         // Ghi chú đã đăng không có trang trong Khu duyệt bài.
         assert!(site.render("duyet/notes/chu-de/").is_none());
+    }
+
+    #[test]
+    fn thu_gon_html_giu_khoi_code_va_o_soan() {
+        let html = "<main>\n    <p>Chào</p>\n\n    <pre><code>fn a() {\n    b();\n}</code></pre>\n  <textarea>dòng 1\n\n    dòng 3</textarea>\n</main>\n";
+        assert_eq!(
+            compact_html(html),
+            "<main>\n<p>Chào</p>\n<pre><code>fn a() {\n    b();\n}</code></pre>\n<textarea>dòng 1\n\n    dòng 3</textarea>\n</main>\n"
+        );
+    }
+
+    #[test]
+    fn du_lieu_cho_ai_va_tim_kiem_gon_nhe() {
+        let site = Site::new(load(false), "/Repo", None, false);
+        let kj = String::from_utf8(site.render("knowledge.json").unwrap().body).unwrap();
+        let data: Json = serde_json::from_str(&kj).unwrap();
+        let note = &data["notes"][0];
+        assert!(note.get("content").is_none(), "nội dung đã có ở bản .md, không chép vào knowledge.json");
+        assert!(note["markdown_url"].as_str().unwrap().ends_with("notes/chu-de.md"));
+        assert!(!kj.contains("\n  "), "knowledge.json ghi gọn, không thụt lề");
+        let si: Json = serde_json::from_str(&String::from_utf8(site.render("search-index.json").unwrap().body).unwrap()).unwrap();
+        assert!(si.as_array().unwrap().iter().all(|x| x["text"].as_str().unwrap().chars().count() <= SEARCH_TEXT_CHARS));
     }
 
     #[test]
