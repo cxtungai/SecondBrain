@@ -111,7 +111,7 @@ pub fn run(argv: Vec<String>) -> i32 {
         print!("{HELP}");
         return 0;
     }
-    if matches!(cmd, "version" | "--version" | "-V") {
+    if matches!(cmd, "version" | "-V") || args.flag("version") {
         println!("secondbrain {}", env!("CARGO_PKG_VERSION"));
         return 0;
     }
