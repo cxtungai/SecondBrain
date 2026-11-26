@@ -93,7 +93,7 @@ Bản báo cáo năm 2004 của cùng hai tác giả đếm 92 nghiên cứu: 58
 - **Nghiên cứu hiện đại:** thử hàng nghìn quy tắc, tính chi phí giao dịch và rủi ro, kiểm tra ngoài mẫu. Chúng cho thấy chiến lược kỹ thuật tạo lợi nhuận kinh tế đều đặn trên nhiều thị trường đầu cơ, **ít nhất đến đầu những năm 1990** (Nguồn [1][2]).
 - **Lợi nhuận giảm dần:** với các đồng tiền chính, nhiều nghiên cứu gần đây cho thấy lợi nhuận đã **giảm hoặc biến mất từ đầu những năm 1990**, trừ đồng yên (Nguồn [2]).
 - **Các lỗi phương pháp phổ biến** (Nguồn [1][2]):
-  - **Đào dữ liệu** (data snooping): thử rất nhiều quy tắc rồi chỉ báo cáo quy tắc tình cờ thắng.
+  - **Đào dữ liệu** (data snooping, xem [[kiem-chung-phuong-phap-giao-dich]]): thử rất nhiều quy tắc rồi chỉ báo cáo quy tắc tình cờ thắng.
   - **Chọn quy tắc sau khi đã biết kết quả.**
   - **Khó ước tính đúng rủi ro và chi phí giao dịch.**
 

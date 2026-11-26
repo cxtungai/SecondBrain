@@ -154,17 +154,15 @@ Chỉ báo là phép tính từ giá, nên luôn đi sau giá. Brooks cho rằng
 
 ## Lộ trình học
 
-Học price action theo 6 cấp, từ biết tới tự sáng tạo: mỗi cấp trả lời một câu hỏi và dựa trên cấp trước nó. Bài ghi "chưa có ghi chú" là phần đang chờ nghiên cứu.
+Price action là một phương pháp giao dịch bằng tiền thật, có nhiều trường phái và hiệu quả còn tranh cãi, nên lộ trình đi đủ 6 cấp, từ biết tới tự xây cách làm. Mỗi cấp trả lời một câu hỏi và dựa trên cấp trước nó. Cấp nào nội dung ngắn thì viết ngay dưới tiêu đề cấp, không tách bài riêng.
 
 ### 1. Biết — price action là gì
 
 Phần **Tổng quan** của bài này trả lời câu hỏi đầu tiên: price action là gì, bắt nguồn từ đâu, dựa trên nguyên lý nào và đọc những gì trên biểu đồ.
 
-- [[phan-tich-ky-thuat]]: lĩnh vực rộng hơn mà price action thuộc về *(chưa có ghi chú)*.
-
 ### 2. Hiểu — vì sao giá chuyển động như vậy
 
-Cấp Hiểu giải thích từng thành phần mà price action đọc: chúng là gì, hình thành ra sao và vì sao có ý nghĩa.
+Cấp Hiểu giải thích từng thành phần mà price action đọc: chúng là gì, hình thành ra sao và vì sao có ý nghĩa. Mỗi bài có mục tiêu và bài tập tự kiểm tra.
 
 - [[xu-huong-gia]]: xu hướng tăng, giảm, đi ngang theo lý thuyết Dow và Brooks.
 - [[ho-tro-va-khang-cu]]: vùng giá nơi đà giảm hoặc đà tăng thường dừng lại.
@@ -172,20 +170,20 @@ Cấp Hiểu giải thích từng thành phần mà price action đọc: chúng 
 
 ### 3. Vận dụng — từ biểu đồ tới một lệnh cụ thể
 
-Cấp Vận dụng đưa các thành phần vào một lệnh: nhận ra tín hiệu, vào lệnh, đặt dừng lỗ và quản lý lệnh.
+Cấp Vận dụng đưa các thành phần vào một lệnh: nhận ra tín hiệu, chọn loại lệnh, vào lệnh, đặt dừng lỗ, tính khối lượng và quản lý lệnh.
 
 - [[mau-hinh-nen]]: các mô hình nến và cách đánh giá thanh tín hiệu.
+- [[cac-loai-lenh-giao-dich]]: lệnh thị trường, lệnh giới hạn, lệnh dừng; các loại lệnh trên sàn HOSE.
 - [[quy-trinh-giao-dich-price-action]]: các bước từ đọc bối cảnh tới quản lý lệnh.
-- [[quan-ly-rui-ro-giao-dich]]: khối lượng lệnh, giới hạn thua lỗ *(chưa có ghi chú)*.
-- [[cac-loai-lenh-giao-dich]]: lệnh thị trường, lệnh dừng, lệnh giới hạn *(chưa có ghi chú)*.
+- [[quan-ly-rui-ro-giao-dich]]: quy tắc 2%, cách tính khối lượng lệnh, giới hạn một chuỗi lệnh thua.
 
 ### 4. Phân tích, tổng hợp — ghép nhiều yếu tố thành một nhận định
 
-Cấp Phân tích, tổng hợp tách một biểu đồ thành bối cảnh, vùng giá, tín hiệu, rồi ghép chúng lại; so sánh các trường phái; đọc nhiều khung thời gian cùng lúc. Bảng "Nguồn gốc" ở phần Tổng quan là bản so sánh tóm tắt.
+Cấp Phân tích, tổng hợp so sánh các trường phái và ghép nhận định trên nhiều khung thời gian. Bảng "Nguồn gốc" ở phần Tổng quan là bản so sánh tóm tắt.
 
-- [[so-sanh-cac-truong-phai-price-action]]: Dow, Wyckoff, nến Nhật và Brooks giống và khác nhau ở đâu *(chưa có ghi chú)*.
-- [[phan-tich-da-khung-thoi-gian]]: ghép nhận định trên nhiều khung thời gian *(chưa có ghi chú)*.
-- Case study phân tích một biểu đồ thật từ đầu tới cuối: chưa có.
+- [[so-sanh-cac-truong-phai-price-action]]: Dow, Wyckoff, nến Nhật và Brooks giống và khác nhau ở đâu; một hiện tượng, bốn cách gọi.
+
+**Đọc nhiều khung thời gian cùng lúc.** Lý thuyết Dow chia chuyển động giá thành ba cấp diễn ra đồng thời: chính, thứ cấp và hằng ngày (Nguồn [5]). Wyckoff xét xu hướng dài hạn của cả thị trường trước tiên, gọi nó là "chiếc la bàn", và để vị trí của cổ phiếu trong sóng 30–60 ngày xuống cuối cùng (Nguồn [7], tr. 90–92). Brooks cho rằng phần lớn xu hướng chỉ là một phần của vùng đi ngang ở khung lớn hơn (Nguồn [2]). Ghép ba ý này lại (tổng hợp của kho): xác định xu hướng ở khung lớn trước, rồi mới tìm điểm vào ở khung nhỏ hơn.
 
 ### 5. Đánh giá — phương pháp hiệu quả tới đâu, giới hạn ở đâu
 
@@ -197,18 +195,20 @@ Cấp Đánh giá nhìn price action bằng bằng chứng và giới hạn củ
 - **Khó làm trong thời gian thực.** Nhìn lại biểu đồ cũ thì thấy rõ điểm vào và ra; làm khi giá đang chạy thì khó hơn nhiều (Nguồn [1]).
 - **Không phải hệ thống thắng chắc.** Hamilton viết lý thuyết Dow không phải "hệ thống để thắng nhà cái", và chiếc phong vũ biểu thị trường không hoàn hảo (Nguồn [5]). Wyckoff nhắc rằng vốn có thể bị hao mòn vì giao dịch quá nhiều hoặc phán đoán kém (Nguồn [6]).
 
-**Bằng chứng và rủi ro:**
+**Bằng chứng và cách tự kiểm chứng:**
 
 - [[nghien-cuu-hieu-qua-phan-tich-ky-thuat]]: nghiên cứu học thuật về phân tích kỹ thuật và mô hình nến cho kết quả trái chiều. Price action theo kiểu tự đọc biểu đồ rất khó kiểm chứng bằng nghiên cứu, vì phải biến cách đọc chủ quan thành quy tắc máy tính (Nguồn [9]).
 - [[ty-le-nha-giao-dich-ca-nhan-thua-lo]]: phần lớn người giao dịch cá nhân ngắn hạn thua lỗ. Ở Việt Nam, Ngân hàng Nhà nước chưa cấp phép cho sàn forex nào; chi tiết trong ghi chú này.
-- [[kiem-chung-phuong-phap-giao-dich]]: tự kiểm chứng một cách giao dịch bằng dữ liệu quá khứ và nhật ký lệnh *(chưa có ghi chú)*.
+- [[kiem-chung-phuong-phap-giao-dich]]: vì sao kết quả kiểm thử quá khứ đẹp chưa chứng minh được gì, và các bước tự kiểm chứng trước khi dùng tiền thật.
 
 ### 6. Sáng tạo — kết hợp price action với phương pháp khác
 
-Cấp Sáng tạo là ghép price action với phương pháp khác và tự xây cách làm của mình. Chính các truyền thống gốc đã là những sự kết hợp: Wyckoff đọc giá cùng khối lượng (Nguồn [6]); Nison dùng nến Nhật chung với các công cụ phân tích phương Tây (Nguồn [8]).
+Cấp Sáng tạo là ghép price action với cách làm khác và tự xây cách làm của riêng mình. Ở đây chỉ ghi những cách kết hợp mà chính tác giả gốc đã viết ra, không tự nghĩ chiến lược mới.
 
-- [[ket-hop-price-action-voi-phuong-phap-khac]]: các cách ghép price action với khối lượng và phương pháp khác, theo tài liệu của chính tác giả *(chưa có ghi chú)*.
-- [[xay-dung-ke-hoach-giao-dich]]: tự viết kế hoạch giao dịch của riêng mình từ các cấp trên *(chưa có ghi chú)*.
+- **Giá cùng khối lượng.** Wyckoff đọc giá cùng khối lượng trên băng giá để biết bên lớn đang gom hay đang xả hàng (Nguồn [6]).
+- **Kỹ thuật cùng nền tảng doanh nghiệp.** Wyckoff xét theo thứ tự: xu hướng thị trường, ngành, công ty, ban lãnh đạo, tài chính, rồi mới tới vị trí kỹ thuật của cổ phiếu (Nguồn [7], tr. 90–92). Ông ví doanh nghiệp tốt như cỗ máy ô tô, còn vị thế kỹ thuật là tia lửa điện quyết định *khi nào* mua (Nguồn [7], tr. 178–179).
+- **Nến Nhật cùng công cụ phương Tây.** Nison dành nửa sau cuốn sách của mình cho việc kết hợp nến với các công cụ phân tích phương Tây (Nguồn [8]); phần này kho chưa đọc được.
+- **Tự xây cách làm của mình.** Wyckoff tự đặt sáu nguyên tắc giao dịch cho bản thân và khuyên tập trên giấy hai, ba năm trước khi giao dịch thật (Nguồn [7], tr. 17–18, 48–50). Một cách làm riêng cần đủ ba phần đã có trong lộ trình (tổng hợp của kho): quy trình vào lệnh và quản lý rủi ro ở cấp Vận dụng, cách tự kiểm chứng ở cấp Đánh giá.
 
 ## Tài liệu gốc
 
@@ -220,6 +220,7 @@ Bản đồ từng cuốn sách gốc đã đọc trọn: ý cốt lõi, quy t�
 
 - **Tài liệu gốc chưa đọc được:** phần lớn bộ ba sách của Brooks (chỉ đọc được chương 1 của hai cuốn và phần đầu chương 25 của cuốn thứ ba); nửa sau *Studies in Tape Reading* (1910) của Wyckoff và các chương XI–XXII sách của Hamilton; sách gốc của Nison phần mô hình nến; sách của Schabacker (1932) và Edwards & Magee (1948) về mẫu hình cổ điển.
 - Chưa có tài liệu price action viết riêng cho cổ phiếu Việt Nam (biên độ trần/sàn, chu kỳ thanh toán).
+- **Cấp Phân tích và Sáng tạo còn mỏng:** chưa đọc được tài liệu gốc của Alexander Elder về hệ thống "ba màn hình" (đọc nhiều khung thời gian), nên phần này viết ngắn ngay trong bài; chưa có case study phân tích một biểu đồ thật từ đầu tới cuối.
 
 ## Câu hỏi thường gặp
 
@@ -237,7 +238,7 @@ Mỗi thanh giá là kết quả giằng co giữa người mua và người bá
 
 ### Bắt đầu học price action từ đâu?
 
-Theo lộ trình 6 cấp của bài này. Trước hết đọc phần Tổng quan để biết price action là gì. Sau đó hiểu xu hướng và vùng đi ngang ([[xu-huong-gia]]), [[ho-tro-va-khang-cu|hỗ trợ – kháng cự]], thân và bóng nến ([[bieu-do-nen-nhat]]). Rồi mới học setup và cách đặt lệnh ([[quy-trinh-giao-dich-price-action]]). Sau cùng là phân tích, đánh giá bằng bằng chứng và kết hợp với phương pháp khác.
+Theo lộ trình học của bài này. Trước hết đọc phần Tổng quan để biết price action là gì. Sau đó hiểu xu hướng và vùng đi ngang ([[xu-huong-gia]]), [[ho-tro-va-khang-cu|hỗ trợ – kháng cự]], thân và bóng nến ([[bieu-do-nen-nhat]]). Rồi mới học tín hiệu, loại lệnh, cách đặt lệnh và quản lý rủi ro ([[quy-trinh-giao-dich-price-action]], [[quan-ly-rui-ro-giao-dich]]). Trước khi dùng tiền thật, đọc phần đánh giá và cách tự kiểm chứng ([[kiem-chung-phuong-phap-giao-dich]]).
 
 ### Price action có cần dùng chỉ báo không?
 
@@ -250,5 +251,9 @@ Không. Brooks khuyên bỏ chỉ báo vì chúng che mất giá (Nguồn [4]). 
 - [[bieu-do-nen-nhat]]
 - [[mau-hinh-nen]]
 - [[quy-trinh-giao-dich-price-action]]
+- [[cac-loai-lenh-giao-dich]]
+- [[quan-ly-rui-ro-giao-dich]]
+- [[so-sanh-cac-truong-phai-price-action]]
 - [[nghien-cuu-hieu-qua-phan-tich-ky-thuat]]
 - [[ty-le-nha-giao-dich-ca-nhan-thua-lo]]
+- [[kiem-chung-phuong-phap-giao-dich]]

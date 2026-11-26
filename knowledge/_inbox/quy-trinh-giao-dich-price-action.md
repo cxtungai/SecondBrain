@@ -130,7 +130,7 @@ Theo Brooks, setup = bối cảnh (các thanh bên trái) + thanh tín hiệu (N
 
 ### Bước 5 — Đặt lệnh: vào, dừng lỗ, mục tiêu
 
-- **Vào lệnh bằng lệnh dừng** (stop order): lệnh chỉ khớp khi giá đã đi theo hướng bạn dự định. Brooks khuyên người mới vào lệnh bằng lệnh dừng (Nguồn [3]). Ví dụ của ông: bán ở một tick (bước giá nhỏ nhất) dưới đáy thanh tín hiệu (Nguồn [1]).
+- **Vào lệnh bằng [[cac-loai-lenh-giao-dich|lệnh dừng]]** (stop order): lệnh chỉ khớp khi giá đã đi theo hướng bạn dự định. Brooks khuyên người mới vào lệnh bằng lệnh dừng (Nguồn [3]). Ví dụ của ông: bán ở một tick (bước giá nhỏ nhất) dưới đáy thanh tín hiệu (Nguồn [1]).
 - **Dừng lỗ ngay khi vào lệnh.** Wyckoff: rủi ro hầu như luôn phải được giới hạn; cách tốt nhất là tập thói quen đặt dừng lỗ 2–3 điểm sau mỗi lệnh giao dịch ngắn hạn. Ông coi đây là quy tắc mà những người giao dịch thành công nhất đều theo (Nguồn [5], tr. 48). Ông cũng tự nhận phần lớn khoản lỗ lớn của mình là do không đặt dừng lỗ ngay lúc vào lệnh, để lỗ 5–10 điểm thay vì 2–3 điểm (Nguồn [5], tr. 120). Trong sách năm 1910, ông chỉ cách đặt dừng lỗ sát hơn bằng "điểm kháng cự", tức mức giá thị trường quay đầu sau một nhịp hồi. Ví dụ của ông: bán khống ở 130, giá xuống 128, hồi lên 129 rồi quay xuống, thì điểm kháng cự là 129 và dừng lỗ đặt ngay trên đó. Mức rủi ro phải quyết định từ đầu, và chỉ được thay đổi theo hướng có lợi (Nguồn [6]). Với thanh tín hiệu nhỏ mà mạnh, Brooks cho rằng rủi ro chỉ là một tick bên kia thanh đó (Nguồn [1]).
 - **Mục tiêu so với rủi ro:**
   - Wyckoff: lợi nhuận dự kiến **ít nhất gấp ba, bốn lần** mức rủi ro, vì chắc chắn sẽ có một phần lệnh thua lỗ (Nguồn [5], tr. 49).
@@ -244,4 +244,6 @@ Khi chạm dừng lỗ, khi đạt mục tiêu, hoặc khi lệnh không chạy.
 - [[ho-tro-va-khang-cu]]
 - [[mau-hinh-nen]]
 - [[quan-ly-rui-ro-giao-dich]]
+- [[cac-loai-lenh-giao-dich]]
+- [[kiem-chung-phuong-phap-giao-dich]]
 - [[wyckoff-how-i-trade-and-invest]]: bản đồ sách gốc của Wyckoff
