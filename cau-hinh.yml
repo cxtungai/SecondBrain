@@ -14,7 +14,7 @@ language: vi
 locale: vi_VN
 
 # Mã xác minh chủ web — dán mã (hoặc nguyên thẻ meta) Google Search Console / Bing Webmaster đưa cho; để trống nếu chưa đăng ký
-google_site_verification: ""
+google_site_verification: "OvmgZBE__5S7i-tDzUOehuwXS-kotmB35wsSnqfmmJ8"
 bing_site_verification: ""
 
 # Quy tắc AI agent phải tuân theo khi dùng kho để viết content (hiện trong llms.txt)
