@@ -43,7 +43,7 @@ Viết ra (trong đầu hoặc trong `brief.md` của harness), **chưa** viết
    - *Người phản biện:* hạn chế, cách hiểu sai, ai nói nó không đúng?
    - *Cơ quan quản lý / pháp lý:* quy định, cảnh báo chính thức?
    - *Người đọc Việt Nam:* bối cảnh, luật, thị trường Việt Nam?
-4. **Kế hoạch ghi chú theo lộ trình 6 cấp.** Người dùng dặn (2026-11-26): tri thức của một chủ đề phải dẫn người đọc qua 6 cấp nhận thức (thang Bloom). Xếp câu hỏi con và ghi chú dự kiến vào đúng cấp:
+4. **Kế hoạch ghi chú theo lộ trình học.** Người dùng dặn (2026-11-26): tri thức của một chủ đề dẫn người đọc theo các cấp nhận thức (thang Bloom), **nhưng chỉ những cấp chủ đề thật sự cần, không ép đủ 6 cấp** (ép đủ sẽ thành máy móc). Trước hết chọn cấp theo loại tri thức: khái niệm, kiến thức nền → thường chỉ Biết + Hiểu; kỹ năng, quy trình, công cụ → thêm Vận dụng; phương pháp nhiều trường phái, hiệu quả còn tranh cãi, người đọc sẽ dùng tiền thật → có thể đủ 6 cấp. Chỉ thêm một cấp khi người đọc có câu hỏi thật ở cấp đó **và** có nguồn tốt để trả lời; nội dung ngắn thì viết thẳng dưới tiêu đề cấp trong bài chủ đề, không tách bài con. Rồi xếp câu hỏi con và ghi chú dự kiến vào đúng cấp:
 
    | Cấp | Người đọc làm được | Câu hỏi | Ghi chú thường dùng |
    | --- | --- | --- | --- |
@@ -54,7 +54,7 @@ Viết ra (trong đầu hoặc trong `brief.md` của harness), **chưa** viết
    | 5. Đánh giá | nhận định đúng sai, giới hạn | bằng chứng, số liệu, giới hạn, khi nào không dùng, cách tự kiểm chứng | `fact` |
    | 6. Sáng tạo | tự xây cách làm | kết hợp với phương pháp khác, tự lập kế hoạch | `framework` |
 
-   Ghi loại và slug dự kiến cho từng ghi chú. Một lượt nghiên cứu không cần lấp đủ 6 cấp; cấp chưa làm thì ghi liên kết `[[slug]]` vào lộ trình để thành việc cần nghiên cứu. Cấp Sáng tạo **vẫn phải có nguồn** (cách chính tác giả gốc kết hợp, tài liệu chính thức), không tự bịa chiến lược mới.
+   Ghi loại và slug dự kiến cho từng ghi chú. Một lượt nghiên cứu không cần làm hết các cấp đã chọn; bài đã định viết mà chưa làm thì ghi liên kết `[[slug]]` vào lộ trình để thành việc cần nghiên cứu. Cấp Sáng tạo **vẫn phải có nguồn** (cách chính tác giả gốc kết hợp, tài liệu chính thức), không tự bịa chiến lược mới.
 
 Mức **Sâu**: nói ngắn kế hoạch cho người dùng trước khi làm tiếp.
 
@@ -89,8 +89,8 @@ Mức **Sâu**: nói ngắn kế hoạch cho người dùng trước khi làm ti
 ## 4. Viết bài tổng hợp
 
 - **Chọn loại ghi chú:** chủ đề rộng (vd. "Price action") → `topic` làm trụ cột kèm 2–4 ghi chú con, trong đó **ít nhất một ghi chú `framework` hướng dẫn cách dùng từng bước**; một khái niệm → `concept`; phương pháp, setup, quy trình → `framework`; số liệu → `fact`; ví dụ thực tế → `case-study`; tóm tắt một tài liệu → `source`.
-- **Ghi chú `topic` có mục `## Lộ trình học`** với `### 1. Biết — …` tới `### 6. Sáng tạo — …` (theo `knowledge/_templates/topic.md`). Dưới mỗi cấp: một câu nói cấp đó trả lời gì, rồi danh sách `- [[slug]]: mô tả một dòng`. Web đọc mục này để xếp thứ tự đọc, hiện "Cấp 2 · Hiểu — bài 3/8", nút bài trước / bài tiếp và thẻ 6 cấp; `./sb seo <slug> --drafts` báo cấp còn thiếu. Bài mới cho chủ đề đã có thì thêm vào đúng cấp trong lộ trình của chủ đề đó. Ví dụ mẫu: `knowledge/_inbox/price-action.md` (hoặc `topics/price-action.md` khi đã đăng).
-- **Bài cấp Hiểu / Vận dụng** có `## Mục tiêu bài học` (ngay sau đoạn mở đầu, 2–4 ý "Sau bài này bạn sẽ…") và `## Bài tập` (trước FAQ, 3–5 câu `### Câu n: …`, mỗi câu có đoạn `**Đáp án:**`, tuỳ chọn `**Gợi ý:**`). Trên web đáp án ẩn, bấm mới hiện. Đề và đáp án chỉ dùng điều đã có trong bài, dẫn nguồn như thân bài; số tự đặt ra ghi "giả định"; ưu tiên câu bắt tự nhớ lại, tự giải thích, tự làm. Chi tiết: AGENTS.md, mục "Mục tiêu bài học và bài tập tự kiểm tra".
+- **Ghi chú `topic` có mục `## Lộ trình học`** với các tiêu đề `### 1. Biết — …`, `### 2. Hiểu — …`, … chỉ cho những cấp đã chọn ở bước 1 (theo `knowledge/_templates/topic.md`). Dưới mỗi cấp: một câu nói cấp đó trả lời gì, rồi danh sách `- [[slug]]: mô tả một dòng`. Web đọc mục này để xếp thứ tự đọc, hiện "Cấp 2 · Hiểu — bài 3/8", nút bài trước / bài tiếp và thẻ lộ trình (chỉ các cấp có trong mục). Bài mới cho chủ đề đã có thì thêm vào đúng cấp trong lộ trình của chủ đề đó. Ví dụ mẫu: `knowledge/_inbox/price-action.md` (hoặc `topics/price-action.md` khi đã đăng).
+- **Bài cấp Hiểu / Vận dụng** có `## Mục tiêu bài học` (ngay sau đoạn mở đầu, 2–4 ý "Sau bài này bạn sẽ…") và `## Bài tập` (trước FAQ, số câu tuỳ độ dài bài, 1–5 câu `### Câu n: …`, mỗi câu có đoạn `**Đáp án:**`, tuỳ chọn `**Gợi ý:**`). Trên web đáp án ẩn, bấm mới hiện. Đề và đáp án chỉ dùng điều đã có trong bài, dẫn nguồn như thân bài; số tự đặt ra ghi "giả định"; ưu tiên câu bắt tự nhớ lại, tự giải thích, tự làm. Chi tiết: AGENTS.md, mục "Mục tiêu bài học và bài tập tự kiểm tra".
 - Theo template `knowledge/_templates/<type>.md`; xoá các chú thích `<!-- -->` khi đã viết xong phần đó.
 - Viết tiếng Việt, rõ ràng, có cấu trúc. **Câu đầu tiên trả lời thẳng "X là gì?"**: Google/AI hay trích câu này.
 - **Dễ được trích (GEO), theo `references/geo.md`:** mỗi mục `##` mở bằng ý chính và gọi đúng tên chủ thể (không mở bằng "Nó / Điều này / Tuy nhiên"); mỗi đoạn một ý; bảng khi so sánh, danh sách đánh số khi có bước; trích ngắn nguyên văn tài liệu gốc kèm số trang cho ý cốt lõi. Đây chỉ là cách trình bày: **không thêm, bớt hay đổi ý của nguồn để đạt gợi ý SEO** (người dùng dặn 2026-11-26).

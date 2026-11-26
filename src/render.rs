@@ -111,7 +111,32 @@ pub fn extract_faq(markdown: &str) -> Vec<Faq> {
     faq.into_iter().filter(|f| !f.question.is_empty() && !f.answer.is_empty()).collect()
 }
 
-/// Tiêu đề kiểu "## Chữ" (ngoài khối code — người gọi tự bỏ qua code): (cấp, chữ thô).
+/// Các dòng nằm ngoài khối code và ngoài chú thích HTML (`<!-- … -->`), cho các bộ đọc theo dòng:
+/// tiêu đề hay liên kết viết trong chú thích (vd. hướng dẫn trong mẫu bài) không được tính.
+pub fn content_lines(markdown: &str) -> impl Iterator<Item = &str> {
+    let (mut fence, mut comment) = (false, false);
+    markdown.lines().filter(move |line| {
+        let t = line.trim_start();
+        if comment {
+            comment = !t.contains("-->");
+            return false;
+        }
+        if t.starts_with("```") || t.starts_with("~~~") {
+            fence = !fence;
+            return false;
+        }
+        if fence {
+            return false;
+        }
+        if t.starts_with("<!--") {
+            comment = !t.contains("-->");
+            return false;
+        }
+        true
+    })
+}
+
+/// Tiêu đề kiểu "## Chữ" (dùng trên dòng của `content_lines`, đã bỏ code): (cấp, chữ thô).
 pub fn atx_heading(line: &str) -> Option<(usize, &str)> {
     let t = line.trim_start();
     let hashes = t.chars().take_while(|&c| c == '#').count();
@@ -155,16 +180,9 @@ pub struct Exercise {
 
 /// Mục "Bài tập" (hoặc "Tự kiểm tra"): mỗi câu là một tiêu đề cấp 3; câu có đáp án khi có đoạn mở bằng **Đáp án:**.
 pub fn extract_exercises(markdown: &str) -> Vec<Exercise> {
-    let (mut out, mut fence, mut inside) = (Vec::<Exercise>::new(), false, false);
-    for line in markdown.lines() {
+    let (mut out, mut inside) = (Vec::<Exercise>::new(), false);
+    for line in content_lines(markdown) {
         let t = line.trim_start();
-        if t.starts_with("```") || t.starts_with("~~~") {
-            fence = !fence;
-            continue;
-        }
-        if fence {
-            continue;
-        }
         if let Some((lv, text)) = atx_heading(t) {
             let text = markdown_to_plain(text);
             if lv <= 2 {

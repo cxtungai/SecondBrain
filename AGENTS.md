@@ -73,7 +73,7 @@ research:                         # tuỳ chọn — do agent nghiên cứu đi�
 
 | Loại | Dùng cho |
 | --- | --- |
-| `topic` | Chủ đề trụ cột: bài giới thiệu (cấp Biết) + **Lộ trình học 6 cấp** dẫn tới các ghi chú con (xem "Lộ trình học"). |
+| `topic` | Chủ đề trụ cột: bài giới thiệu (cấp Biết) + **Lộ trình học** gồm các cấp chủ đề cần (thường Biết, Hiểu; đủ 6 cấp cho phương pháp), dẫn tới các ghi chú con (xem "Lộ trình học"). |
 | `concept` | Một khái niệm/thuật ngữ. Câu đầu trả lời thẳng "X là gì?". |
 | `fact` | Số liệu, dữ kiện có thể trích dẫn. **Bắt buộc có nguồn.** |
 | `framework` | Mô hình, phương pháp, quy trình, setup, checklist. |
@@ -138,9 +138,9 @@ Cấp 1 là quy tắc người dùng đặt ra; cấp 2–3 là quy tắc "linh 
 - Mỗi ghi chú mới phải được ít nhất một ghi chú `topic` liên kết tới, và nên có mục `## Liên quan`.
 - Backlinks, đồ thị, breadcrumb, bài trước / bài tiếp đều được sinh tự động từ liên kết.
 
-## Lộ trình học (6 cấp)
+## Lộ trình học (tối đa 6 cấp, chọn theo chủ đề)
 
-Người dùng dặn (2026-11-26): tri thức của mỗi chủ đề phải dẫn người đọc từ **biết** tới **tự sáng tạo**, theo 6 cấp nhận thức (thang Bloom). Trang chủ đề giới thiệu phương pháp; các bài con giúp hiểu, làm được, rồi đánh giá và kết hợp nó.
+Người dùng dặn (2026-11-26): tri thức của một chủ đề dẫn người đọc theo các cấp nhận thức của thang Bloom, từ **biết** tới **tự sáng tạo**. Trang chủ đề giới thiệu; các bài con giúp hiểu, làm được, rồi đánh giá và kết hợp. Người dùng dặn thêm cùng ngày: **áp dụng linh hoạt, không bắt đủ 6 cấp**. Nhiều tri thức chỉ cần Biết và Hiểu là đủ; ép đủ 6 cấp sẽ thành máy móc.
 
 | Cấp | Bài phải làm rõ | Thường là |
 | --- | --- | --- |
@@ -149,14 +149,29 @@ Người dùng dặn (2026-11-26): tri thức của mỗi chủ đề phải d�
 | 3. Vận dụng | làm từng bước, ví dụ có số, lỗi khi làm | `framework`, `case-study` |
 | 4. Phân tích, tổng hợp | so sánh trường phái / biến thể, mổ xẻ ví dụ thật, ghép nhiều yếu tố | `concept`, `case-study` |
 | 5. Đánh giá | bằng chứng, số liệu, giới hạn, khi nào không dùng, cách tự kiểm chứng | `fact` |
-| 6. Sáng tạo | kết hợp với phương pháp khác, tự xây kế hoạch — vẫn dựa trên nguồn | `framework` |
+| 6. Sáng tạo | kết hợp với phương pháp khác, tự xây cách làm — vẫn dựa trên nguồn | `framework` |
 
-Ghi chú `topic` có mục `## Lộ trình học` với các tiêu đề `### 1. Biết — …` … `### 6. Sáng tạo — …` (mẫu: `knowledge/_templates/topic.md`; ví dụ: ghi chú Price action). Dưới mỗi cấp: một câu nói cấp đó trả lời gì, rồi `- [[slug]]: mô tả một dòng`; bài chưa có vẫn ghi liên kết để thành việc cần nghiên cứu. Chương trình tự đọc mục này:
+**Chọn cấp theo loại tri thức** (gợi ý, không phải luật):
 
-- thứ tự đọc của chủ đề = thứ tự trong lộ trình (cấp 1 → 6); ghi chú `source` không nằm trong lộ trình xếp cuối;
+| Loại tri thức | Thường cần | Ví dụ |
+| --- | --- | --- |
+| Khái niệm, kiến thức nền | Biết, Hiểu | biểu đồ nến, robots.txt, lãi kép |
+| Kỹ năng, quy trình, công cụ | Biết, Hiểu, Vận dụng | viết bài SEO, đặt lệnh, đọc báo cáo tài chính |
+| Phương pháp có nhiều trường phái, hiệu quả còn tranh cãi, người đọc sẽ dùng tiền thật | đủ 6 cấp | price action, một phương pháp đầu tư |
+
+Quy tắc:
+
+- Chỉ thêm một cấp khi người đọc thật sự có câu hỏi ở cấp đó **và** có nguồn tốt để trả lời. Không tạo bài chỉ để lấp cho đủ cấp.
+- Một cấp không cần bài riêng. Nội dung ngắn thì viết thẳng dưới tiêu đề cấp trong bài chủ đề (thẻ lộ trình ghi "Ngay trong bài này"); đủ dài, đủ nguồn thì mới tách bài con.
+- Một khái niệm đơn lẻ (`concept`) không cần lộ trình; lộ trình chỉ dành cho ghi chú `topic`.
+- Bài tập (xem mục dưới) chỉ bắt buộc với bài con đặt ở cấp Hiểu và Vận dụng; số câu tuỳ độ dài bài.
+
+Ghi chú `topic` có mục `## Lộ trình học` với các tiêu đề `### 1. Biết — …`, `### 2. Hiểu — …`, … chỉ cho những cấp chủ đề dùng (mẫu: `knowledge/_templates/topic.md`; ví dụ đủ 6 cấp: ghi chú Price action). Dưới mỗi cấp: một câu nói cấp đó trả lời gì, rồi `- [[slug]]: mô tả một dòng`; bài đã định viết mà chưa có vẫn ghi liên kết để thành việc cần nghiên cứu. Chương trình tự đọc mục này:
+
+- thứ tự đọc của chủ đề = thứ tự trong lộ trình (cấp thấp → cao); ghi chú `source` không nằm trong lộ trình xếp cuối;
 - trang bài con hiện "Cấp 2 · Hiểu — bài 3/8", thời gian đọc, nút **bài trước / bài tiếp**; Khu duyệt bài ghi "Hiểu · Bài 3/8";
-- trang chủ đề có thẻ **Lộ trình học · 6 cấp** (số bài và số bài còn thiếu mỗi cấp);
-- `knowledge.json` có `learning_path` cho chủ đề; `./sb seo <slug>` báo cấp còn thiếu; tiêu đề cấp 3 không khớp cấp nào thì `./sb check` cảnh báo.
+- trang chủ đề có thẻ **Lộ trình học · N cấp**, chỉ gồm các cấp chủ đề dùng (số bài, số bài còn thiếu, hoặc "Ngay trong bài này");
+- `knowledge.json` có `learning_path` cho chủ đề; `./sb seo <slug>` ghi các cấp chủ đề đang dùng; tiêu đề cấp 3 không khớp cấp nào thì `./sb check` cảnh báo.
 
 Thêm bài mới cho chủ đề đã có lộ trình → đặt vào đúng cấp (`/connect`). Sắp xếp lại lộ trình chỉ là đổi cách trình bày: không thêm, bớt hay đổi dữ kiện của ghi chú.
 
@@ -165,7 +180,7 @@ Thêm bài mới cho chủ đề đã có lộ trình → đặt vào đúng c�
 Người dùng dặn (2026-11-26): bài cấp **Hiểu** và **Vận dụng** phải có bài tập để người đọc tự làm, không chỉ đọc. Theo cách sách giáo khoa mở OpenStax làm (mục tiêu đầu bài, câu hỏi ôn tập cuối bài), và theo tổng hợp nghiên cứu của Dunlosky và cộng sự (2013): tự kiểm tra là một trong hai cách học hiệu quả nhất, còn đọc lại hay tô đậm thì kém.
 
 - `## Mục tiêu bài học`: đặt ngay sau đoạn mở đầu (câu định nghĩa vẫn đứng đầu bài). 2–4 gạch đầu dòng "Sau bài này bạn sẽ…", mở bằng động từ của cấp (Hiểu: giải thích được, phân biệt được; Vận dụng: nhận ra được, tính được, làm được). Trên web hiện thành khung 🎯.
-- `## Bài tập`: đặt trước "Câu hỏi thường gặp". 3–5 câu, mỗi câu là `### Câu 1: …`, đề bài ngay dưới, rồi một đoạn mở bằng `**Đáp án:**`; có thể thêm `**Gợi ý:**` trước đáp án. Trên web, gợi ý và đáp án ẩn, bấm mới hiện (phần ẩn kéo tới câu kế tiếp). File `.md`, `llms.txt` và bản cho AI vẫn có đủ đáp án.
+- `## Bài tập`: đặt trước "Câu hỏi thường gặp". Số câu tuỳ độ dài bài (bài ngắn 1–2 câu, bài dài tới 5 câu), mỗi câu là `### Câu 1: …`, đề bài ngay dưới, rồi một đoạn mở bằng `**Đáp án:**`; có thể thêm `**Gợi ý:**` trước đáp án. Trên web, gợi ý và đáp án ẩn, bấm mới hiện (phần ẩn kéo tới câu kế tiếp). File `.md`, `llms.txt` và bản cho AI vẫn có đủ đáp án.
 - Mỗi mục tiêu có ít nhất một câu kiểm tra. Ưu tiên câu bắt người đọc tự nhớ lại, tự giải thích, tự làm, hơn là chọn đáp án có sẵn.
 - **Nguồn:** đề và đáp án chỉ dùng điều đã có trong chính bài, đúng định nghĩa gốc, dẫn `(Nguồn [n])` như phần thân bài. Số liệu tự đặt ra để luyện (giá, khối lượng lệnh) ghi rõ "giả định". Không thêm dữ kiện mới chỉ để có câu hỏi.
 - Bài tập không phải FAQ: "Câu hỏi thường gặp" trả lời điều người đọc hay hỏi (Google/AI dùng), còn "Bài tập" để người học tự luyện.

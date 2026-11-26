@@ -39,7 +39,7 @@ updated: {{date}}
 <!-- Những điểm AI/người viết hay nhầm, cần tránh. -->
 
 ## Bài tập
-<!-- Bài cấp Hiểu / Vận dụng bắt buộc có mục này. 3–5 câu; mỗi câu một tiêu đề "### Câu 1: …", đề bài ngay dưới,
+<!-- Bài cấp Hiểu / Vận dụng bắt buộc có mục này. Số câu tuỳ độ dài bài (bài ngắn 1–2, bài dài tới 5); mỗi câu một tiêu đề "### Câu 1: …", đề bài ngay dưới,
      rồi một đoạn mở bằng **Đáp án:** — trên web đáp án ẩn, bấm mới hiện. Có thể thêm đoạn **Gợi ý:** trước đáp án.
      Ưu tiên câu bắt người đọc tự nhớ lại, tự giải thích, tự làm (hiệu quả hơn chọn đáp án có sẵn).
      Đề và đáp án chỉ dùng điều đã có trong bài, đúng định nghĩa gốc, dẫn (Nguồn [n]) như phần thân bài;

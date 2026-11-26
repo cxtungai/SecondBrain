@@ -18,7 +18,7 @@
         <span>⏱ ~{{ read_minutes }} phút đọc</span>
         {% if exercises %}<a class="meta-exercises" href="#{{ exercises_id }}">📝 {{ exercises }} bài tập tự kiểm tra</a>{% endif %}
       </div>
-      {% if is_topic and ladder %}<p class="note-role">⭐ <strong>Chủ đề chính</strong> — cấp 1 · Biết: bài giới thiệu. Đọc trước, rồi đi theo <a href="#lo-trinh">lộ trình học</a> từ Hiểu tới Sáng tạo.</p>
+      {% if is_topic and ladder %}<p class="note-role">⭐ <strong>Chủ đề chính</strong> — cấp 1 · Biết: bài giới thiệu. Đọc trước, rồi đi theo <a href="#lo-trinh">lộ trình học</a>{% if ladder|length > 1 %} tới cấp {{ (ladder|last).name }}{% endif %}.</p>
       {% elif is_topic %}<p class="note-role">⭐ <strong>Chủ đề chính</strong> — bài tổng quan, đọc trước rồi đi theo các bài con bên dưới.</p>
       {% elif place and place.level %}<p class="note-role">🪜 Cấp {{ place.level }} · <strong>{{ place.level_name }}</strong> — bài {{ place.index }}/{{ place.total }} trong lộ trình <a href="{{ place.topic.url }}">{{ place.topic.title }}</a></p>
       {% elif place and c.type == 'source' %}<p class="note-role">📚 <strong>Tài liệu gốc</strong> của chủ đề <a href="{{ place.topic.url }}">{{ place.topic.title }}</a> — bản đồ sách để tra cứu, có số trang.</p>
@@ -49,7 +49,7 @@
 
     {% if ladder %}
     <nav class="ladder card" id="lo-trinh" aria-label="Lộ trình học">
-      <h2>Lộ trình học · 6 cấp</h2>
+      <h2>Lộ trình học · {{ ladder|length }} cấp</h2>
       <ol>
         {% for l in ladder %}
         <li class="ladder-step{% if l.empty %} ladder-step--empty{% endif %}">

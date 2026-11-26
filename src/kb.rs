@@ -1,7 +1,7 @@
 //! Kho tri thức: đọc ghi chú, kiểm tra, dựng đồ thị liên kết (links, backlinks, gaps, tags).
 
 use crate::mentions::{find_unlinked_mentions, Mention};
-use crate::render::{atx_heading, extract_exercises, has_objectives};
+use crate::render::{atx_heading, content_lines, extract_exercises, has_objectives};
 use crate::schema::{self, Source, KNOWN_FIELDS};
 use crate::text::{count_words, extract_wikilinks, markdown_to_plain, normalize_for_search, slugify, vi_cmp};
 use regex::Regex;
@@ -79,7 +79,7 @@ pub struct Note {
     pub backlinks: Vec<String>,
     /// Bản nháp này cập nhật cho ghi chú đã đăng nào (slug gốc).
     pub updates: Option<String>,
-    /// Chủ đề: lộ trình học 6 cấp đọc từ mục "## Lộ trình học" (rỗng nếu chưa có).
+    /// Chủ đề: lộ trình học (các cấp chủ đề dùng, tối đa 6) đọc từ mục "## Lộ trình học" (rỗng nếu chưa có).
     #[serde(skip)]
     pub learning_path: Vec<PathLevel>,
 }
@@ -124,16 +124,9 @@ struct RawLevel {
 /// Trả về các cấp và những tiêu đề cấp 3 không khớp cấp nào.
 fn parse_learning_path(body: &str) -> (Vec<RawLevel>, Vec<String>) {
     let (mut levels, mut unknown): (Vec<RawLevel>, Vec<String>) = (vec![], vec![]);
-    let (mut fence, mut inside, mut current) = (false, false, None::<usize>);
-    for line in body.lines() {
+    let (mut inside, mut current) = (false, None::<usize>);
+    for line in content_lines(body) {
         let t = line.trim_start();
-        if t.starts_with("```") || t.starts_with("~~~") {
-            fence = !fence;
-            continue;
-        }
-        if fence {
-            continue;
-        }
         if let Some((hashes, text)) = atx_heading(t) {
             let text = markdown_to_plain(text);
             if hashes <= 2 {
@@ -326,16 +319,9 @@ static CITATION: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\[(\d{1,2})\]")
 pub fn definition_text(body: &str) -> String {
     let mut out = String::new();
     // Vùng đang đọc: mở đầu bài hoặc mục định nghĩa; `taken` = vùng này đã lấy xong đoạn đầu.
-    let (mut fence, mut zone, mut taken, mut started) = (false, true, false, false);
-    for line in body.lines() {
+    let (mut zone, mut taken, mut started) = (true, false, false);
+    for line in content_lines(body) {
         let t = line.trim_start();
-        if t.starts_with("```") || t.starts_with("~~~") {
-            fence = !fence;
-            continue;
-        }
-        if fence {
-            continue;
-        }
         if let Some((hashes, text)) = atx_heading(t) {
             if started {
                 taken = true;

@@ -592,11 +592,14 @@ impl Site {
                 "next": p.next.map(|n| lesson(n, p.topic)),
             })
         });
-        // Thẻ "Lộ trình học" 6 cấp ở đầu trang chủ đề.
-        let ladder: Vec<Json> = if note.learning_path.is_empty() {
-            vec![]
-        } else {
-            (1..=6)
+        // Thẻ "Lộ trình học" ở đầu trang chủ đề: chỉ các cấp chủ đề này dùng (người dùng dặn 2026-11-26:
+        // nhiều chủ đề chỉ cần Biết, Hiểu — không bắt đủ 6 cấp).
+        let ladder: Vec<Json> = {
+            let mut levels: Vec<usize> = note.learning_path.iter().map(|l| l.level).collect();
+            levels.sort_unstable();
+            levels.dedup();
+            levels
+                .into_iter()
                 .map(|lv| {
                     let found: Vec<_> = note.learning_path.iter().filter(|l| l.level == lv).collect();
                     let shown = |s: &&String| kb.get(s).is_some_and(|n| with_drafts || !n.inbox);
@@ -605,6 +608,9 @@ impl Site {
                     let mut parts: Vec<String> = vec![];
                     if lv == 1 {
                         parts.push("Bài này".into());
+                    } else if all == 0 {
+                        // Cấp viết thẳng trong bài chủ đề, không tách bài con.
+                        parts.push("Ngay trong bài này".into());
                     }
                     if count > 0 {
                         parts.push(format!("{count} bài"));
@@ -612,11 +618,8 @@ impl Site {
                     if all > count {
                         parts.push(format!("{} bài còn thiếu", all - count));
                     }
-                    if parts.is_empty() {
-                        parts.push("Chưa có bài".into());
-                    }
                     json!({"level": lv, "name": level_name(lv), "id": found.first().map(|l| l.id.clone()),
-                        "status": parts.join(" · "), "empty": lv > 1 && count == 0})
+                        "status": parts.join(" · "), "empty": all > 0 && count == 0})
                 })
                 .collect()
         };
@@ -1023,7 +1026,7 @@ impl Site {
             m["extra"] = Json::Object(n.extra.clone());
         }
         if !n.learning_path.is_empty() {
-            // Lộ trình học 6 cấp: chỉ giữ bài đã đăng, bài còn thiếu ghi riêng.
+            // Lộ trình học: chỉ giữ bài đã đăng, bài còn thiếu ghi riêng.
             let kb = self.kb();
             m["learning_path"] = json!(n.learning_path.iter().map(|l| json!({
                 "level": l.level, "name": level_name(l.level),
@@ -1457,14 +1460,33 @@ mod tests {
         let site = Site::new(Loaded { config: Config::default(), config_error: None, kb, articles, figures: Default::default() }, "/Repo", None, false)
             .into_review(Review { repo: Some("chu/kho".into()), branch: Some("main".into()) });
         let topic_page = String::from_utf8(site.render("duyet/notes/pa/").unwrap().body).unwrap();
-        assert!(topic_page.contains("Lộ trình học · 6 cấp"));
+        // Chỉ các cấp chủ đề dùng (1, 2, 3, 6) — không bắt đủ 6 cấp; cấp không có bài con thì viết ngay trong bài.
+        assert!(topic_page.contains("Lộ trình học · 4 cấp"), "{topic_page}");
+        assert!(!topic_page.contains("<span class=\"ladder-num\">Cấp 4</span>"));
         assert!(topic_page.contains("href=\"#2-hieu\""));
         assert!(topic_page.contains("1 bài còn thiếu"));
+        assert!(topic_page.contains("Ngay trong bài này"));
+        assert!(topic_page.contains("lộ trình học</a> tới cấp Sáng tạo."));
         let b = String::from_utf8(site.render("duyet/notes/b/").unwrap().body).unwrap();
         assert!(b.contains("Cấp 2 · <strong>Hiểu</strong>"));
         assert!(b.contains("← Bài trước · Biết") && b.contains("Bài tiếp · Hiểu →"));
         let sach = String::from_utf8(site.render("duyet/notes/sach/").unwrap().body).unwrap();
         assert!(sach.contains("Hết lộ trình"));
+    }
+
+    #[test]
+    fn mau_chu_de_chi_co_cap_bat_dau() {
+        // Mẫu chủ đề chỉ bật Biết + Hiểu; cấp 3–6 nằm trong chú thích nên không được đọc (không ép đủ 6 cấp).
+        let tpl = include_str!("../knowledge/_templates/topic.md");
+        let body = tpl.splitn(3, "---").nth(2).unwrap();
+        let files = vec![FileEntry {
+            path: "knowledge/_inbox/mau.md".into(),
+            raw: format!("---\ntitle: Mẫu\ntype: topic\nsummary: Mẫu.\nstatus: draft\ncreated: 2026-01-01\n---\n{body}"),
+        }];
+        let kb = Kb::build(&files, true);
+        let levels: Vec<usize> = kb.get("mau").unwrap().learning_path.iter().map(|l| l.level).collect();
+        assert_eq!(levels, [1, 2]);
+        assert!(!kb.issues.iter().any(|i| i.message.contains("Lộ trình học: \"###")), "không có cảnh báo tiêu đề cấp lạ");
     }
 
     #[test]

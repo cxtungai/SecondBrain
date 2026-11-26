@@ -210,19 +210,18 @@ pub fn note_hints(note: &Note, today: &str) -> Vec<Hint> {
         h(&mut out, faq >= 2, format!("{faq} câu hỏi thường gặp"), "Thêm mục \"Câu hỏi thường gặp\" với 3–5 câu hỏi — site tự sinh dữ liệu FAQ cho Google/AI.");
     }
     if note.kind == "topic" {
-        // Lộ trình học 6 cấp: cấu trúc tri thức của chủ đề (Biết → Sáng tạo), không phải mẹo SEO.
+        // Lộ trình học: cấu trúc tri thức của chủ đề, không phải mẹo SEO. Chỉ gồm các cấp chủ đề cần
+        // (người dùng dặn 2026-11-26: nhiều chủ đề chỉ cần Biết, Hiểu) — không nhắc "thiếu cấp".
         let mut levels: Vec<usize> = note.learning_path.iter().map(|l| l.level).collect();
+        levels.sort_unstable();
         levels.dedup();
-        let missing: Vec<&str> = (1..=6).filter(|l| !levels.contains(l)).map(crate::kb::level_name).collect();
-        let label = if note.learning_path.is_empty() {
-            "Chưa có mục \"Lộ trình học\" 6 cấp".to_string()
-        } else if missing.is_empty() {
-            "Lộ trình học đủ 6 cấp".to_string()
+        let label = if levels.is_empty() {
+            "Chưa có mục \"Lộ trình học\"".to_string()
         } else {
-            format!("Lộ trình học thiếu cấp: {}", missing.join(", "))
+            format!("Lộ trình học: {}", levels.iter().map(|&l| crate::kb::level_name(l)).collect::<Vec<_>>().join(" → "))
         };
-        h(&mut out, !note.learning_path.is_empty() && missing.is_empty(), label,
-            "Thêm \"## Lộ trình học\" với \"### 1. Biết\" … \"### 6. Sáng tạo\", dưới mỗi cấp liệt kê [[bài]] (bài chưa có vẫn ghi để thành việc cần nghiên cứu).");
+        h(&mut out, !levels.is_empty(), label,
+            "Thêm \"## Lộ trình học\" với các cấp chủ đề thật sự cần (thường \"### 1. Biết\" và \"### 2. Hiểu\"; thêm Vận dụng … Sáng tạo khi người đọc cần làm, so sánh, đánh giá), dưới mỗi cấp liệt kê [[bài]].");
     }
     if note.kind != "topic" {
         h(&mut out, !note.sources.is_empty(), format!("{} nguồn", note.sources.len()), "Nguồn có tên, ngày và điểm uy tín giúp người đọc lẫn AI tin và trích dẫn.");

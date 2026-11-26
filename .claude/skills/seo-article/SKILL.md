@@ -23,7 +23,7 @@ Từ khoá: **$ARGUMENTS** (trống → hỏi người dùng, hoặc đề xuấ
   - **Trùng bài viết**: cập nhật bài cũ thay vì viết bài mới.
 - WebSearch từ khoá (tiếng Việt) để hiểu người tìm muốn gì: dạng kết quả đứng đầu (định nghĩa / hướng dẫn / danh sách / so sánh), các câu "Mọi người cũng hỏi", các ý mà bài top đều có. **Chỉ học cấu trúc và câu hỏi — không lấy dữ kiện từ đó.** Dữ kiện còn thiếu trong kho → ghi `[[ten-ghi-chu-de-xuat]]` và báo người dùng nên nghiên cứu.
 - Chọn `intent`: `guide` | `how-to` | `compare` | `list` | `explain`, và 2–5 từ khoá phụ (`keywords`).
-- **Đặt bài vào lộ trình 6 cấp của chủ đề** (mục `## Lộ trình học` trong ghi chú `topic`): `explain` → cấp Biết / Hiểu; `how-to`, `guide` → Vận dụng; `compare` → Phân tích, tổng hợp; bài "có hiệu quả không / rủi ro gì" → Đánh giá; bài kết hợp phương pháp → Sáng tạo. Ưu tiên viết cho cấp đã có ghi chú gốc `verified`; cấp chưa có ghi chú thì chưa viết bài.
+- **Đặt bài vào lộ trình học của chủ đề** (mục `## Lộ trình học` trong ghi chú `topic`): `explain` → cấp Biết / Hiểu; `how-to`, `guide` → Vận dụng; `compare` → Phân tích, tổng hợp; bài "có hiệu quả không / rủi ro gì" → Đánh giá; bài kết hợp phương pháp → Sáng tạo. Ưu tiên viết cho cấp đã có ghi chú gốc `verified`; cấp chưa có ghi chú thì chưa viết bài.
 - **Khung bài hướng dẫn** (`guide`, `how-to`) nên đi theo cấp: là gì (ngắn, dẫn về ghi chú) → vì sao → các bước → ví dụ có số → sai lầm thường gặp → giới hạn → checklist → câu hỏi thường gặp. Ví dụ phải **ghi rõ là ví dụ giả định** hoặc dẫn đúng ví dụ trong ghi chú gốc. Không kể kết quả kiểu "giá chạy đúng như phân tích". Không có mục "liên hệ thị trường hiện tại" khi không có số liệu.
 
 ## 3. Viết bài
