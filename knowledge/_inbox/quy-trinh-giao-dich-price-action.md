@@ -47,7 +47,7 @@ sources:
     date: 1922
     kind: book
     credibility: 4
-    credibility_note: Tài liệu gốc của Wyckoff, không còn hạn chế bản quyền; đọc nguyên văn chương I–VIII, đã đối chiếu trực tiếp 6 nguyên tắc ở chương II.
+    credibility_note: Tài liệu gốc của Wyckoff, không còn hạn chế bản quyền; đọc trọn 14 chương (bản in lần thứ 5, 1925), số trang theo bản này. Bản đồ sách ở ghi chú riêng.
     accessed: 2026-11-25
   - title: "Studies in Tape Reading"
     url: https://archive.org/details/studiesintapere00wyckgoog
@@ -68,7 +68,7 @@ sources:
     credibility_note: Tài liệu gốc; chỉ đọc được phần mở đầu chương.
     accessed: 2026-11-25
 created: 2026-11-25
-updated: 2026-11-25
+updated: 2026-11-26
 research:
   keyword: Price action
   date: 2026-11-25
@@ -85,7 +85,8 @@ Quy trình này biến các nguyên lý của [[price-action]] thành các bư�
 
 - Thị trường đang có [[xu-huong-gia|xu hướng]] hay đi ngang? Xem cả **khung lớn hơn**, vì xu hướng ở khung nhỏ có thể chỉ là một nhịp trong vùng đi ngang của khung lớn (Nguồn [2]).
 - Xu hướng mạnh hay yếu? Thanh xu hướng không có bóng ở phía đóng cửa cho thấy thị trường một chiều và mạnh (Nguồn [1]).
-- Wyckoff coi xu hướng là "yếu tố chính" và gọi xu hướng dài hạn là chiếc la bàn để định hướng mọi lệnh (Nguồn [5]).
+- Wyckoff coi xu hướng là "yếu tố chính" (Nguồn [5], tr. 48) và gọi xu hướng dài hạn là chiếc la bàn để định hướng mọi lệnh (Nguồn [5], tr. 91).
+- Với cổ phiếu, Wyckoff xét theo thứ tự: xu hướng dài hạn của thị trường → ngành → tình hình công ty → ban lãnh đạo → tài chính và lợi nhuận → **cuối cùng** mới là vị trí của cổ phiếu trong sóng trung hạn 30–60 ngày (Nguồn [5], tr. 90). Chi tiết ở [[wyckoff-how-i-trade-and-invest]].
 
 ### Bước 2 — Đánh dấu vùng giá
 
@@ -101,6 +102,7 @@ Theo Brooks, setup = bối cảnh (các thanh bên trái) + thanh tín hiệu (N
 | Vừa phá vỡ | **Phá vỡ – điều chỉnh** (breakout pullback) | Một nhịp điều chỉnh nhỏ khoảng 1–5 thanh ngay sau phá vỡ là cơ hội vào theo hướng phá vỡ (Nguồn [4]). |
 | Đi ngang | **Mua gần cạnh dưới, bán gần cạnh trên** | Brooks mua thấp bán cao, chốt lời nhanh trong vùng đi ngang (Nguồn [3]); không mua ở đỉnh vùng, không bán ở đáy vùng (Nguồn [1]). |
 | Sau xu hướng dài | **Đảo chiều có kiểm tra** | Chỉ giao dịch ngược xu hướng mạnh khi giá đã phá đường xu hướng, rồi có thanh đảo chiều mạnh lúc giá quay lại kiểm tra đỉnh/đáy cũ (Nguồn [1]). |
+| Sau nhịp giảm trong xu hướng tăng | **Chờ giá chống đỡ trước áp lực bán (Wyckoff)** | Cổ phiếu tăng từ 100 lên 150 rồi bị đánh xuống 110 trong khi nền tảng không đổi: nếu ở 110 nó chống đỡ mạnh trước áp lực bán thì đáng mua hơn mã vừa tăng nóng và còn trong vùng xả hàng (Nguồn [5], tr. 97–98). Ông gọi đây là đọc "vị thế kỹ thuật": ai đang giữ cổ phiếu, sức mua hay sức bán đã cạn (Nguồn [5], tr. 100–101). |
 | Khi có tin quan trọng | **Đọc phản ứng của giá (Wyckoff)** | Sức mạnh hay yếu kém kỹ thuật của thị trường và từng cổ phiếu lộ ra qua cách giá phản ứng trước tin quan trọng. Theo Wyckoff, tiền kiếm được nhờ đón trước điều sắp xảy ra, không phải chờ nó xảy ra rồi chạy theo đám đông (Nguồn [6]). |
 
 **Vào lệnh lần hai.** Brooks coi lần thứ hai giá cho cùng một tín hiệu trong vài thanh là tín hiệu tốt hơn lần đầu (Nguồn [1][4]).
@@ -113,19 +115,21 @@ Theo Brooks, setup = bối cảnh (các thanh bên trái) + thanh tín hiệu (N
 ### Bước 5 — Đặt lệnh: vào, dừng lỗ, mục tiêu
 
 - **Vào lệnh bằng lệnh dừng** (stop order): lệnh chỉ khớp khi giá đã đi theo hướng bạn dự định. Brooks khuyên người mới vào lệnh bằng lệnh dừng (Nguồn [3]). Ví dụ của ông: bán ở một tick (bước giá nhỏ nhất) dưới đáy thanh tín hiệu (Nguồn [1]).
-- **Dừng lỗ ngay khi vào lệnh.** Wyckoff: rủi ro hầu như luôn phải được giới hạn; cách tốt nhất là tập thói quen đặt dừng lỗ 2–3 điểm sau mỗi lệnh giao dịch ngắn hạn. Ông coi đây là quy tắc mà những người giao dịch thành công nhất đều theo (Nguồn [5]). Trong sách năm 1910, ông chỉ cách đặt dừng lỗ sát hơn bằng "điểm kháng cự", tức mức giá thị trường quay đầu sau một nhịp hồi. Ví dụ của ông: bán khống ở 130, giá xuống 128, hồi lên 129 rồi quay xuống, thì điểm kháng cự là 129 và dừng lỗ đặt ngay trên đó. Mức rủi ro phải quyết định từ đầu, và chỉ được thay đổi theo hướng có lợi (Nguồn [6]). Với thanh tín hiệu nhỏ mà mạnh, Brooks cho rằng rủi ro chỉ là một tick bên kia thanh đó (Nguồn [1]).
+- **Dừng lỗ ngay khi vào lệnh.** Wyckoff: rủi ro hầu như luôn phải được giới hạn; cách tốt nhất là tập thói quen đặt dừng lỗ 2–3 điểm sau mỗi lệnh giao dịch ngắn hạn. Ông coi đây là quy tắc mà những người giao dịch thành công nhất đều theo (Nguồn [5], tr. 48). Ông cũng tự nhận phần lớn khoản lỗ lớn của mình là do không đặt dừng lỗ ngay lúc vào lệnh, để lỗ 5–10 điểm thay vì 2–3 điểm (Nguồn [5], tr. 120). Trong sách năm 1910, ông chỉ cách đặt dừng lỗ sát hơn bằng "điểm kháng cự", tức mức giá thị trường quay đầu sau một nhịp hồi. Ví dụ của ông: bán khống ở 130, giá xuống 128, hồi lên 129 rồi quay xuống, thì điểm kháng cự là 129 và dừng lỗ đặt ngay trên đó. Mức rủi ro phải quyết định từ đầu, và chỉ được thay đổi theo hướng có lợi (Nguồn [6]). Với thanh tín hiệu nhỏ mà mạnh, Brooks cho rằng rủi ro chỉ là một tick bên kia thanh đó (Nguồn [1]).
 - **Mục tiêu so với rủi ro:**
-  - Wyckoff: lợi nhuận dự kiến **ít nhất gấp ba, bốn lần** mức rủi ro, vì chắc chắn sẽ có một phần lệnh thua lỗ (Nguồn [5]).
+  - Wyckoff: lợi nhuận dự kiến **ít nhất gấp ba, bốn lần** mức rủi ro, vì chắc chắn sẽ có một phần lệnh thua lỗ (Nguồn [5], tr. 49).
   - Brooks: với lệnh theo sóng, nhắm mức lời **ít nhất gấp đôi** rủi ro (Nguồn [3]).
 - **Phương trình của người giao dịch** (trader's equation): theo Brooks, phần lớn lệnh chỉ có xác suất thắng khoảng 40–60% (Nguồn [3]). Nếu lời bằng lỗ thì phải thắng trên 60% số lệnh mới đáng giao dịch (Nguồn [2]).
 
 ### Bước 6 — Quản lý lệnh
 
-- **Bảo vệ lợi nhuận:** Wyckoff dời lệnh dừng lên, hoặc bán một nửa để hạ giá vốn của nửa còn lại (Nguồn [5]). Brooks dời dừng lỗ từ bên kia thanh tín hiệu lên bên kia thanh vào lệnh, chốt lời từng phần và để phần còn lại chạy (Nguồn [2]).
-- **Lệnh không chạy thì thoát.** Wyckoff thuật lại quy tắc của Jesse Livermore: thoát lệnh nếu sau hai ba ngày mà lệnh chưa có lãi (Nguồn [5]).
+- **Bảo vệ lợi nhuận:** Wyckoff dời lệnh dừng lên, hoặc bán một nửa để hạ giá vốn của nửa còn lại (Nguồn [5], tr. 49). Brooks dời dừng lỗ từ bên kia thanh tín hiệu lên bên kia thanh vào lệnh, chốt lời từng phần và để phần còn lại chạy (Nguồn [2]).
+- **Chỉ thêm khi đang đúng.** Ví dụ của Wyckoff với U.S. Steel: mua 300 cổ phiếu kèm dừng lỗ 3 điểm. Mỗi lần giá lên 2 điểm thì mua thêm 100 cổ, mỗi lô cũng kèm dừng lỗ 3 điểm. Sau khoảng 10 điểm thì ngưng mua, rồi chốt lời hoặc dời dừng lỗ lên để khoá lãi (Nguồn [5], tr. 43–44).
+- **Lệnh không chạy thì thoát.** Wyckoff thuật lại quy tắc của Jesse Livermore: thoát lệnh nếu sau hai ba ngày mà lệnh chưa có lãi, vì phán đoán về diễn biến trước mắt đã sai. Livermore còn dặn: hễ thấy mình đang *hy vọng* lệnh sẽ ổn là thoát. Như vậy ông có cả dừng lỗ theo thời gian lẫn theo giá (Nguồn [5], tr. 118–119).
+- **Chốt lời theo hành vi của bên lớn, không theo con số cố định.** Wyckoff không chốt vì đã lãi bao nhiêu điểm hay bao nhiêu phần trăm. Ông chờ tới lúc thấy người nội bộ bắt đầu bán: "khi người trong cuộc bán là lúc người ngoài nên bán" (Nguồn [5], tr. 102, 112).
 - **Giữ kỷ luật với dừng lỗ ban đầu.** Brooks kể ví dụ người giao dịch hoảng, kéo dừng lỗ sát lại, bị quét ra ngay trước khi giá chạy đúng hướng (Nguồn [1]).
 - **Dùng khối lượng nhỏ** để không bị chi phối bởi nỗi lo thua lỗ (Nguồn [3]).
-- **Không bình quân giá xuống.** Wyckoff gọi việc mua thêm khi lệnh đang lỗ là "mò mẫm tìm đỉnh hay đáy" (Nguồn [6]).
+- **Không bình quân giá xuống với lệnh giao dịch.** Wyckoff gọi việc mua thêm khi lệnh đang lỗ là "mò mẫm tìm đỉnh hay đáy" (Nguồn [6]). Trong sách 1922, ông chỉ bình quân giá với khoản **đầu tư** đã biết rõ vì sao giá giảm, và cảnh báo hai lỗi phổ biến là bắt đầu quá sớm và thiếu vốn (Nguồn [5], tr. 134–137).
 
 ## Ví dụ áp dụng
 
@@ -149,7 +153,9 @@ Các lỗi thường gặp mà tác giả gốc cảnh báo:
 - **Dùng thanh đảo chiều ở khung 1 phút**: phần lớn thất bại (Brooks, Nguồn [1]).
 - **Lướt sóng ăn ít** đòi tỷ lệ thắng khoảng 70%, điều Brooks cho là không thực tế với phần lớn người giao dịch (Nguồn [4]).
 - **Giao dịch quá nhiều:** Wyckoff nêu việc vốn bị hao mòn vì giao dịch quá nhiều hoặc phán đoán kém là một trong những lý do người đọc băng giá thất bại (Nguồn [6]).
-- **Giao dịch như thú vui tay trái:** Wyckoff cho rằng hoặc làm giao dịch như một nghề có đào tạo, hoặc đừng làm; không hợp thì nên làm nhà đầu tư (Nguồn [5]).
+- **Giao dịch như thú vui tay trái:** Wyckoff cho rằng hoặc làm giao dịch như một nghề có đào tạo, hoặc đừng làm; không hợp thì nên làm nhà đầu tư (Nguồn [5], tr. 50).
+- **Lướt sóng trong ngày:** Wyckoff thấy mua bán liên tục trong ngày chủ yếu làm lợi cho môi giới vì phí. Ông có kết quả tốt nhất khi chờ điểm ngoặt quan trọng và giao dịch theo sóng 10–20 điểm (Nguồn [5], tr. 120–121).
+- **Dùng quá nhiều vốn:** ông chỉ dùng 5–10% vốn nhàn rỗi để giao dịch, và cho rằng 85–90% thất bại là do giao dịch quá sức hoặc thiếu vốn (Nguồn [5], tr. 42, 137).
 
 Giới hạn chung:
 
@@ -177,7 +183,7 @@ Lệnh dừng chỉ khớp khi giá đã đi theo hướng bạn dự định, n
 
 ### Khi nào nên thoát lệnh?
 
-Khi chạm dừng lỗ, khi đạt mục tiêu, hoặc khi lệnh không chạy. Wyckoff thuật lại quy tắc thoát lệnh nếu sau hai ba ngày mà chưa có lãi (Nguồn [5]).
+Khi chạm dừng lỗ, khi đạt mục tiêu, hoặc khi lệnh không chạy. Wyckoff thuật lại quy tắc của Livermore: thoát nếu sau hai ba ngày mà chưa có lãi, và thoát ngay khi thấy mình chỉ còn hy vọng (Nguồn [5], tr. 118–119).
 
 ## Liên quan
 
@@ -186,3 +192,4 @@ Khi chạm dừng lỗ, khi đạt mục tiêu, hoặc khi lệnh không chạy.
 - [[ho-tro-va-khang-cu]]
 - [[mau-hinh-nen]]
 - [[quan-ly-rui-ro-giao-dich]]
+- [[wyckoff-how-i-trade-and-invest]]: bản đồ sách gốc của Wyckoff

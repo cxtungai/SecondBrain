@@ -14,6 +14,7 @@ Nếu trống: hỏi người dùng, hoặc đề xuất 3 mục từ `./sb kb g
 Ba file đi kèm, đọc khi tới bước tương ứng:
 - `references/truy-cap-nguon.md`: cách đọc nguồn khó truy cập (PDF, trang chặn công cụ tự động) và những việc không được làm.
 - `references/kiem-chung.md`: bảng khẳng định, SIFT, độc lập nguồn, mức độ chắc chắn.
+- `references/doc-sach-goc.md`: chế độ **Đọc sách gốc**: đọc trọn từng cuốn sách gốc có kiểm kê, ghi số trang, viết ghi chú "bản đồ sách" rồi bổ sung các ghi chú chủ đề.
 - `NGUON.md`: các dự án đã tham khảo để thiết kế quy trình này.
 
 ## 0. Xem kho đã có gì
@@ -35,7 +36,7 @@ Viết ra (trong đầu hoặc trong `brief.md` của harness), **chưa** viết
 3. **Câu hỏi con theo góc nhìn.** Mỗi góc nhìn là một người hỏi khác nhau. Chọn những góc hợp chủ đề; với phương pháp, **hai góc đầu chiếm phần lớn công sức**:
    - *Cơ chế & nguyên lý:* nó hoạt động dựa trên điều gì? Vì sao nó được cho là có tác dụng? Gồm những thành phần nào?
    - *Người thực hành:* họ làm cụ thể từng bước thế nào? Dùng công cụ, thuật ngữ gì? Lỗi thường gặp? Đọc **tài liệu gốc của tác giả chính** (sách, chương mẫu của nhà xuất bản, trang của tác giả), không chỉ bài tóm tắt.
-   - **Phương pháp trading / đầu tư:** kiến thức về phương pháp **phải dựa trên tài liệu gốc**, tức sách hay bài của chính người đặt ra hoặc hệ thống hoá phương pháp. Ví dụ: Al Brooks (price action), Richard D. Wyckoff, Charles Dow / William P. Hamilton / Robert Rhea (lý thuyết Dow), Steve Nison (nến Nhật ở phương Tây), Schabacker và Edwards & Magee (mẫu hình cổ điển). Trước khi tìm, lập danh sách tác giả gốc. Sách cũ thường đã thuộc phạm vi công cộng (Project Gutenberg, archive.org); sách mới thì tìm chương mẫu của nhà xuất bản hoặc trang của tác giả. Trang giáo dục thứ cấp (StockCharts, Britannica, tài liệu của công ty môi giới) **chỉ bổ trợ**: không làm nguồn duy nhất cho một quy tắc của phương pháp. Trong `credibility_note` ghi rõ "tài liệu gốc" hay "thứ cấp". Thiếu tài liệu gốc thì ghi vào "Câu hỏi còn mở". Người dùng dặn điều này ngày 2026-11-25.
+   - **Phương pháp trading / đầu tư:** kiến thức về phương pháp **phải dựa trên tài liệu gốc**, tức sách hay bài của chính người đặt ra hoặc hệ thống hoá phương pháp. Ví dụ: Al Brooks (price action), Richard D. Wyckoff, Charles Dow / William P. Hamilton / Robert Rhea (lý thuyết Dow), Steve Nison (nến Nhật ở phương Tây), Schabacker và Edwards & Magee (mẫu hình cổ điển). Trước khi tìm, lập danh sách tác giả gốc. Sách cũ thường đã thuộc phạm vi công cộng (Project Gutenberg, archive.org); sách mới thì tìm chương mẫu của nhà xuất bản hoặc trang của tác giả. Trang giáo dục thứ cấp (StockCharts, Britannica, tài liệu của công ty môi giới) **chỉ bổ trợ**: không làm nguồn duy nhất cho một quy tắc của phương pháp. Trong `credibility_note` ghi rõ "tài liệu gốc" hay "thứ cấp". Thiếu tài liệu gốc thì ghi vào "Câu hỏi còn mở". Người dùng dặn điều này ngày 2026-11-25. Khi phương pháp dựa vào một vài cuốn sách chính, **đọc trọn từng cuốn** theo `references/doc-sach-goc.md` thay vì nhặt ý từ vài chương đầu (người dùng dặn 2026-11-26).
    - *Định nghĩa & nguồn gốc:* ai đặt ra khái niệm, tài liệu gốc nào?
    - *Nhà nghiên cứu:* có dữ liệu, nghiên cứu, tổng quan nào? Kết quả ra sao?
    - *Người phản biện:* hạn chế, cách hiểu sai, ai nói nó không đúng?

@@ -67,7 +67,7 @@ sources:
     date: 1922
     kind: book
     credibility: 4
-    credibility_note: Tài liệu gốc của Wyckoff, bản quét thư viện Cornell không còn hạn chế bản quyền; đọc nguyên văn chương I–VIII.
+    credibility_note: Tài liệu gốc của Wyckoff, đọc trọn 14 chương trên bản quét thư viện Cornell (bản in lần thứ 5, 1925; không còn hạn chế bản quyền). Bản đồ sách có số trang ở ghi chú riêng.
     accessed: 2026-11-25
   - title: "Technische Analyse mit Candlesticks — Kapitel 1: Einleitung (bản đọc thử của nhà xuất bản)"
     url: https://www.m-vg.de/mediafiles/Leseprobe/9783898798433.pdf
@@ -87,7 +87,7 @@ sources:
     credibility_note: Nghiên cứu định lượng của các nhà kinh tế MIT; đọc toàn văn bản NBER.
     accessed: 2026-11-25
 created: 2026-11-25
-updated: 2026-11-25
+updated: 2026-11-26
 research:
   keyword: Price action
   date: 2026-11-25
@@ -105,17 +105,17 @@ research:
 | Truyền thống | Tài liệu gốc đã đọc | Đóng góp cho price action |
 | --- | --- | --- |
 | **Lý thuyết Dow** | Hamilton, *The Stock Market Barometer* (1922), có trích xã luận của Dow | Giá phản ánh hiểu biết của cả thị trường; ba cấp chuyển động; "đường đi ngang" là tích luỹ hoặc phân phối (Nguồn [5]) |
-| **Wyckoff** | *Studies in Tape Reading* (1910), *How I Trade and Invest in Stocks and Bonds* (1922) | Đọc giá và khối lượng để biết bên lớn đang gom hay xả hàng; giao dịch thuận xu hướng, luôn có dừng lỗ (Nguồn [6][7]) |
+| **Wyckoff** | *Studies in Tape Reading* (1910), *How I Trade and Invest in Stocks and Bonds* (1922) | Đọc giá và khối lượng để biết bên lớn đang gom hay xả hàng; mỗi chiến dịch giá đi qua ba giai đoạn gom hàng – đẩy giá – xả hàng; giao dịch thuận xu hướng, luôn có dừng lỗ (Nguồn [6], Nguồn [7] tr. 39, 48). Bản đồ sách 1922: [[wyckoff-how-i-trade-and-invest]] |
 | **Nến Nhật** | Nison, chương 1 *Japanese Candlestick Charting Techniques* (bản tiếng Đức) | Cách vẽ giá cho thấy ngay bên thắng trong từng phiên, kết hợp với công cụ phương Tây (Nguồn [8]) |
 
 Al Brooks (từ 2009) hệ thống hoá các ý trên thành cách đọc **từng thanh giá**, thường trên biểu đồ nến 5 phút (Nguồn [1][2]).
 
 ### Nguyên lý cốt lõi
 
-1. **Mỗi thanh giá là kết quả giằng co giữa người mua và người bán.** Trong từng thanh, hoặc một bên kiểm soát (thanh có thân rõ theo một hướng), hoặc hai bên gần cân bằng, như một vùng đi ngang chỉ gồm một thanh (Nguồn [1]). Wyckoff viết rằng thị trường do suy nghĩ của rất nhiều người tạo nên, và trạng thái của những suy nghĩ đó phản ánh vào giá. Mục đích đọc băng giá của ông là biết cổ phiếu đang được bên lớn gom vào hay xả ra, đẩy lên hay dìm xuống, hay bị bỏ mặc (Nguồn [6]).
+1. **Mỗi thanh giá là kết quả giằng co giữa người mua và người bán.** Trong từng thanh, hoặc một bên kiểm soát (thanh có thân rõ theo một hướng), hoặc hai bên gần cân bằng, như một vùng đi ngang chỉ gồm một thanh (Nguồn [1]). Wyckoff viết rằng thị trường do suy nghĩ của rất nhiều người tạo nên, và trạng thái của những suy nghĩ đó phản ánh vào giá. Mục đích đọc băng giá của ông là biết cổ phiếu đang được bên lớn gom vào hay xả ra, đẩy lên hay dìm xuống, hay bị bỏ mặc (Nguồn [6]). Trong sách năm 1922, ông gọi mọi biểu đồ là "lịch sử cụ thể" của tác động mà nhiều bộ óc để lại lên thị trường, và nghiên cứu giá là nghiên cứu tâm trí con người (Nguồn [7], tr. 36, 92).
 2. **Giá phản ánh hiểu biết của cả thị trường, kể cả về tương lai.** Theo Hamilton, chuyển động giá thể hiện tổng hiểu biết của Phố Wall, nhất là về những gì sắp xảy ra. Tin đã biết là tin đã được tính vào giá (Nguồn [5]). Vì vậy người theo price action đọc phản ứng của giá, thay vì tự đoán tin tức.
 3. **Thị trường luân phiên giữa xu hướng và đi ngang, lồng vào nhau ở mọi khung thời gian.** Mọi xu hướng chứa những vùng đi ngang nhỏ hơn; mọi vùng đi ngang chứa những xu hướng nhỏ hơn. Phần lớn xu hướng chỉ là một phần của vùng đi ngang ở khung lớn hơn (Nguồn [2]). Lý thuyết Dow đã chia chuyển động giá thành ba cấp diễn ra đồng thời: chính, thứ cấp và hằng ngày (Nguồn [5]).
-4. **Xu hướng là yếu tố chính.** Wyckoff đặt nguyên tắc đầu tiên của mình là "yếu tố chính là xu hướng": thuận xu hướng thì cơ hội thành công gấp ba, bốn lần đi ngược nó (Nguồn [7]). Brooks cũng cho rằng xu hướng có quán tính và phần lớn nỗ lực đảo chiều thất bại. Ông nêu con số khoảng 80% như một ước tính từ kinh nghiệm (Nguồn [4]).
+4. **Xu hướng là yếu tố chính.** Wyckoff đặt nguyên tắc đầu tiên của mình là "yếu tố chính là xu hướng": thuận xu hướng thì cơ hội thành công gấp ba, bốn lần đi ngược nó (Nguồn [7], tr. 48). Ông kể đã rút ra điều này từ lúc mới vào nghề: trong các điều kiện kỹ thuật, yếu tố quan trọng nhất là xu hướng của thị trường (Nguồn [7], tr. 19). Brooks cũng cho rằng xu hướng có quán tính và phần lớn nỗ lực đảo chiều thất bại. Ông nêu con số khoảng 80% như một ước tính từ kinh nghiệm (Nguồn [4]).
 5. **Mọi thứ là xác suất và chủ quan; lợi thế luôn nhỏ.** Brooks gọi những gì ông viết là "nguyên tắc" chứ không phải "quy tắc": giao dịch là chủ quan, lợi thế nhỏ và nhanh mất, vì đây là trò chơi tổng bằng không với những người chơi rất giỏi (Nguồn [3]). Ông dùng các từ "thường", "có lẽ" cho những điều chỉ đúng khoảng 60% số lần (Nguồn [2]). Ông cũng nhắc rằng nếu mức lời bằng mức lỗ thì phải thắng trên 60% số lệnh mới đáng làm (Nguồn [2]).
 
 ### Bốn thứ người giao dịch price action đọc
@@ -137,7 +137,7 @@ Chi tiết ở [[quy-trinh-giao-dich-price-action]]:
 2. Đánh dấu vùng giá quan trọng.
 3. Chờ setup hợp trạng thái: trong xu hướng thì vào lệnh thuận chiều ở nhịp điều chỉnh; trong vùng đi ngang thì mua gần cạnh dưới, bán gần cạnh trên.
 4. Chờ thanh tín hiệu có thân rõ theo hướng định vào lệnh.
-5. Vào lệnh kèm dừng lỗ, và biết trước mục tiêu: Wyckoff đòi lợi nhuận dự kiến ít nhất gấp ba, bốn lần rủi ro (Nguồn [7]).
+5. Vào lệnh kèm dừng lỗ, và biết trước mục tiêu: Wyckoff đòi lợi nhuận dự kiến ít nhất gấp ba, bốn lần rủi ro (Nguồn [7], tr. 49).
 6. Quản lý lệnh: dời dừng lỗ, chốt một phần.
 
 ### Vì sao bỏ chỉ báo
@@ -180,9 +180,15 @@ Chưa có.
 - Phần lớn người giao dịch cá nhân ngắn hạn thua lỗ; xem [[ty-le-nha-giao-dich-ca-nhan-thua-lo]].
 - Ở Việt Nam, Ngân hàng Nhà nước chưa cấp phép cho sàn forex nào; chi tiết trong ghi chú trên.
 
+## Tài liệu gốc
+
+Bản đồ từng cuốn sách gốc đã đọc trọn: ý cốt lõi, quy tắc giữ đúng tên tác giả gọi, ví dụ mẫu, kèm số trang.
+
+- [[wyckoff-how-i-trade-and-invest]]: Wyckoff, *How I Trade and Invest in Stocks and Bonds* (1922).
+
 ## Câu hỏi còn mở
 
-- **Tài liệu gốc chưa đọc được:** phần lớn bộ ba sách của Brooks (chỉ đọc được chương 1 của hai cuốn và phần đầu chương 25 của cuốn thứ ba); nửa sau hai cuốn của Wyckoff và các chương XI–XXII sách của Hamilton; sách gốc của Nison phần mô hình nến; sách của Schabacker (1932) và Edwards & Magee (1948) về mẫu hình cổ điển.
+- **Tài liệu gốc chưa đọc được:** phần lớn bộ ba sách của Brooks (chỉ đọc được chương 1 của hai cuốn và phần đầu chương 25 của cuốn thứ ba); nửa sau *Studies in Tape Reading* (1910) của Wyckoff và các chương XI–XXII sách của Hamilton; sách gốc của Nison phần mô hình nến; sách của Schabacker (1932) và Edwards & Magee (1948) về mẫu hình cổ điển.
 - Chưa có tài liệu price action viết riêng cho cổ phiếu Việt Nam (biên độ trần/sàn, chu kỳ thanh toán).
 
 ## Câu hỏi thường gặp

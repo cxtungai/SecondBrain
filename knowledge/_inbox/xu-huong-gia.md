@@ -48,7 +48,7 @@ sources:
     date: 1922
     kind: book
     credibility: 4
-    credibility_note: Tài liệu gốc của Wyckoff, bản quét thư viện Cornell không còn hạn chế bản quyền; đọc nguyên văn chương I–VIII.
+    credibility_note: Tài liệu gốc của Wyckoff, đọc trọn 14 chương trên bản quét thư viện Cornell (bản in lần thứ 5, 1925; không còn hạn chế bản quyền).
     accessed: 2026-11-25
   - title: "Reading Price Charts Bar by Bar — Chapter 1: Price Action (trích đoạn của nhà xuất bản)"
     url: https://media.wiley.com/product_data/excerpt/52/04704439/0470443952.pdf
@@ -60,7 +60,7 @@ sources:
     credibility_note: Tài liệu gốc, đọc toàn văn chương 1.
     accessed: 2026-11-25
 created: 2026-11-25
-updated: 2026-11-25
+updated: 2026-11-26
 research:
   keyword: Price action
   date: 2026-11-25
@@ -86,13 +86,14 @@ Hamilton viết rằng Dow đã chỉ ra ba chuyển động diễn ra đồng t
 - **Nhịp điều chỉnh sâu bao nhiêu?** Dow viết rằng một chuyển động chính thường kèm một chuyển động thứ cấp ngược chiều **ít nhất ba phần tám** đợt chạy chính. Ví dụ của ông: tăng 10 điểm thì hay điều chỉnh khoảng 4 điểm (Nguồn [1]).
 - **Không biết trước độ dài.** Dow viết không thể biết trước một chuyển động chính sẽ kéo dài bao lâu (Nguồn [1]).
 - **Khó phân biệt điều chỉnh với đảo chiều.** Theo Dow, khó đánh giá đợt tăng đã kết thúc chưa, vì một nhịp giảm có thể chỉ là chuyển động thứ cấp mạnh bất thường. Hamilton thêm rằng nhịp thứ cấp rất dễ bị nhầm là khởi đầu của một xu hướng chính mới (Nguồn [1]).
+- **Wyckoff dùng ba cấp này thế nào.** Ông hiểu lý thuyết Dow là ba chuyển động diễn ra cùng lúc: xu hướng dài kéo dài nhiều năm, các sóng 30–60 ngày, và các sóng nhỏ từ một tới vài ngày (Nguồn [5], tr. 30). Lưu ý con số ông nhớ (30–60 ngày) khác với con số Dow viết theo Hamilton (10–60 ngày). Wyckoff thấy tiền thật nằm ở các sóng 30–60 ngày, vì ở đó việc gom hay xả hàng lộ rõ ngay từ giai đoạn chuẩn bị (Nguồn [5], tr. 38).
 - **Xác nhận chéo.** Trong lý thuyết Dow gốc, hai chỉ số (công nghiệp và đường sắt) phải xác nhận lẫn nhau; hầu như không có chuyển động chính nào mà hai chỉ số không cùng hướng (Nguồn [1]). Người giao dịch price action ngày nay hay áp dụng ý này bằng cách xem khung thời gian lớn hơn hoặc chỉ số chung của thị trường.
 
 ### "Đường đi ngang": tích luỹ hay phân phối
 
 - Giá đi ngang trong biên độ hẹp nghĩa là đang có tích luỹ hoặc phân phối, và chưa biết là bên nào cho tới khi giá thoát ra (Nguồn [1]).
 - **Giá vượt lên trên đường** là tín hiệu tăng mạnh: có thể chỉ là nhịp hồi thứ cấp trong thị trường giảm, hoặc là khởi đầu một xu hướng tăng chính. **Giá thủng xuống dưới đường** cho thấy thị trường đã "bão hoà" (Nguồn [1]).
-- Wyckoff mô tả cùng hiện tượng ở cấp từng cổ phiếu: các nhóm đầu cơ lớn gom cổ phiếu mà không làm giá tăng, rồi mới đẩy giá lên (Nguồn [5]).
+- Wyckoff mô tả cùng hiện tượng ở cấp từng cổ phiếu: các nhóm đầu cơ lớn gom cổ phiếu mà không làm giá tăng, rồi mới đẩy giá lên (Nguồn [5], tr. 99). Ông chia một chiến dịch tăng giá thành ba giai đoạn: gom hàng (vài tuần tới vài tháng), đẩy giá, rồi xả hàng; chiến dịch giảm giá thì ngược lại (Nguồn [5], tr. 39). Xem [[wyckoff-how-i-trade-and-invest]].
 
 ### Brooks: xu hướng và đi ngang là một dải liên tục
 
@@ -103,9 +104,16 @@ Hamilton viết rằng Dow đã chỉ ra ba chuyển động diễn ra đồng t
 
 ### Giao dịch thuận xu hướng
 
-- Wyckoff: "yếu tố chính là xu hướng". Thuận xu hướng thì cơ hội thành công gấp ba, bốn lần đi ngược nó. Mua trong thị trường giảm thì lối thoát duy nhất là chờ một nhịp hồi (Nguồn [5]).
+- Wyckoff: "yếu tố chính là xu hướng". Thuận xu hướng thì cơ hội thành công gấp ba, bốn lần đi ngược nó. Mua trong thị trường giảm thì lối thoát duy nhất là chờ một nhịp hồi (Nguồn [5], tr. 48). Ông gọi xu hướng dài hạn là "chiếc la bàn": mua chưa đúng lúc trong thị trường tăng vẫn có thể có lãi, còn mua trong thị trường giảm thì có khi phải ôm rất lâu (Nguồn [5], tr. 91).
 - Brooks: xu hướng có khuynh hướng tiếp diễn; phần lớn nỗ lực đảo chiều xu hướng thất bại, và trong vùng đi ngang thì phần lớn nỗ lực phá vỡ thất bại. Ông nêu con số khoảng 80% như một ước tính từ kinh nghiệm (Nguồn [4]). Ông gọi giao dịch ngược xu hướng là cách thua lỗ của phần lớn người giao dịch (Nguồn [3]).
 - Brooks khuyên người mới đứng ngoài khi giá đi ngang chồng chéo, chờ tới khi có phá vỡ rõ ràng (Nguồn [3]).
+
+### Đám đông qua một chu kỳ (Wyckoff)
+
+- **Giá thấp:** đám đông thờ ơ khi giá thấp và thị trường ì ạch (Nguồn [5], tr. 164).
+- **Giá tăng:** khi giá bắt đầu tăng, đám đông bắt đầu mua, và mua càng nhiều khi giá tăng càng xa, càng nhanh. Tới đỉnh của một đợt tăng lớn, khoảng 95% đám đông lạc quan và đã mua đầy (Nguồn [5], tr. 164).
+- **Hoảng loạn:** những người mua mạnh trên đường lên bị buộc phải bán. Người mua lúc này là người mới đi săn giá rẻ, cùng số ít người đã bán ở giá cao nên còn tiền (Nguồn [5], tr. 164–165).
+- **Thị trường giảm thường nhanh và dữ:** lãi trên giấy tích luỹ trong hai năm có thể mất trong 30–60 ngày (Nguồn [5], tr. 165).
 
 ### Thuật ngữ của Brooks
 
@@ -146,7 +154,7 @@ Lý thuyết Dow coi giá đi ngang trong biên độ hẹp là giai đoạn tí
 
 ### Nên giao dịch thuận hay ngược xu hướng?
 
-Thuận xu hướng. Wyckoff viết rằng cơ hội thành công khi thuận xu hướng gấp ba, bốn lần khi đi ngược nó (Nguồn [5]).
+Thuận xu hướng. Wyckoff viết rằng cơ hội thành công khi thuận xu hướng gấp ba, bốn lần khi đi ngược nó (Nguồn [5], tr. 48).
 
 ## Liên quan
 
@@ -154,3 +162,4 @@ Thuận xu hướng. Wyckoff viết rằng cơ hội thành công khi thuận xu
 - [[ho-tro-va-khang-cu]]
 - [[quy-trinh-giao-dich-price-action]]
 - [[bieu-do-nen-nhat]]
+- [[wyckoff-how-i-trade-and-invest]]: bản đồ sách gốc của Wyckoff

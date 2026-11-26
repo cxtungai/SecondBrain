@@ -74,8 +74,17 @@ sources:
     credibility: 3
     credibility_note: Tài liệu gốc của tác giả price action hiện đại, đọc toàn văn chương 1.
     accessed: 2026-11-25
+  - title: "How I Trade and Invest in Stocks and Bonds"
+    url: https://archive.org/details/cu31924031269552
+    author: Richard D. Wyckoff
+    publisher: The Magazine of Wall Street
+    date: 1922
+    kind: book
+    credibility: 4
+    credibility_note: Tài liệu gốc của Wyckoff, đọc trọn 14 chương trên bản quét thư viện Cornell (bản in lần thứ 5, 1925; không còn hạn chế bản quyền).
+    accessed: 2026-11-26
 created: 2026-11-25
-updated: 2026-11-25
+updated: 2026-11-26
 research:
   keyword: Price action
   date: 2026-11-25
@@ -92,6 +101,7 @@ research:
 
 - **Wyckoff (1910):** "điểm kháng cự" là mức giá mà thị trường quay đầu sau một nhịp hồi. Ví dụ của ông: cổ phiếu bị bán khống ở 130, giảm về 128, hồi lên 129 rồi quay xuống, thì 129 là điểm kháng cự. Ông dùng các điểm này để đặt dừng lỗ sát hơn (Nguồn [6]).
 - **Lý thuyết Dow (Hamilton, 1922):** khi chỉ số đi ngang trong biên độ hẹp ("tạo một đường"), cạnh trên và cạnh dưới của đường là ranh giới của giai đoạn tích luỹ hoặc phân phối. Giá vượt lên trên là tín hiệu tăng mạnh, thủng xuống dưới là thị trường đã "bão hoà" (Nguồn [7]).
+- **Wyckoff (1922):** ông đọc hỗ trợ qua cách giá **chống đỡ trước áp lực bán**. Ví dụ: cổ phiếu lên từ 100 tới 150, bị đánh xuống 110 trong khi nền tảng không đổi; nếu ở 110 nó chống đỡ mạnh thì ông thích mua nó hơn mã vừa tăng nóng và còn trong vùng xả hàng (Nguồn [9], tr. 97–98). Với American Graphophone, ông chú ý khi cổ phiếu giữ vững ở vùng 43½–46 trong lúc cả thị trường yếu (Nguồn [9], tr. 110). Theo ông, cầu vượt cung khi bên bán khống đã bán hết sức mà sức mua vẫn chặn được áp lực bán (Nguồn [9], tr. 101).
 - **Brooks (2009):** trong vùng đi ngang, không mua ở đỉnh vùng, không bán ở đáy vùng (Nguồn [8]).
 
 ### Vì sao hỗ trợ và kháng cự hình thành
@@ -170,3 +180,4 @@ Với tỷ giá trong ngày, nghiên cứu của Fed New York cho thấy các m�
 - [[quy-trinh-giao-dich-price-action]]
 - [[mau-hinh-nen]]
 - [[nghien-cuu-hieu-qua-phan-tich-ky-thuat]]
+- [[wyckoff-how-i-trade-and-invest]]: bản đồ sách gốc của Wyckoff
