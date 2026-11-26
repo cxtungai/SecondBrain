@@ -2,7 +2,8 @@
 
 use crate::articles::Articles;
 use crate::config::Config;
-use crate::kb::{FileEntry, Kb};
+use crate::kb::{FileEntry, Issue, Kb};
+use crate::minh_hoa::Figures;
 use std::path::{Path, PathBuf};
 
 pub struct Project {
@@ -14,6 +15,15 @@ pub struct Loaded {
     pub config_error: Option<String>,
     pub kb: Kb,
     pub articles: Articles,
+    /// Hình minh hoạ chỉ dùng trên web (thư mục `minh-hoa/`).
+    pub figures: Figures,
+}
+
+impl Loaded {
+    /// Mọi vấn đề cần báo: ghi chú, bài viết, hình minh hoạ.
+    pub fn issues(&self) -> impl Iterator<Item = &Issue> {
+        self.kb.issues.iter().chain(self.articles.issues.iter()).chain(self.figures.issues.iter())
+    }
 }
 
 impl Project {
@@ -65,13 +75,14 @@ impl Project {
         let (config, config_error) = Config::load(&self.root);
         let kb = Kb::build(&self.read_md("knowledge"), include_drafts);
         let articles = Articles::build(&self.read_md("articles"), &kb, include_drafts);
-        Loaded { config, config_error, kb, articles }
+        let figures = Figures::build(&self.read_md(crate::minh_hoa::DIR), &kb, &articles);
+        Loaded { config, config_error, kb, articles, figures }
     }
 
     /// Dấu vân tay nội dung (số file + thời điểm sửa) để biết khi nào cần dựng lại.
     pub fn fingerprint(&self) -> u128 {
         let mut acc: u128 = 0;
-        for dir in ["knowledge", "articles"] {
+        for dir in ["knowledge", "articles", crate::minh_hoa::DIR] {
             walk(&self.root.join(dir), &mut |p| {
                 if let Ok(meta) = std::fs::metadata(p) {
                     let t = meta.modified().ok().and_then(|m| m.duration_since(std::time::UNIX_EPOCH).ok()).map(|d| d.as_nanos()).unwrap_or(0);

@@ -26,6 +26,7 @@ knowledge/              Kho tri thức (mở được bằng Obsidian)
   case-studies/         Case study
   sources/              Tóm tắt nguồn tham khảo
 articles/               Bài viết SEO/GEO dẫn xuất từ tri thức (URL /bai-viet/<slug>/)
+minh-hoa/               Hình minh hoạ chỉ dùng trên web (hình nến vẽ từ chữ) — không thuộc kho tri thức
 src/                    Chương trình Rust `secondbrain`: lõi tri thức, sinh web tĩnh, Bàn làm việc, CLI
 templates/  assets/     Giao diện web (minijinja) + CSS/JS — được nhúng vào chương trình
 cau-hinh.yml            Tên, mô tả, tác giả, miễn trừ, quy tắc cho AI agent
@@ -167,6 +168,19 @@ Git giữ mọi phiên bản mãi mãi, nên file lớn đã commit thì không 
 - Mỗi ghi chú một ý, dưới ~25 KB (tối đa 40 KB). Dài hơn thì tách thành chủ đề + ghi chú con.
 - Không chép lại nội dung đã có ở ghi chú khác: tóm một câu rồi `[[liên kết]]` sang. Một tài liệu được nhiều ghi chú dùng và cần mô tả dài thì tạo ghi chú `source` cho nó.
 - Bước `verify` của harness chạy `.harness/checks/check_repo_size.mjs` để kiểm các quy tắc này. Thư mục `bin/`, `target/`, `dist/` đã bỏ khỏi git; web được dựng lại trên GitHub Actions mỗi lần đưa lên.
+
+## Hình minh hoạ (chỉ trên web)
+
+Kho tri thức chỉ có chữ. Hình minh hoạ nằm riêng ở `minh-hoa/<slug>.md` (cùng slug với ghi chú hoặc bài viết) và chỉ được chèn vào **trang web** khi dựng site. File .md của ghi chú, `llms.txt`, `knowledge.json`, `notes/<slug>.md` không có hình.
+
+- Mỗi mục `## <tiêu đề một mục trong bài>` trong file hình được chèn vào **cuối mục đó** trên trang. Sửa tên mục trong bài thì sửa cả ở đây; `./sb check` cảnh báo mục không khớp.
+- Hình nến viết bằng khối ```nen, mỗi dòng một lệnh (chi tiết đầu file `src/nen.rs`):
+  - `ten: Tiêu đề hình`: chú thích dưới hình;
+  - `mở cao thấp đóng`, vd. `100 108 97 105`; thêm `| Nhãn` để tô nổi một cây nến;
+  - `ngang 98 Hỗ trợ`: đường ngang; `vung 50 60 Gom hàng @1-6`: vùng giá (tuỳ chọn chỉ từ nến 1 tới 6);
+  - `giai-phau`: ghi tên thân, bóng, giá mở/đóng/cao/thấp; `-`: chỗ trống.
+- Hình phải **đúng định nghĩa trong bài** (vd. búa: bóng dưới ít nhất gấp đôi thân, sau đà giảm). Số liệu ví dụ lấy đúng số trong bài. Không lưu file ảnh, không chép hình trong sách.
+- Trong `articles/` có thể viết khối ```nen ngay trong bài, vì bài viết đã là lớp web.
 
 ## Lệnh
 

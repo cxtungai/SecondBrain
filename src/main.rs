@@ -8,6 +8,8 @@ mod cli;
 mod config;
 mod kb;
 mod mentions;
+mod minh_hoa;
+mod nen;
 mod project;
 mod publish;
 mod render;

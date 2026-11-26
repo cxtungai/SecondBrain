@@ -258,6 +258,15 @@ impl Site {
         render_html(md, &resolve, &|t| self.gap_href(t))
     }
 
+    /// HTML của bài trên web: nội dung + hình minh hoạ trong `minh-hoa/<slug>.md` (nếu có).
+    fn page_html(&self, slug: &str, md: &str, with_articles: bool) -> String {
+        let html = self.render_body(md, with_articles);
+        match self.data.figures.for_slug(slug) {
+            Some(f) => crate::minh_hoa::insert(&html, f, &|m| self.render_body(m, with_articles)),
+            None => html,
+        }
+    }
+
     fn toc(&self, md: &str) -> Vec<Json> {
         let mut toc: Vec<Json> = Vec::new();
         for h in extract_headings(md) {
@@ -537,7 +546,7 @@ impl Site {
                 "inbox": note.inbox, "status": note.status, "md_url": self.url(&format!("notes/{}.md", note.slug)),
             },
             "original": original.map(|o| self.link(o)),
-            "crumbs": crumbs, "html": self.render_body(&note.body, false),
+            "crumbs": crumbs, "html": self.page_html(&note.slug, &note.body, false),
             "toc": if headings.len() >= 3 { self.toc(&note.body) } else { vec![] },
             "sources": sources, "parent": parent.map(|p| self.link(p)), "next_reads": next_reads,
             "place": place.map(|(p, i, total)| json!({"topic": self.link(p), "index": i, "total": total})),
@@ -596,7 +605,7 @@ impl Site {
             "read_minutes": (a.word_count as f64 / 220.0).round().max(1.0) as usize, "word_count": a.word_count,
             "published": format_date(&published),
             "toc": if headings.len() >= 3 { self.toc(&a.body) } else { vec![] },
-            "html": self.render_body(&a.body, true),
+            "html": self.page_html(&a.slug, &a.body, true),
             "basis": basis.iter().map(|n| { let mut c = self.note_card(n); c["sources_count"] = json!(n.sources.len()); c }).collect::<Vec<_>>(),
             "mentioned": mentioned.iter().map(|n| self.link(n)).collect::<Vec<_>>(),
             "related": self.data.articles.related(a, 4).iter().map(|x| self.article_card(x)).collect::<Vec<_>>(),
@@ -1142,7 +1151,7 @@ mod tests {
         ];
         let kb = Kb::build(&files, include_drafts);
         let articles = Articles::build(&[], &kb, include_drafts);
-        Loaded { config: Config::default(), config_error: None, kb, articles }
+        Loaded { config: Config::default(), config_error: None, kb, articles, figures: Default::default() }
     }
 
     fn review_site() -> Site {
@@ -1204,7 +1213,7 @@ mod tests {
         assert!(kb.parent_topic(kb.get("a").unwrap(), false).is_none());
 
         let articles = Articles::build(&[], &kb, true);
-        let site = Site::new(Loaded { config: Config::default(), config_error: None, kb, articles }, "/Repo", None, false)
+        let site = Site::new(Loaded { config: Config::default(), config_error: None, kb, articles, figures: Default::default() }, "/Repo", None, false)
             .into_review(Review { repo: Some("chu/kho".into()), branch: Some("main".into()) });
         let index = String::from_utf8(site.render("duyet/").unwrap().body).unwrap();
         let (main, b, a) = (index.find("Chủ đề chính").unwrap(), index.find("Bài con 1/3").unwrap(), index.find("Bài con 2/3").unwrap());

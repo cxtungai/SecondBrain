@@ -105,7 +105,7 @@ fn rebuild(project: &Project, state: &RwLock<State>, lock: &Mutex<()>) {
 }
 
 fn print_issue_summary(site: &Site) {
-    let issues: Vec<_> = site.kb().issues.iter().chain(site.data.articles.issues.iter()).collect();
+    let issues: Vec<_> = site.data.issues().collect();
     let errors = issues.iter().filter(|i| i.level == Level::Error).count();
     if errors > 0 {
         println!("  ⚠ {errors} lỗi cần sửa — xem mục \"Cần chú ý\" trên Bàn làm việc.\n");
@@ -301,10 +301,9 @@ fn desk(site: &Site, project: &Project, sync_note: &str) -> String {
             "edit_url": format!("/ban-lam-viec/sua/?f={}", a.path), "errors": errors_for(&a.path), "cred": Json::Null})
     }));
     // Bản nháp bị lỗi đọc (không vào được danh sách) vẫn cần hiện để sửa.
-    let issues: Vec<Json> = kb
-        .issues
-        .iter()
-        .chain(site.data.articles.issues.iter())
+    let issues: Vec<Json> = site
+        .data
+        .issues()
         .map(|i| json!({"path": i.path, "message": i.message, "error": i.level == Level::Error, "edit_url": format!("/ban-lam-viec/sua/?f={}", i.path)}))
         .collect();
     let prompts = [
@@ -442,10 +441,8 @@ fn api(name: &str, data: &Json, project: &Project, state: &RwLock<State>, lock: 
                     let st = state.read().unwrap();
                     let issues: Vec<Json> = st
                         .site
-                        .kb()
-                        .issues
-                        .iter()
-                        .chain(st.site.data.articles.issues.iter())
+                        .data
+                        .issues()
                         .filter(|i| i.path == rel)
                         .map(|i| json!({"level": if i.level == Level::Error { "error" } else { "warning" }, "message": i.message}))
                         .collect();

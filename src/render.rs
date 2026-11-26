@@ -1,7 +1,7 @@
 //! Markdown → HTML (cho người đọc) và Markdown chuẩn (cho AI agent); mục lục, FAQ.
 
 use crate::text::{escape_html, map_outside_code, markdown_to_plain, slugify, WIKILINK};
-use pulldown_cmark::{html, CowStr, Event, HeadingLevel, Options, Parser, Tag, TagEnd};
+use pulldown_cmark::{html, CodeBlockKind, CowStr, Event, HeadingLevel, Options, Parser, Tag, TagEnd};
 use regex::Regex;
 use std::sync::LazyLock;
 
@@ -145,8 +145,29 @@ pub fn render_html(
 
     let mut hidx = 0;
     let mut link_stack: Vec<bool> = Vec::new();
-    let events: Vec<Event> = Parser::new_ext(&pre, options())
-        .map(|ev| match ev {
+    // Khối ```nen được vẽ thành hình SVG (xem `nen.rs`).
+    let mut nen_buf: Option<String> = None;
+    let mut events: Vec<Event> = Vec::new();
+    for ev in Parser::new_ext(&pre, options()) {
+        if let Some(buf) = nen_buf.as_mut() {
+            match ev {
+                Event::Text(t) => buf.push_str(&t),
+                Event::End(TagEnd::CodeBlock) => {
+                    let src = nen_buf.take().unwrap_or_default();
+                    let html = crate::nen::render(&src).unwrap_or_else(|e| crate::nen::error_box(&e));
+                    events.push(Event::Html(CowStr::from(html)));
+                }
+                _ => {}
+            }
+            continue;
+        }
+        if let Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(lang))) = &ev {
+            if lang.trim() == "nen" {
+                nen_buf = Some(String::new());
+                continue;
+            }
+        }
+        let mapped = match ev {
             Event::Start(Tag::Heading { level, classes, attrs, .. }) => {
                 let id = ids.get(hidx).cloned().unwrap_or_default();
                 hidx += 1;
@@ -174,8 +195,9 @@ pub fn render_html(
                 }
             }
             other => other,
-        })
-        .collect();
+        };
+        events.push(mapped);
+    }
     let mut out = String::new();
     html::push_html(&mut out, events.into_iter());
     out

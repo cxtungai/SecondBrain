@@ -209,7 +209,7 @@ fn check(project: &Project, args: &Args, c: &C) -> i32 {
         return 1;
     }
     println!("{}", c.green(&format!("✓ Không có lỗi{}", if warnings > 0 { format!(" ({warnings} cảnh báo)") } else { String::new() })));
-    if kb.issues.iter().chain(data.articles.issues.iter()).any(|i| i.level == Level::Error && i.draft) {
+    if data.issues().any(|i| i.level == Level::Error && i.draft) {
         println!("{}", c.dim("  lỗi* = lỗi trong bản nháp (_inbox hoặc bài viết nháp), không chặn build; sửa trước khi đăng."));
     }
     0
@@ -217,7 +217,7 @@ fn check(project: &Project, args: &Args, c: &C) -> i32 {
 
 fn print_issues(data: &crate::project::Loaded, strict_drafts: bool, c: &C) -> (usize, usize) {
     let mut by_file: Vec<(&str, Vec<&crate::kb::Issue>)> = Vec::new();
-    for i in data.kb.issues.iter().chain(data.articles.issues.iter()) {
+    for i in data.issues() {
         match by_file.iter_mut().find(|(p, _)| *p == i.path) {
             Some((_, v)) => v.push(i),
             None => by_file.push((&i.path, vec![i])),
@@ -252,7 +252,7 @@ fn build(project: &Project, args: &Args, c: &C) -> i32 {
     // Kiểm tra trước: lỗi ở ghi chú/bài đã đăng thì dừng.
     let check_data = project.load(true);
     let (errors, _) = {
-        let fatal = check_data.kb.issues.iter().chain(check_data.articles.issues.iter()).filter(|i| i.level == Level::Error && !i.draft).count();
+        let fatal = check_data.issues().filter(|i| i.level == Level::Error && !i.draft).count();
         (fatal, 0)
     };
     if errors > 0 {

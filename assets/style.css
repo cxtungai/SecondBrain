@@ -1344,3 +1344,22 @@ mark {
 .desk-list li.desk-group-title { display: block; border: 0; background: none; padding: 0.9rem 0 0.2rem; font-size: 1rem; }
 .desk-list li.review-main-topic { border-left: 4px solid var(--accent); padding-left: 0.75rem; }
 .note-role { margin: 0.5rem 0 0; font-size: 0.95rem; color: var(--muted); }
+
+/* ---------- Hình nến minh hoạ (chỉ trên web, vẽ từ minh-hoa/*.md) ---------- */
+.hinh-nhom { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1rem 0 1.5rem; align-items: flex-start; }
+.hinh-nhom > p { flex-basis: 100%; margin: 0; color: var(--muted); font-size: 0.92rem; }
+.hinh-nen { margin: 0; padding: 0.6rem 0.7rem 0.5rem; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); width: fit-content; min-width: 10rem; max-width: 100%; }
+.hinh-nen svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.hinh-nen figcaption { width: 0; min-width: 100%; font-size: 0.85rem; line-height: 1.35; color: var(--muted); margin-top: 0.35rem; text-align: center; }
+.nen-tang { fill: var(--ok); stroke: var(--ok); }
+.nen-giam { fill: var(--bad); stroke: var(--bad); }
+.nen-doji { fill: var(--text); stroke: var(--text); }
+.nen-bong { stroke-width: 1.6; fill: none; }
+.nen-than { stroke-width: 1; }
+.nen-ngang { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.nen-vung { fill: var(--accent-soft); }
+.nen-noi { fill: var(--accent-soft); }
+.nen-chi { stroke: var(--muted); stroke-width: 1; fill: none; }
+.nen-chu { font-size: 11px; fill: var(--muted); }
+.nen-gia { font-weight: 600; fill: var(--text); }
+.nen-nhan { font-size: 11px; font-weight: 700; fill: var(--accent); }
