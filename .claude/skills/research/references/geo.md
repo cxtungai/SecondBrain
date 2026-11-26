@@ -10,8 +10,8 @@ Người dùng dặn ngày 2026-11-26: tối ưu SEO/GEO được, nhưng **khô
 | --- | --- |
 | Đưa ý chính lên đầu bài và đầu mỗi mục | Thêm khẳng định, số liệu hay câu trích **không có trong nguồn đã đọc** |
 | Gọi đúng tên chủ thể thay cho "Nó / Điều này" | Đổi hay "làm đẹp" kết luận cho hấp dẫn |
-| Tách đoạn quá dài theo ý, mỗi đoạn một ý trọn vẹn | Cắt vụn bài thành mẩu nhỏ "cho AI dễ đọc" (Google khuyên không làm) |
-| Dùng bảng khi so sánh, danh sách đánh số khi có các bước | Viết một bản riêng cho AI khác bản cho người đọc |
+| Tách đoạn quá dài theo ý, mỗi đoạn một ý trọn vẹn | Cắt vụn bài thành mẩu nhỏ "cho AI dễ đọc". Google nói không cần: hệ thống tự hiểu nhiều chủ đề trên một trang |
+| Dùng bảng khi so sánh, danh sách đánh số khi có các bước | Viết một bản riêng cho AI, hay làm hàng loạt trang cho từng biến thể câu hỏi. Google coi việc sau là spam "nội dung hàng loạt" |
 | Gắn `(Nguồn [n])` đúng chỗ nguồn đó nói | Nhồi từ khoá (nghiên cứu GEO: gần như vô ích) |
 | Trích ngắn nguyên văn tài liệu gốc kèm số trang | Bỏ điều kiện, giới hạn, chỗ "còn tranh cãi" cho câu gọn hơn |
 | Nêu mục giới hạn / khi nào không áp dụng (từ nguồn đã có) | Tạo trích dẫn, đánh giá hay "chuyên gia" không có thật |
@@ -21,6 +21,13 @@ Người dùng dặn ngày 2026-11-26: tối ưu SEO/GEO được, nhưng **khô
 - **GEO** (Aggarwal và cộng sự, KDD 2024): thêm trích dẫn nguồn, câu trích và số liệu giúp nội dung được AI nhắc tới nhiều hơn, tới khoảng 40%; nhồi từ khoá kiểu SEO cũ gần như không có tác dụng.
 - **AutoGEO** (Wu và cộng sự, ICLR 2026): rút quy tắc từ chính Gemini, GPT, Claude. Các quy tắc lặp lại ở cả ba: nêu kết luận ngay đầu; mỗi đoạn một ý, tự đứng được; chính xác, cập nhật, có ngày; giải thích "vì sao / như thế nào"; định nghĩa thuật ngữ ở lần đầu; phân biệt khái niệm dễ nhầm; cân bằng nhiều góc nhìn; bảng và danh sách; không quảng cáo, không lan man.
 - **Claude** rất kén nguồn: ưu tiên nội dung chính xác, dẫn nguồn rõ, nhiều chi tiết cụ thể (theo skill `ai-seo` của repo marketingskills).
+- **Google** (hướng dẫn chính thức "Optimizing your website for generative AI features on Google Search", 2026):
+  - tối ưu cho AI của Google vẫn là SEO;
+  - nội dung độc đáo, không đại trà, viết cho người đọc là quan trọng nhất;
+  - **không cần** `llms.txt`, chia nhỏ bài, viết riêng cho AI hay dữ liệu cấu trúc đặc biệt; Google Search bỏ qua `llms.txt` (giữ cho dịch vụ khác cũng không hại);
+  - "nhắc tới" giả không có ích;
+  - web phải bật **Search generative AI** (mặc định là bật) trong Search Console.
+- **Phản biện:** một bài tổng quan 45 nghiên cứu GEO (Martinez, 2026, bản thảo chưa bình duyệt) cho rằng mức tăng trong bài GEO gốc chỉ đúng khi trang **đã được lấy vào** câu trả lời. Chưa kỹ thuật nào cho thấy hiệu quả ổn định lâu dài; mức liên quan tới chủ đề là yếu tố lặp lại được rõ nhất. Vì vậy, **được lập chỉ mục và nội dung đúng chủ đề** quan trọng hơn mẹo viết.
 - Những điều này trùng với cách kho vốn viết (nguồn có điểm uy tín, phân biệt đồng thuận / tranh cãi). GEO cho kho này nghĩa là **làm tri thức rõ hơn**, không phải viết khác đi.
 
 ## Tự kiểm trước khi lưu bản nháp

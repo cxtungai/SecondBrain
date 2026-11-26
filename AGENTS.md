@@ -35,7 +35,7 @@ Mo-Second-Brain.*       File bấm đúp cho người dùng: tải chương trì
 .github/workflows/      deploy.yml (test + build + GitHub Pages + kiểm tra web thật + báo IndexNow), release.yml (file chạy), duyet.yml (nút duyệt trên web)
 .github/scripts/duyet.sh  Đăng/bỏ bản nháp theo tiêu đề issue (chạy thử được trên máy, xem đầu file)
 .github/scripts/kiem-tra-web.mjs, indexnow.mjs  Sau mỗi lần đăng: kiểm tra SEO của web thật; báo trang mới/sửa cho IndexNow
-.claude/skills/         Skill cho Claude Code: research, publish, connect, seo-article, write-content
+.claude/skills/         Skill cho Claude Code: research, publish, connect, seo-article, write-content, quy-trinh-seo-geo
 ```
 
 ## Ghi chú
@@ -158,6 +158,8 @@ Quy tắc:
 **Phần kỹ thuật chương trình tự lo** khi dựng web: canonical, Open Graph và thẻ X/Twitter kèm ảnh chia sẻ (`assets/og-image.png`), JSON-LD (WebSite + Organization ở trang chủ; Article có tác giả hoặc tên thương hiệu khi `author` trống, đơn vị xuất bản, nguồn trích; FAQ; Breadcrumb; DefinedTermSet), sitemap có ngày sửa, `feed.xml` (Atom), `robots.txt` nêu tên bot tìm kiếm và bot AI, `llms.txt`, bản Markdown. Mã xác minh Google Search Console / Bing Webmaster điền ở `cau-hinh.yml` (`google_site_verification`, `bing_site_verification`). Web nằm dưới `/ten-repo/` thì bot không đọc `robots.txt` của mình (chỉ đọc ở gốc tên miền), nên cần gửi sitemap qua Search Console.
 
 **Tự động sau mỗi lần đăng** (job `sau-khi-dang` trong `deploy.yml`, chạy cả khi người dùng bấm duyệt trên web): (1) `kiem-tra-web.mjs` kiểm web thật — canonical, ảnh chia sẻ, JSON-LD, mã xác minh Google/Bing, sitemap, robots, feed, llms.txt, file khoá IndexNow, `/duyet/` có noindex; hỏng thì báo đỏ. (2) `indexnow.mjs` so sitemap cũ với bản mới rồi báo trang mới/sửa/bỏ cho IndexNow (Bing, Yandex, Naver, Seznam) bằng `indexnow_key` trong `cau-hinh.yml`; lỗi chỉ cảnh báo. Google không dùng IndexNow — nó tự đọc lại sitemap. Không cần đăng ký Bing Webmaster để Bing biết bài mới. Cả hai script chạy thử được trên máy (xem đầu file).
+
+**Quy trình SEO/GEO dùng lại được:** `.claude/skills/quy-trinh-seo-geo/` (skill `/quy-trinh-seo-geo`) gom mọi bước theo 8 giai đoạn: dựng trang mới, nền kỹ thuật, đăng ký Google/Bing/Brave, tự động, nội dung, uy tín bên ngoài, đo lường, đổi tên miền. `trang-thai.md` ghi trang này đã làm tới đâu. **Mỗi lần tối ưu SEO/GEO được điều gì mới** (sửa chương trình, thêm bước, bài học) thì cập nhật luôn `SKILL.md`, `references/` liên quan, `NHAT-KY.md` và `trang-thai.md`; kiến thức chung thì cập nhật cả các ghi chú tri thức SEO/GEO. Dựng trang tri thức khác thì chép thư mục skill này (hoặc cả repo) rồi chạy `/quy-trinh-seo-geo trang-moi`.
 
 ## Quy trình
 

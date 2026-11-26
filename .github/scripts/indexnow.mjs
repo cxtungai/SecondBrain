@@ -6,6 +6,8 @@
 //   node .github/scripts/indexnow.mjs doi --cu https://ten.github.io/Repo/sitemap.xml --moi dist/sitemap.xml > urls.txt
 //       So sitemap đang chạy trên web (bản cũ) với bản vừa dựng: in ra URL mới, URL có ngày sửa khác, URL đã bỏ.
 //       Không tải được bản cũ (lần đầu) → in mọi URL trong bản mới.
+//   node .github/scripts/indexnow.mjs doi --tat-ca --moi https://ten.github.io/Repo/sitemap.xml > urls.txt
+//       Mọi URL của web (dùng cho lần gửi đầu sau khi có khoá). --moi nhận cả file lẫn địa chỉ web.
 //   node .github/scripts/indexnow.mjs gui --site https://ten.github.io/Repo/ --tep urls.txt [--thu]
 //       Gửi danh sách cho api.indexnow.org. Khoá đọc từ cau-hinh.yml (indexnow_key).
 //       --thu: chỉ in nội dung sẽ gửi, không gửi.
@@ -57,9 +59,11 @@ async function fetchText(url) {
 }
 
 async function doi() {
-  const cu = opt("cu"), moi = opt("moi");
-  if (!moi) throw new Error("thiếu --moi <đường dẫn sitemap.xml vừa dựng>");
-  const newMap = parseSitemap(fs.readFileSync(moi, "utf8"));
+  const cu = flag("tat-ca") ? undefined : opt("cu"), moi = opt("moi");
+  if (!moi) throw new Error("thiếu --moi <sitemap.xml vừa dựng — đường dẫn file hoặc địa chỉ web>");
+  const newXml = /^https?:\/\//.test(moi) ? await fetchText(moi) : fs.readFileSync(moi, "utf8");
+  if (!newXml) throw new Error(`không tải được ${moi}`);
+  const newMap = parseSitemap(newXml);
   const oldXml = cu ? await fetchText(cu) : null;
   const oldMap = oldXml ? parseSitemap(oldXml) : null;
   if (!oldMap) console.error(`Không tải được sitemap cũ (${cu ?? "không có --cu"}) — báo mọi trang.`);
