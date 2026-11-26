@@ -122,6 +122,12 @@ pub fn insert(html: &str, file: &FigureFile, render: &dyn Fn(&str) -> String) ->
             .filter_map(|lv| out[after..].find(&format!("<h{lv}")).map(|p| after + p))
             .min()
             .unwrap_or(out.len());
+        // Câu bài tập: hình là một phần của đề, nên đặt trước đáp án ẩn (nếu đáp án nằm ngay trong mục này).
+        let section = &out[after..end];
+        let end = match (section.find("<details class=\"reveal"), section.find("<h")) {
+            (Some(d), sub) if sub.is_none_or(|h| d < h) => after + d,
+            _ => end,
+        };
         let block = format!("<div class=\"hinh-nhom\">{}</div>\n", render(&s.markdown));
         out.insert_str(end, &block);
     }
@@ -153,5 +159,28 @@ mod tests {
         let (fig_at, sub_at, next_at) = (out.find("hinh-nen").unwrap(), out.find("id=\"chi-tiet\"").unwrap(), out.find("id=\"khac\"").unwrap());
         // Hình nằm cuối mục "Cấu tạo" (sau cả mục con), trước mục kế tiếp cùng cấp.
         assert!(sub_at < fig_at && fig_at < next_at);
+    }
+
+    #[test]
+    fn hinh_cua_bai_tap_dat_truoc_dap_an() {
+        let body = "Nến.\n\n## Bài tập\n\n### Câu 1: Đây là nến gì?\n\nNhìn hình.\n\n**Đáp án:** Nến búa.\n\n### Câu 2\n\nĐề.\n";
+        let note = FileEntry {
+            path: "knowledge/_inbox/nen.md".into(),
+            raw: format!("---\ntitle: Nến\ntype: concept\nsummary: Mẫu.\nstatus: draft\ncreated: 2026-01-01\n---\n{body}"),
+        };
+        let kb = Kb::build(&[note], true);
+        let articles = Articles::build(&[], &kb, true);
+        let fig = FileEntry {
+            path: "minh-hoa/nen.md".into(),
+            raw: "## Câu 1: Đây là nến gì?\n\n```nen\nten: Một nến\n100 102 90 101\n```\n\n## Bài tập\n\n```nen\nten: Cả mục\n100 108 97 105\n```\n".into(),
+        };
+        let figs = Figures::build(&[fig], &kb, &articles);
+        assert!(figs.issues.is_empty(), "{:?}", figs.issues.iter().map(|i| &i.message).collect::<Vec<_>>());
+        let render = |md: &str| crate::render::render_html(md, &|_, _| None, &|t| t.to_string());
+        let out = insert(&render(body), figs.for_slug("nen").unwrap(), &render);
+        let at = |s: &str| out.find(s).unwrap_or_else(|| panic!("thiếu {s}: {out}"));
+        // Hình của câu 1 nằm giữa đề và đáp án ẩn; hình của cả mục nằm cuối mục, sau câu 2.
+        assert!(at("Nhìn hình") < at("Một nến") && at("Một nến") < at("<details"));
+        assert!(at("id=\"cau-2\"") < at("Cả mục"));
     }
 }

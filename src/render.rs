@@ -111,6 +111,208 @@ pub fn extract_faq(markdown: &str) -> Vec<Faq> {
     faq.into_iter().filter(|f| !f.question.is_empty() && !f.answer.is_empty()).collect()
 }
 
+/// Tiêu đề kiểu "## Chữ" (ngoài khối code — người gọi tự bỏ qua code): (cấp, chữ thô).
+pub fn atx_heading(line: &str) -> Option<(usize, &str)> {
+    let t = line.trim_start();
+    let hashes = t.chars().take_while(|&c| c == '#').count();
+    ((1..=6).contains(&hashes) && t[hashes..].starts_with(' ')).then(|| (hashes, t[hashes..].trim().trim_end_matches('#').trim()))
+}
+
+static EXERCISE_HEADING: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^(bai-tap|tu-kiem-tra|cau-hoi-on-tap)").unwrap());
+static OBJECTIVES_HEADING: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^(muc-tieu-bai-hoc|sau-bai-nay)").unwrap());
+
+/// Phần ẩn trong một bài tập: đoạn mở bằng **Đáp án:** hoặc **Gợi ý:**.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Reveal {
+    Answer,
+    Hint,
+}
+
+impl Reveal {
+    fn of(label: &str) -> Option<Self> {
+        let s = slugify(label);
+        if s.starts_with("dap-an") {
+            Some(Self::Answer)
+        } else if s.starts_with("goi-y") {
+            Some(Self::Hint)
+        } else {
+            None
+        }
+    }
+
+    /// Dòng Markdown mở bằng **Đáp án:** / **Gợi ý:**.
+    pub fn of_line(line: &str) -> Option<Self> {
+        Self::of(line.trim_start().strip_prefix("**")?.split("**").next()?)
+    }
+}
+
+/// Một câu trong mục "Bài tập" (tiêu đề cấp 3).
+#[derive(Debug, Clone, serde::Serialize)]
+pub struct Exercise {
+    pub question: String,
+    pub has_answer: bool,
+}
+
+/// Mục "Bài tập" (hoặc "Tự kiểm tra"): mỗi câu là một tiêu đề cấp 3; câu có đáp án khi có đoạn mở bằng **Đáp án:**.
+pub fn extract_exercises(markdown: &str) -> Vec<Exercise> {
+    let (mut out, mut fence, mut inside) = (Vec::<Exercise>::new(), false, false);
+    for line in markdown.lines() {
+        let t = line.trim_start();
+        if t.starts_with("```") || t.starts_with("~~~") {
+            fence = !fence;
+            continue;
+        }
+        if fence {
+            continue;
+        }
+        if let Some((lv, text)) = atx_heading(t) {
+            let text = markdown_to_plain(text);
+            if lv <= 2 {
+                inside = lv == 2 && EXERCISE_HEADING.is_match(&slugify(&text));
+            } else if inside && lv == 3 {
+                out.push(Exercise { question: text, has_answer: false });
+            }
+            continue;
+        }
+        if inside && Reveal::of_line(t) == Some(Reveal::Answer) {
+            if let Some(e) = out.last_mut() {
+                e.has_answer = true;
+            }
+        }
+    }
+    out
+}
+
+/// Id của mục "Bài tập" trên trang (để dẫn tới), nếu có.
+pub fn exercises_id(markdown: &str) -> Option<String> {
+    all_headings(markdown).into_iter().find(|h| h.depth == 2 && EXERCISE_HEADING.is_match(&h.id)).map(|h| h.id)
+}
+
+/// Bài có mục "Mục tiêu bài học" ("Sau bài này bạn sẽ…") không.
+pub fn has_objectives(markdown: &str) -> bool {
+    all_headings(markdown).iter().any(|h| h.depth == 2 && OBJECTIVES_HEADING.is_match(&h.id))
+}
+
+#[derive(Clone, Copy, PartialEq)]
+enum Block {
+    Other,
+    Objectives,
+    Exercises,
+}
+
+fn raw_html<'a>(s: &str) -> Event<'a> {
+    Event::Html(CowStr::from(s.to_string()))
+}
+
+/// Nhãn đậm mở đầu đoạn ("**Đáp án:**"): loại và vị trí sự kiện ngay sau nhãn, đã bỏ ":" và khoảng trắng theo sau.
+fn reveal_label(events: &mut [Event<'_>], start: usize) -> Option<(Reveal, usize)> {
+    if !matches!(events.get(start), Some(Event::Start(Tag::Strong))) {
+        return None;
+    }
+    let (mut label, mut j) = (String::new(), start + 1);
+    loop {
+        match events.get(j)? {
+            Event::Text(t) => label.push_str(t),
+            Event::End(TagEnd::Strong) => break,
+            _ => return None,
+        }
+        j += 1;
+    }
+    let kind = Reveal::of(&label)?;
+    j += 1;
+    while let Some(ev) = events.get(j) {
+        match ev {
+            Event::SoftBreak | Event::HardBreak => j += 1,
+            Event::Text(t) => {
+                let rest = t.trim_start_matches(|c: char| c == ':' || c.is_whitespace()).to_string();
+                if !rest.is_empty() {
+                    events[j] = Event::Text(CowStr::from(rest));
+                    break;
+                }
+                j += 1;
+            }
+            _ => break,
+        }
+    }
+    Some((kind, j))
+}
+
+/// Mục "Mục tiêu bài học" hiện thành khung; trong mục "Bài tập", đoạn mở bằng **Đáp án:** / **Gợi ý:**
+/// cùng phần sau nó (tới tiêu đề kế tiếp) thành phần ẩn, bấm mới hiện (thẻ <details>, không cần JavaScript).
+/// Không bọc thẻ nào quanh tiêu đề, để hình minh hoạ vẫn chèn đúng cuối mục (`minh_hoa::insert`).
+fn learning_blocks(mut events: Vec<Event<'_>>) -> Vec<Event<'_>> {
+    let mut out = Vec::with_capacity(events.len() + 8);
+    let (mut depth, mut block, mut box_after_title) = (0usize, Block::Other, false);
+    // Thẻ đang mở (khung mục tiêu, phần ẩn) — đóng trước tiêu đề kế tiếp.
+    let mut open: Option<&'static str> = None;
+    let mut i = 0;
+    while i < events.len() {
+        if depth == 0 {
+            if let Event::Start(Tag::Heading { level, id, classes, .. }) = &mut events[i] {
+                if let Some(close) = open.take() {
+                    out.push(raw_html(close));
+                }
+                let lv = level_num(*level);
+                if lv <= 2 {
+                    let id = id.as_deref().unwrap_or("");
+                    block = if OBJECTIVES_HEADING.is_match(id) {
+                        Block::Objectives
+                    } else if EXERCISE_HEADING.is_match(id) {
+                        Block::Exercises
+                    } else {
+                        Block::Other
+                    };
+                }
+                let class = match (block, lv) {
+                    (Block::Objectives, 2) => Some("objectives-title"),
+                    (Block::Exercises, 2) => Some("exercises-title"),
+                    (Block::Exercises, 3) => Some("exercise-title"),
+                    _ => None,
+                };
+                classes.extend(class.map(CowStr::from));
+                box_after_title = block == Block::Objectives && lv == 2;
+            } else if block == Block::Exercises && matches!(events[i], Event::Start(Tag::Paragraph)) {
+                if let Some((kind, j)) = reveal_label(&mut events, i + 1) {
+                    if let Some(close) = open.take() {
+                        out.push(raw_html(close));
+                    }
+                    let (class, summary) = match kind {
+                        Reveal::Answer => ("answer", "Xem đáp án"),
+                        Reveal::Hint => ("hint", "Xem gợi ý"),
+                    };
+                    out.push(raw_html(&format!("<details class=\"reveal reveal--{class}\"><summary>{summary}</summary>")));
+                    open = Some("</details>");
+                    if matches!(events.get(j), Some(Event::End(TagEnd::Paragraph))) {
+                        i = j + 1; // đoạn chỉ có nhãn
+                    } else {
+                        out.push(Event::Start(Tag::Paragraph));
+                        depth += 1;
+                        i = j;
+                    }
+                    continue;
+                }
+            }
+        }
+        let title_ends = box_after_title && depth == 1 && matches!(events[i], Event::End(TagEnd::Heading(_)));
+        match &events[i] {
+            Event::Start(_) => depth += 1,
+            Event::End(_) => depth = depth.saturating_sub(1),
+            _ => {}
+        }
+        out.push(std::mem::replace(&mut events[i], Event::SoftBreak));
+        i += 1;
+        if title_ends {
+            out.push(raw_html("<div class=\"objectives\">"));
+            open = Some("</div>");
+            box_after_title = false;
+        }
+    }
+    if let Some(close) = open {
+        out.push(raw_html(close));
+    }
+    out
+}
+
 /// Render markdown của ghi chú/bài viết sang HTML.
 /// `resolve(đích, heading)` trả về đích liên kết; `gap_href(đích)` cho liên kết tới ghi chú chưa có.
 pub fn render_html(
@@ -199,7 +401,7 @@ pub fn render_html(
         events.push(mapped);
     }
     let mut out = String::new();
-    html::push_html(&mut out, events.into_iter());
+    html::push_html(&mut out, learning_blocks(events).into_iter());
     out
 }
 
@@ -255,5 +457,33 @@ mod tests {
         assert!(html.contains("href=\"/notes/a/\""));
         assert!(html.contains("wikilink--broken"));
         assert!(html.contains("target=\"_blank\""));
+    }
+
+    #[test]
+    fn bai_tap_dap_an_an_va_muc_tieu() {
+        let md = "Mở đầu.\n\n## Mục tiêu bài học\n\n- Nêu được X\n\n## Giải thích\n\nY.\n\n## Bài tập\n\nLàm thử.\n\n\
+            ### Câu 1: X là gì?\n\nĐề bài.\n\n**Gợi ý:** nhìn lại mục Giải thích.\n\n**Đáp án:** X là Y.\n\nThêm ý.\n\n\
+            ### Câu 2: Chưa có đáp án\n\nĐề.\n\n### Câu 3\n\n**Đáp án**:\nDòng sau.\n\n```\n### không phải câu\n**Đáp án:** trong code\n```\n\n\
+            ## Câu hỏi thường gặp\n\n### Hỏi?\n\n**Đáp án:** không ẩn ngoài mục Bài tập.\n";
+        let ex = extract_exercises(md);
+        assert_eq!(ex.iter().map(|e| (e.question.as_str(), e.has_answer)).collect::<Vec<_>>(),
+            [("Câu 1: X là gì?", true), ("Câu 2: Chưa có đáp án", false), ("Câu 3", true)]);
+        assert_eq!(exercises_id(md).as_deref(), Some("bai-tap"));
+        assert!(has_objectives(md) && !has_objectives("## Mục đích\n\nX"));
+
+        // So khớp không tính xuống dòng giữa các thẻ.
+        let html = render_html(md, &|_, _| None, &|t| t.to_string()).replace('\n', "");
+        assert!(html.contains("<h2 id=\"muc-tieu-bai-hoc\" class=\"objectives-title\">"), "{html}");
+        assert!(html.contains("<div class=\"objectives\"><ul>"), "{html}");
+        assert!(html.contains("</ul></div><h2 id=\"giai-thich\">"), "{html}");
+        assert!(html.contains("<h3 id=\"cau-1-x-la-gi\" class=\"exercise-title\">"));
+        // Gợi ý và đáp án là hai phần ẩn riêng; nhãn được bỏ, đáp án kéo tới câu kế tiếp.
+        assert!(html.contains("<details class=\"reveal reveal--hint\"><summary>Xem gợi ý</summary><p>nhìn lại mục Giải thích.</p></details>"), "{html}");
+        assert!(html.contains("<summary>Xem đáp án</summary><p>X là Y.</p><p>Thêm ý.</p></details><h3"), "{html}");
+        assert!(html.contains("<summary>Xem đáp án</summary><p>Dòng sau.</p>"), "{html}");
+        assert!(html.contains("<code>### không phải câu**Đáp án:** trong code"));
+        assert!(html.contains("<p><strong>Đáp án:</strong> không ẩn ngoài mục Bài tập.</p>"), "{html}");
+        assert_eq!(html.matches("<details").count(), html.matches("</details>").count());
+        assert_eq!(html.matches("<details").count(), 3);
     }
 }

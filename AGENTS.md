@@ -160,6 +160,18 @@ Ghi chú `topic` có mục `## Lộ trình học` với các tiêu đề `### 1.
 
 Thêm bài mới cho chủ đề đã có lộ trình → đặt vào đúng cấp (`/connect`). Sắp xếp lại lộ trình chỉ là đổi cách trình bày: không thêm, bớt hay đổi dữ kiện của ghi chú.
 
+### Mục tiêu bài học và bài tập tự kiểm tra
+
+Người dùng dặn (2026-11-26): bài cấp **Hiểu** và **Vận dụng** phải có bài tập để người đọc tự làm, không chỉ đọc. Theo cách sách giáo khoa mở OpenStax làm (mục tiêu đầu bài, câu hỏi ôn tập cuối bài), và theo tổng hợp nghiên cứu của Dunlosky và cộng sự (2013): tự kiểm tra là một trong hai cách học hiệu quả nhất, còn đọc lại hay tô đậm thì kém.
+
+- `## Mục tiêu bài học`: đặt ngay sau đoạn mở đầu (câu định nghĩa vẫn đứng đầu bài). 2–4 gạch đầu dòng "Sau bài này bạn sẽ…", mở bằng động từ của cấp (Hiểu: giải thích được, phân biệt được; Vận dụng: nhận ra được, tính được, làm được). Trên web hiện thành khung 🎯.
+- `## Bài tập`: đặt trước "Câu hỏi thường gặp". 3–5 câu, mỗi câu là `### Câu 1: …`, đề bài ngay dưới, rồi một đoạn mở bằng `**Đáp án:**`; có thể thêm `**Gợi ý:**` trước đáp án. Trên web, gợi ý và đáp án ẩn, bấm mới hiện (phần ẩn kéo tới câu kế tiếp). File `.md`, `llms.txt` và bản cho AI vẫn có đủ đáp án.
+- Mỗi mục tiêu có ít nhất một câu kiểm tra. Ưu tiên câu bắt người đọc tự nhớ lại, tự giải thích, tự làm, hơn là chọn đáp án có sẵn.
+- **Nguồn:** đề và đáp án chỉ dùng điều đã có trong chính bài, đúng định nghĩa gốc, dẫn `(Nguồn [n])` như phần thân bài. Số liệu tự đặt ra để luyện (giá, khối lượng lệnh) ghi rõ "giả định". Không thêm dữ kiện mới chỉ để có câu hỏi.
+- Bài tập không phải FAQ: "Câu hỏi thường gặp" trả lời điều người đọc hay hỏi (Google/AI dùng), còn "Bài tập" để người học tự luyện.
+- Hình cho một câu: `minh-hoa/<slug>.md`, mục `## Câu 1: …` (cùng tên tiêu đề câu). Hình nằm sau đề, trước đáp án ẩn.
+- `./sb check` cảnh báo bản nháp cấp Hiểu / Vận dụng thiếu một trong hai mục, và câu bài tập thiếu đáp án. Trang bài hiện "📝 N bài tập tự kiểm tra"; `knowledge.json` có `exercises` (số câu).
+
 ## Bài viết SEO/GEO
 
 Mục đích chính của site là tri thức. Bài viết là **bài con** kéo traffic từ Google / AI search về tri thức — không thay thế, không làm sai lệch tri thức.

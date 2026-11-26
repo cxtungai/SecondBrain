@@ -58,6 +58,14 @@ research:
 
 **Biểu đồ nến Nhật** (candlestick chart) là cách vẽ giá trong đó mỗi phiên (một ngày, một giờ, năm phút…) là một "cây nến" thể hiện bốn mức giá. Giá mở cửa và đóng cửa tạo thành **thân nến**, giá cao nhất và thấp nhất là hai đầu **bóng nến** (còn gọi là râu nến) (Nguồn [1]). Ưu điểm của nến so với biểu đồ đường là cho thấy ngay **bên mua hay bên bán đã thắng phiên đó**, và thắng áp đảo hay sít sao (Nguồn [1][2]).
 
+## Mục tiêu bài học
+
+Sau bài này bạn sẽ:
+
+- đọc được bốn mức giá (mở cửa, đóng cửa, cao nhất, thấp nhất) trên một cây nến;
+- giải thích được thân nến và bóng nến cho biết gì về bên mua và bên bán;
+- giải thích được vì sao một cây nến phải đọc trong bối cảnh, và nến không cho biết điều gì.
+
 ## Giải thích
 
 ### Cấu tạo một cây nến
@@ -109,6 +117,40 @@ Một phiên mở cửa ở 100, lên cao nhất 108, xuống thấp nhất 97 v
 - **"Một cây nến đẹp là đủ để vào lệnh."** Cần bối cảnh và xác nhận (Nguồn [1][2]).
 - **"Doji là tín hiệu đảo chiều."** Đứng một mình thì doji trung tính (Nguồn [1]).
 - **"Homma phát minh ra biểu đồ nến."** Điều này còn tranh cãi; chính Nison nghi ngờ nó (Nguồn [3]).
+
+## Bài tập
+
+Tự làm trước, rồi mới mở đáp án. Mọi con số giá là **giả định** để luyện tập.
+
+### Câu 1: Đọc một cây nến
+
+Một phiên mở cửa ở 100, lên cao nhất 102, xuống thấp nhất 88 và đóng cửa ở 101. Thân nến và hai bóng nến nằm ở đâu? Phiên này cho biết gì về bên mua và bên bán?
+
+**Đáp án:** Thân nến tăng, nhỏ, từ 100 lên 101. Bóng trên ngắn, từ 101 lên 102. Bóng dưới rất dài, từ 88 lên 100. Bóng dưới dài, bóng trên ngắn nghĩa là bên bán đã đẩy giá xuống sâu nhưng bên mua kéo lên lại (Nguồn [1]). Brooks đọc kiểu bóng dưới dài này là lực bán đã bị từ chối và bên mua kiểm soát thanh (Nguồn [2]). Hình dạng này gần với nến búa; tiêu chí của từng mô hình nằm ở bài [[mau-hinh-nen]].
+
+### Câu 2: Điều cây nến không cho biết
+
+Hai phiên cùng mở 100, cao nhất 108, thấp nhất 97, đóng 105. Phiên A lên 108 trước rồi mới xuống 97; phiên B xuống 97 trước rồi mới lên 108. Trên biểu đồ nến, hai cây nến có khác nhau không? Muốn biết giá đi lên trước hay xuống trước thì làm gì?
+
+**Đáp án:** Hai cây nến **giống hệt nhau**, vì nến không cho biết thứ tự giao dịch giữa lúc mở và lúc đóng cửa (Nguồn [1]). Muốn biết thì xem khung thời gian nhỏ hơn (Nguồn [2]).
+
+### Câu 3: Doji giữa vùng đi ngang
+
+Giữa một vùng giá đi ngang, xuất hiện một doji (giá mở gần bằng giá đóng). Đó có phải tín hiệu đảo chiều không?
+
+**Đáp án:** **Không, nếu chỉ dựa vào nó.** Doji đứng một mình thì trung tính; ý nghĩa đến từ bối cảnh trước nó và xác nhận sau nó (Nguồn [1]). Brooks cũng nhắc một thanh đảo chiều đơn lẻ không đủ lý do vào lệnh (Nguồn [2]).
+
+### Câu 4: Cùng một cây nến, hai vị trí
+
+Một nến giảm dài xuất hiện (a) ngay sau một đợt tăng dài, (b) ngay sau một đợt giảm dài. Ý nghĩa của nó khác nhau thế nào?
+
+**Đáp án:** (a) Sau đợt tăng dài, nến giảm dài có thể đánh dấu bước ngoặt hoặc kháng cự. (b) Sau đợt giảm dài, nó có thể là dấu hiệu bán tháo hoảng loạn (Nguồn [1]). Cùng một hình dạng, vị trí làm đổi ý nghĩa.
+
+### Câu 5: Ai phát minh ra biểu đồ nến?
+
+Nhiều trang viết "Homma phát minh ra biểu đồ nến ở thế kỷ 18". Câu này có chắc chắn đúng không?
+
+**Đáp án:** **Còn tranh cãi.** Ngay Wikipedia chỉ viết ông "đôi khi được coi là" cha đẻ của biểu đồ nến (Nguồn [3][4]). Trong *Beyond Candlesticks* (1994), Nison cho rằng ít có khả năng Homma đã dùng biểu đồ nến, và nhiều khả năng nó ra đời đầu thời Minh Trị, cuối thế kỷ 19 (Nguồn [3]).
 
 ## Câu hỏi thường gặp
 

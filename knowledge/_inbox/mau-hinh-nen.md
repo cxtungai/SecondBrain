@@ -73,6 +73,14 @@ research:
 
 Chính Nison, người đưa nến Nhật sang phương Tây, dành nửa sau cuốn sách của mình cho việc **kết hợp nến với công cụ phân tích phương Tây**. Ông cũng nhắc rằng mô hình ngoài thực tế không cần giống hệt hình minh hoạ mới cho tín hiệu đáng tin, và các biến thể của mô hình gốc vẫn cho biết nhiều điều về trạng thái thị trường (Nguồn [6]). Brooks nói cùng ý: "gần đúng là đủ" (Nguồn [4]). Các trang tóm tắt sách Nison cũng nhắc không nên dùng nến một mình (Nguồn [1][2]).
 
+## Mục tiêu bài học
+
+Sau bài này bạn sẽ:
+
+- nhận ra được các mô hình nến chính (búa, người treo cổ, sao băng, nhấn chìm, harami, sao mai) từ hình dạng và vị trí của chúng;
+- kiểm tra được ba điều kiện trước khi coi một mô hình là tín hiệu: có xu hướng trước đó, ở vị trí có ý nghĩa, được xác nhận;
+- đánh giá được một thanh tín hiệu mạnh hay yếu theo cách của Brooks.
+
 ## Các bước / thành phần
 
 ### Nhóm 1 — nến bóng dài (một cây): búa, người treo cổ, sao băng, búa ngược
@@ -132,6 +140,42 @@ Người giao dịch chưa mua ngay mà chờ **xác nhận**: phiên sau tăng 
 - Quy tắc xác nhận không hoàn toàn thống nhất. Ví dụ, có ví dụ trong ChartSchool cho rằng sao mai doji không cần xác nhận thêm ngoài nến thứ ba, trong khi quy tắc chung là phần lớn mô hình cần xác nhận (Nguồn [2]).
 - **Tài liệu gốc chưa đọc được:** phần mô tả từng mô hình trong sách của Nison (chỉ đọc được chương mở đầu), nên tiêu chí hình thành ở trên lấy qua bản tóm tắt thứ cấp của ChartSchool. Cần đối chiếu với sách gốc trước khi đăng.
 - Tên gọi khác nhau giữa các tác giả: "pin bar" và "inside bar" là tên của người giao dịch price action, gần với búa/sao băng và harami trong hệ thống nến Nhật.
+
+## Bài tập
+
+Tự làm trước, rồi mới mở đáp án. Mọi con số giá là **giả định** để luyện tập. Tiêu chí mô hình ở đây theo bản tóm tắt của ChartSchool, chưa đối chiếu sách gốc của Nison (xem "Lưu ý & giới hạn").
+
+### Câu 1: Cùng hình dạng, khác tên
+
+Một nến có thân nhỏ, bóng dưới dài gấp ba thân, gần như không có bóng trên. Gọi tên nó khi (a) xuất hiện sau ba tuần giảm, tại vùng hỗ trợ; (b) xuất hiện sau một đợt tăng dài.
+
+**Đáp án:** (a) **Búa**: bên bán đẩy giá xuống sâu nhưng bên mua kéo lên lại, có thể đảo chiều tăng. (b) **Người treo cổ**: cảnh báo đảo chiều giảm. Cả hai đều cần phiên sau xác nhận (Nguồn [1]). Cùng một hình dạng, vị trí quyết định ý nghĩa.
+
+### Câu 2: Đủ ba điều kiện chưa?
+
+Giá đang lập đỉnh mới thì xuất hiện một mô hình nhấn chìm tăng. Có nên coi đây là tín hiệu đảo chiều để mua không?
+
+**Gợi ý:** Nhắc lại ba điều kiện ở mục "Mục đích".
+
+**Đáp án:** **Không.** Mô hình đảo chiều tăng cần một xu hướng giảm trước đó để đảo chiều. Nhấn chìm tăng ở đỉnh mới không phải tín hiệu đảo chiều; nó có thể chỉ là tiếp diễn (Nguồn [2]). Ba điều kiện là: có xu hướng trước đó, ở vị trí có ý nghĩa, và được xác nhận (Nguồn [1][2]).
+
+### Câu 3: Nhấn chìm hay harami?
+
+Sau một đợt giảm, nến thứ nhất giảm, mở 105 và đóng 100. Nến thứ hai tăng, mở 101 và đóng 104. Đây có phải nhấn chìm tăng không?
+
+**Đáp án:** **Không.** Nhấn chìm tăng cần thân nến thứ hai bao trùm hoàn toàn thân nến thứ nhất, tức mở từ 100 trở xuống và đóng từ 105 trở lên (Nguồn [2]). Ở đây thân nến thứ hai (101–104) nằm trọn trong thân nến thứ nhất (100–105), nên đó là dạng **harami**. Ý nghĩa của harami phụ thuộc xu hướng trước đó, không phụ thuộc màu nến (Nguồn [2][3]).
+
+### Câu 4: Chờ xác nhận và đặt dừng lỗ
+
+Cổ phiếu giảm hai tuần, về vùng hỗ trợ 30.000 đồng. Một nến búa xuất hiện: đáy bóng 29.200, đóng cửa 30.100. Vì sao chưa nên mua ngay? Nếu phiên sau xác nhận và bạn vào lệnh, dừng lỗ thường đặt ở đâu?
+
+**Đáp án:** Chưa mua vì phần lớn mô hình cần **xác nhận** trong 1–3 phiên sau, ví dụ một nến tăng dài hoặc một phiên tăng với khối lượng lớn (Nguồn [2][3]). Dừng lỗ thường đặt **dưới đáy bóng nến búa (29.200)**: giá xuống tới đó nghĩa là sự từ chối ở hỗ trợ đã thất bại. Xem cách làm đầy đủ ở [[quy-trinh-giao-dich-price-action]].
+
+### Câu 5: Thanh tín hiệu nào tốt hơn?
+
+Hai thanh đảo chiều tăng xuất hiện ở hai lúc khác nhau. Thanh X có thân tăng rõ, đóng cửa gần đỉnh, bóng dưới vừa phải. Thanh Y nhỏ hơn hẳn các thanh trước, thân nhỏ, bóng trên dài. Theo Brooks, thanh nào là tín hiệu tốt hơn, và vì sao?
+
+**Đáp án:** **Thanh X.** Brooks coi thanh đảo chiều tăng tốt là thanh có thân tăng rõ và bóng dưới vừa phải: giá đã bị đẩy xuống rồi được mua lên tới tận lúc đóng cửa. Thanh Y yếu: nhỏ hơn hẳn các thanh trước, thân nhỏ, và có bóng dài ở phía đối diện, cho thấy bên mua đã mất tự tin vào cuối thanh (Nguồn [4]).
 
 ## Câu hỏi thường gặp
 

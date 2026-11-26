@@ -4,7 +4,7 @@
 use crate::articles::{intent_label, Article, INTENTS};
 use crate::kb::{level_in, level_name, Kb, Level, Note};
 use crate::project::Loaded;
-use crate::render::{extract_faq, extract_headings, render_html, to_portable_markdown, LinkTarget};
+use crate::render::{extract_exercises, exercises_id, extract_faq, extract_headings, render_html, to_portable_markdown, LinkTarget};
 use crate::schema::{self, credibility_info, source_kind_label, status_info, type_label, NOTE_TYPES, STATUSES};
 use crate::seo;
 use crate::text::{format_date, markdown_to_plain, slugify, strip_diacritics, today, vi_cmp};
@@ -678,6 +678,7 @@ impl Site {
                 "level": p.level, "level_name": p.level.map(level_name)})),
             "is_topic": note.kind == "topic", "ladder": ladder,
             "read_minutes": (note.word_count as f64 / 220.0).round().max(1.0) as usize,
+            "exercises": extract_exercises(&note.body).len(), "exercises_id": exercises_id(&note.body),
             "backlinks": backlinks.iter().map(|n| self.link(n)).collect::<Vec<_>>(),
             "outgoing": outgoing.iter().map(|n| self.link(n)).collect::<Vec<_>>(),
             "broken": note.broken_links.iter().map(|b| json!({"name": b, "href": self.gap_href(b)})).collect::<Vec<_>>(),
@@ -1030,6 +1031,10 @@ impl Site {
                 "missing": l.gaps.iter().cloned().chain(l.notes.iter().filter(|s| kb.get(s).is_some_and(|x| x.inbox)).cloned()).collect::<Vec<_>>(),
             })).collect::<Vec<_>>());
         }
+        let exercises = extract_exercises(&n.body).len();
+        if exercises > 0 {
+            m["exercises"] = json!(exercises); // số câu trong mục "Bài tập" (đề và đáp án nằm trong nội dung)
+        }
         m
     }
 
@@ -1039,6 +1044,7 @@ impl Site {
             o.remove("links");
             o.remove("backlinks");
             o.remove("learning_path"); // đã có trong nội dung (mục "Lộ trình học")
+            o.remove("exercises");
         }
         let yaml = serde_yaml::to_string(&fm).unwrap_or_default();
         let mut related: Vec<&Note> = Vec::new();
@@ -1459,6 +1465,39 @@ mod tests {
         assert!(b.contains("← Bài trước · Biết") && b.contains("Bài tiếp · Hiểu →"));
         let sach = String::from_utf8(site.render("duyet/notes/sach/").unwrap().body).unwrap();
         assert!(sach.contains("Hết lộ trình"));
+    }
+
+    #[test]
+    fn bai_hoc_can_muc_tieu_va_bai_tap() {
+        let note = |path: &str, title: &str, kind: &str, body: &str| FileEntry {
+            path: path.into(),
+            raw: format!("---\ntitle: {title}\ntype: {kind}\nsummary: Mẫu.\nstatus: draft\ncreated: 2026-01-01\n---\n{body}\n"),
+        };
+        let topic = "Giới thiệu.\n\n## Lộ trình học\n\n### 1. Biết\n\nTrên.\n\n### 2. Hiểu\n\n- [[du]]\n- [[thieu]]\n\n\
+            ### 3. Vận dụng\n\n- [[nua]]\n\n### 5. Đánh giá\n\n- [[danh-gia]]\n";
+        let full = "D là gì.\n\n## Mục tiêu bài học\n\n- Nêu được D\n\n## Bài tập\n\n### Câu 1: D là gì?\n\n**Đáp án:** D là …\n\n### Câu 2\n\nĐề.\n";
+        let files = vec![
+            note("knowledge/_inbox/chu-de.md", "Chủ đề", "topic", topic),
+            note("knowledge/_inbox/du.md", "Đủ", "concept", full),
+            note("knowledge/_inbox/thieu.md", "Thiếu", "concept", "T là gì."),
+            note("knowledge/_inbox/nua.md", "Nửa", "framework", "## Mục tiêu bài học\n\n- Làm được N\n"),
+            note("knowledge/_inbox/danh-gia.md", "Đánh giá", "fact", "Số liệu."),
+        ];
+        let kb = Kb::build(&files, true);
+        let msgs = |slug: &str| kb.issues.iter().filter(|i| i.path.ends_with(&format!("/{slug}.md"))).map(|i| i.message.clone()).collect::<Vec<_>>();
+        assert!(msgs("du").iter().any(|m| m.contains("Bài tập \"Câu 2\" chưa có đáp án")), "{:?}", msgs("du"));
+        assert!(!msgs("du").iter().any(|m| m.contains("Bài cấp")));
+        assert!(msgs("thieu").iter().any(|m| m.contains("Bài cấp 2 · Hiểu") && m.contains("Mục tiêu bài học") && m.contains("\"Bài tập\"")));
+        let nua = msgs("nua");
+        assert!(nua.iter().any(|m| m.contains("Bài cấp 3 · Vận dụng") && !m.contains("Mục tiêu") && m.contains("\"Bài tập\"")), "{nua:?}");
+        assert!(!msgs("danh-gia").iter().any(|m| m.contains("Bài cấp")), "chỉ cấp Hiểu và Vận dụng");
+
+        let articles = Articles::build(&[], &kb, true);
+        let site = Site::new(Loaded { config: Config::default(), config_error: None, kb, articles, figures: Default::default() }, "/Repo", None, false)
+            .into_review(Review { repo: Some("chu/kho".into()), branch: Some("main".into()) });
+        let page = String::from_utf8(site.render("duyet/notes/du/").unwrap().body).unwrap();
+        assert!(page.contains("href=\"#bai-tap\">📝 2 bài tập tự kiểm tra</a>"));
+        assert!(page.contains("<summary>Xem đáp án</summary>"));
     }
 
     #[test]

@@ -101,6 +101,15 @@ research:
 
 Britannica gọi chúng là "sàn và trần có điều kiện", vì sớm muộn giá cũng xuyên qua khi hoàn cảnh thay đổi (Nguồn [4]).
 
+## Mục tiêu bài học
+
+Sau bài này bạn sẽ:
+
+- nêu được hỗ trợ và kháng cự là gì, theo tài liệu gốc (Wyckoff, lý thuyết Dow) và theo cách nói phổ biến hiện nay;
+- giải thích được vì sao các vùng giá này hình thành;
+- phân biệt được phá vỡ thật, phá vỡ giả và phá vỡ thất bại, và biết dùng bộ lọc xác nhận;
+- đọc đúng bằng chứng: giá hay dừng ở một mức không có nghĩa là giao dịch theo mức đó sẽ có lãi.
+
 ## Giải thích
 
 ### Trong tài liệu gốc của các phương pháp
@@ -156,6 +165,40 @@ Cổ phiếu dao động giữa 40.000 và 46.000 đồng suốt ba tháng: 40.0
 - **"Hỗ trợ là một đường chính xác."** Nên coi đó là một vùng, nhất là với vùng đi ngang rộng (Nguồn [3]).
 - **"Giá vượt kháng cự một chút là phá vỡ."** Cần bộ lọc xác nhận; phá vỡ giả rất thường gặp (Nguồn [5]).
 - **"Dự báo được thì kiếm lời được."** Nghiên cứu của Osler không kiểm tra lợi nhuận (Nguồn [1]).
+
+## Bài tập
+
+Tự làm trước, rồi mới mở đáp án. Trừ câu 1 (ví dụ của chính Wyckoff), mọi con số giá là **giả định** để luyện tập.
+
+### Câu 1: Điểm kháng cự theo Wyckoff
+
+Bạn bán khống một cổ phiếu ở 130. Giá giảm về 128, hồi lên 129, rồi quay xuống lại. Theo Wyckoff (1910), đâu là điểm kháng cự, và ông dùng điểm đó để làm gì?
+
+**Đáp án:** Điểm kháng cự là **129**, mức giá mà thị trường quay đầu sau nhịp hồi. Wyckoff dùng các điểm này để **đặt dừng lỗ sát hơn** (Nguồn [6]).
+
+### Câu 2: Vì sao đỉnh cũ thành kháng cự?
+
+Một cổ phiếu từng lên đỉnh 50.000 rồi giảm sâu. Nay giá hồi lên gần 50.000 thì chững lại. Giải thích bằng lời của bạn: vì sao vùng 50.000 có thể là kháng cự?
+
+**Đáp án:** Có hai cách giải thích trong bài. Thứ nhất, những người đã mua quanh 50.000 rồi bị lỗ thường muốn bán khi giá quay lại mức mua của họ để hoà vốn, và lượng bán đó tạo kháng cự (ChartSchool gọi là "nguồn cung phía trên") (Nguồn [3]). Thứ hai, nhiều người cùng nhìn một mức giá và cùng hành động ở đó, nên mức giá đó có tác dụng thật, chủ yếu trong ngắn hạn (Nguồn [1][4]).
+
+### Câu 3: Phá vỡ thật hay giả?
+
+Giá đi ngang giữa 20.000 và 22.000. Một phiên, giá vượt lên 22.300 nhưng đóng cửa ở 21.800; phiên sau giảm về 21.000. Đây là loại phá vỡ gì? Trước khi tin một lần phá vỡ, bạn có thể dùng những bộ lọc nào?
+
+**Đáp án:** Đây là **phá vỡ giả**: giá phá ra rồi quay lại ngay qua mức phá vỡ (Nguồn [5]). Nếu sau đó giá thủng tiếp xuống dưới 20.000 thì đó là phá vỡ thất bại, một cái bẫy với người đã mua theo lần phá vỡ ban đầu (Nguồn [5]). Các bộ lọc xác nhận: giá vượt hẳn trong phiên, nhiều phiên đóng cửa bên ngoài, đủ thời gian, hoặc vượt một tỷ lệ, số điểm hay số tiền nhất định (Nguồn [5]).
+
+### Câu 4: Kháng cự cũ đổi vai
+
+Cũng vùng giá trên, lần này giá vượt 22.000 và đóng cửa phía trên nhiều phiên liền, rồi quay về 22.100. Mức 22.000 giờ có vai trò gì? Nếu mua ở nhịp quay lại này, đặt dừng lỗ ở đâu?
+
+**Đáp án:** Kháng cự cũ 22.000 **thường trở thành hỗ trợ mới** (Nguồn [3]). Đây là quy tắc kinh nghiệm lấy qua nguồn thứ cấp, chưa có nghiên cứu kiểm chứng riêng trong các nguồn đã đọc. Dừng lỗ đặt ngoài vùng hỗ trợ cộng một khoảng đệm, tức dưới 22.000 thêm một đoạn (Nguồn [5]). Độ rộng của khoảng đệm do bạn tự chọn, bài không có con số chuẩn.
+
+### Câu 5: Đọc đúng bằng chứng
+
+Có người nói: "Nghiên cứu của Fed New York đã chứng minh giao dịch theo hỗ trợ và kháng cự có lãi." Câu này đúng hay sai? Vì sao?
+
+**Đáp án:** **Sai.** Osler cho thấy xu hướng trong ngày của ba tỷ giá dừng lại tại các mức do 6 công ty công bố (1996–1998) thường xuyên hơn đáng kể so với tại mức ngẫu nhiên. Nhưng nghiên cứu **không kiểm tra** việc giao dịch theo các mức đó có sinh lời hay không. "Độ mạnh" mà các công ty gắn cho từng mức cũng không có giá trị dự báo (Nguồn [1]).
 
 ## Câu hỏi thường gặp
 

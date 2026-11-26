@@ -16,6 +16,7 @@
         {% if note.rated %}{{ m.cred(note.cred_title) }}{% endif %}
         <span>Cập nhật {{ c.updated }}</span>
         <span>⏱ ~{{ read_minutes }} phút đọc</span>
+        {% if exercises %}<a class="meta-exercises" href="#{{ exercises_id }}">📝 {{ exercises }} bài tập tự kiểm tra</a>{% endif %}
       </div>
       {% if is_topic and ladder %}<p class="note-role">⭐ <strong>Chủ đề chính</strong> — cấp 1 · Biết: bài giới thiệu. Đọc trước, rồi đi theo <a href="#lo-trinh">lộ trình học</a> từ Hiểu tới Sáng tạo.</p>
       {% elif is_topic %}<p class="note-role">⭐ <strong>Chủ đề chính</strong> — bài tổng quan, đọc trước rồi đi theo các bài con bên dưới.</p>

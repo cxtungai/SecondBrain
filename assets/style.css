@@ -1070,6 +1070,59 @@ mark {
   text-align: right;
 }
 
+/* Mục tiêu bài học & bài tập tự kiểm tra (đáp án ẩn, bấm mới hiện) */
+.prose h2.objectives-title::before {
+  content: "🎯 ";
+}
+
+.prose .objectives {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.25rem 1rem;
+}
+
+.prose .objectives ul {
+  margin: 0.5rem 0;
+}
+
+.prose h2.exercises-title::before {
+  content: "📝 ";
+}
+
+.prose h3.exercise-title {
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+.prose details.reveal {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  margin: 0.75rem 0;
+  padding: 0 1rem;
+}
+
+.prose details.reveal > summary {
+  cursor: pointer;
+  padding: 0.6rem 0;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.prose details.reveal--hint > summary {
+  color: var(--warn);
+}
+
+.prose details.reveal[open] > summary {
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.5rem;
+}
+
+.meta-exercises {
+  text-decoration: none;
+}
+
 @media (max-width: 560px) {
   .ladder ol {
     grid-template-columns: repeat(2, minmax(0, 1fr));

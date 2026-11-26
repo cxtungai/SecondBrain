@@ -86,6 +86,15 @@ research:
 
 Quy trình này biến các nguyên lý của [[price-action]] thành các bước ra quyết định: **khi nào** vào lệnh, **ở đâu** dừng lỗ, **bao nhiêu** là mục tiêu. Brooks tóm tắt cách làm của mình như sau: trước hết xác định thị trường đang có xu hướng hay đi ngang; nếu có xu hướng thì đó là pha bứt phá hay pha kênh giá; rồi mới cấu trúc lệnh với dừng lỗ và mục tiêu (Nguồn [3]). Ông nhấn mạnh **quản lý lệnh quan trọng hơn chọn tín hiệu** (Nguồn [3]). Ông cũng gọi những gì mình viết là "nguyên tắc" chứ không phải "quy tắc", vì giao dịch là chủ quan và lợi thế luôn nhỏ (Nguồn [7]).
 
+## Mục tiêu bài học
+
+Sau bài này bạn sẽ:
+
+- làm được sáu bước của quy trình, từ đọc bối cảnh tới quản lý lệnh;
+- chọn được setup hợp với bối cảnh: đang có xu hướng, đang đi ngang, hay vừa hết một xu hướng dài;
+- tính được rủi ro, mục tiêu và tỷ lệ lời/lỗ của một lệnh, và biết khi nào nên bỏ qua lệnh;
+- nêu được các quy tắc quản lý lệnh của Wyckoff và Brooks.
+
 ## Các bước / thành phần
 
 ### Bước 1 — Đọc bối cảnh
@@ -169,6 +178,42 @@ Giới hạn chung:
 - Các tỷ lệ (40–60%, 70%, "ba bốn lần") là **kinh nghiệm cá nhân** của các tác giả, không phải số liệu kiểm chứng. Bằng chứng nghiên cứu ở [[nghien-cuu-hieu-qua-phan-tich-ky-thuat]].
 - Dừng lỗ "2–3 điểm" của Wyckoff là cho cổ phiếu Mỹ những năm 1920; ngày nay cần đổi theo biến động của từng mã.
 - Khối lượng lệnh và giới hạn thua lỗ trên toàn tài khoản thuộc về [[quan-ly-rui-ro-giao-dich]].
+
+## Bài tập
+
+Tự làm trước, rồi mới mở đáp án. Mọi con số giá là **giả định** để luyện cách tính, **không phải khuyến nghị**.
+
+### Câu 1: Tính rủi ro và mục tiêu
+
+Trong một xu hướng tăng, thanh tín hiệu có giá cao nhất 25.300 và thấp nhất 24.500 đồng. Bạn đặt mua dừng ở 25.400 (trên đỉnh thanh) và dừng lỗ ở 24.400 (dưới đáy thanh). (a) Rủi ro mỗi cổ phiếu là bao nhiêu? Mục tiêu tối thiểu theo Brooks và theo Wyckoff là bao nhiêu? (b) Đỉnh cũ gần nhất, nơi giá dễ bị chặn lại, là 26.500. Có nên vào lệnh không?
+
+**Gợi ý:** Rủi ro = giá vào − giá dừng lỗ. Brooks: lời ít nhất gấp đôi rủi ro; Wyckoff: ít nhất gấp ba.
+
+**Đáp án:** (a) Rủi ro là 25.400 − 24.400 = **1.000 đồng/cổ phiếu**. Theo Brooks, mục tiêu ít nhất gấp đôi rủi ro, tức từ **27.400** trở lên (Nguồn [3]). Theo Wyckoff, ít nhất gấp ba, tức từ **28.400** trở lên (Nguồn [5], tr. 49). (b) Tới đỉnh cũ 26.500 chỉ lời được 1.100 đồng, chưa tới gấp đôi rủi ro. Theo cách làm ở phần "Ví dụ áp dụng", mục tiêu hợp lý không đạt tỷ lệ thì **bỏ qua lệnh**.
+
+### Câu 2: Phương trình của người giao dịch
+
+Bạn định giao dịch kiểu lời bằng lỗ (mục tiêu bằng đúng mức rủi ro). Theo Brooks, phải thắng bao nhiêu phần trăm số lệnh thì mới đáng? Điều đó nói gì, khi ông cho rằng phần lớn lệnh chỉ có xác suất thắng khoảng 40–60%?
+
+**Đáp án:** Theo Brooks, lời bằng lỗ thì phải thắng **trên 60%** số lệnh mới đáng giao dịch (Nguồn [2]). Phần lớn lệnh chỉ có xác suất thắng khoảng 40–60% (Nguồn [3]), nên kiểu lời bằng lỗ hiếm khi đáng làm; cần mục tiêu lớn hơn rủi ro. Các tỷ lệ này là kinh nghiệm cá nhân của Brooks, không phải số liệu kiểm chứng.
+
+### Câu 3: Chọn setup theo bối cảnh
+
+Với mỗi bối cảnh sau, setup nào phù hợp theo tài liệu gốc? (a) Xu hướng tăng rõ, giá vừa điều chỉnh vài thanh. (b) Giá đi ngang, các thanh chồng lên nhau, nhiều doji. (c) Sau một xu hướng giảm dài, giá vừa phá đường xu hướng giảm.
+
+**Đáp án:** (a) **Vào lệnh thuận chiều ở nhịp điều chỉnh**; Brooks đếm H1, H2 để tìm điểm vào (Nguồn [4]). (b) Người mới nên **đứng ngoài** tới khi có phá vỡ rõ ràng (Nguồn [4]). Nếu giao dịch thì mua gần cạnh dưới, bán gần cạnh trên, và không mua ở đỉnh vùng (Nguồn [1][3]). (c) **Đảo chiều có kiểm tra**: chưa mua ngay, chờ thanh đảo chiều mạnh lúc giá quay lại kiểm tra đáy cũ (Nguồn [1]).
+
+### Câu 4: Lệnh không chạy, lệnh đang lỗ
+
+(a) Bạn đã mua ba ngày mà lệnh vẫn chưa có lãi, và thấy mình đang *hy vọng* giá sẽ lên. Theo quy tắc của Livermore mà Wyckoff thuật lại, nên làm gì? (b) Lệnh đang lỗ, có nên mua thêm để bình quân giá xuống không?
+
+**Đáp án:** (a) **Thoát lệnh.** Quy tắc của Livermore: thoát nếu sau hai ba ngày mà lệnh chưa có lãi, vì phán đoán về diễn biến trước mắt đã sai; hễ thấy mình đang hy vọng là thoát (Nguồn [5], tr. 118–119). (b) **Không**, với lệnh giao dịch. Wyckoff gọi việc mua thêm khi lệnh đang lỗ là "mò mẫm tìm đỉnh hay đáy" (Nguồn [6]). Ông chỉ thêm khi đang đúng, như ví dụ U.S. Steel (Nguồn [5], tr. 43–44).
+
+### Câu 5: Thứ tự Wyckoff xét một cổ phiếu
+
+Sắp xếp lại theo thứ tự Wyckoff xét trước khi mua một cổ phiếu: tình hình công ty, vị trí của cổ phiếu trong sóng trung hạn, xu hướng dài hạn của thị trường, tài chính và lợi nhuận, ngành, ban lãnh đạo.
+
+**Đáp án:** Xu hướng dài hạn của thị trường → ngành → tình hình công ty → ban lãnh đạo → tài chính và lợi nhuận → **cuối cùng** mới là vị trí của cổ phiếu trong sóng trung hạn 30–60 ngày (Nguồn [5], tr. 90).
 
 ## Câu hỏi thường gặp
 

@@ -77,6 +77,14 @@ research:
 
 Theo định nghĩa của Dow mà Hamilton thuật lại, thị trường đang **tăng** khi các đỉnh sau vượt lên trên các đỉnh trước, và đang **giảm** khi các đáy sau thủng xuống dưới các đáy trước (Nguồn [1]). Khi giá không làm được điều đó mà dao động trong một khoảng hẹp, thị trường đang **đi ngang**. Lý thuyết Dow gọi đó là "tạo một đường" (making a line), và coi đó là giai đoạn tích luỹ hoặc phân phối (Nguồn [1]).
 
+## Mục tiêu bài học
+
+Sau bài này bạn sẽ:
+
+- nhận ra được thị trường đang tăng, giảm hay đi ngang từ một dãy đỉnh và đáy, theo định nghĩa của Dow;
+- phân biệt được ba cấp chuyển động của lý thuyết Dow, và giải thích được vì sao nhịp điều chỉnh dễ bị nhầm là đảo chiều;
+- giải thích được vì sao Brooks khuyên xem khung thời gian lớn hơn, và vì sao Wyckoff khuyên giao dịch thuận xu hướng.
+
 ## Giải thích
 
 ### Ba cấp chuyển động diễn ra cùng lúc (lý thuyết Dow)
@@ -139,6 +147,42 @@ Giá tạo đáy ở 100, lên đỉnh 110, điều chỉnh về 106, rồi vư�
 - **"Xu hướng ở khung 5 phút là xu hướng thật."** Nó có thể chỉ là một nhịp trong vùng đi ngang của khung lớn hơn (Nguồn [2]).
 - **"Xu hướng đã đi xa thì sắp đảo chiều."** Brooks cho rằng phần lớn nỗ lực đảo chiều thất bại (Nguồn [4]).
 - **"Lý thuyết Dow là hệ thống để thắng thị trường."** Hamilton viết rõ nó không phải hệ thống kiểu cờ bạc để thắng nhà cái (Nguồn [1]).
+
+## Bài tập
+
+Tự làm trước, rồi mới mở đáp án. Mọi con số giá trong bài tập là **giả định** để luyện tập.
+
+### Câu 1: Thị trường đang tăng, giảm hay đi ngang?
+
+Giá lần lượt tạo đỉnh 120, đáy 112, đỉnh 117, rồi đáy 108. Theo định nghĩa của Dow, đây là thị trường gì?
+
+**Đáp án:** Thị trường **giảm**. Đỉnh sau (117) thấp hơn đỉnh trước (120), và đáy sau (108) thủng xuống dưới đáy trước (112). Định nghĩa của Dow: thị trường giảm khi các đáy sau thủng xuống dưới các đáy trước (Nguồn [1]).
+
+### Câu 2: Giá dao động trong một khoảng hẹp
+
+Nhiều tuần liền, giá chạy qua lại giữa 95 và 100, không vượt 100 và không thủng 95. Lý thuyết Dow gọi trạng thái này là gì? Khi nào thì biết bên mua hay bên bán thắng?
+
+**Đáp án:** Đó là **đi ngang**, lý thuyết Dow gọi là "tạo một đường": giai đoạn tích luỹ hoặc phân phối. Chưa biết là bên nào cho tới khi giá thoát ra (Nguồn [1]). Giá vượt lên trên 100 là tín hiệu tăng, nhưng có thể chỉ là nhịp hồi thứ cấp trong thị trường giảm, chứ chưa chắc là khởi đầu xu hướng tăng chính. Giá thủng xuống dưới 95 cho thấy thị trường đã "bão hoà" (Nguồn [1]).
+
+### Câu 3: Nhịp giảm này là điều chỉnh hay đảo chiều?
+
+Giá tăng từ 200 lên 240, rồi giảm về 225. Có kết luận được là xu hướng tăng đã kết thúc không?
+
+**Gợi ý:** Nhịp giảm lấy lại bao nhiêu phần đợt tăng? So với mô tả của Dow về chuyển động thứ cấp.
+
+**Đáp án:** **Chưa kết luận được.** Nhịp giảm 15 điểm trên đợt tăng 40 điểm là 3/8, đúng mức "ít nhất ba phần tám" mà Dow mô tả cho một nhịp điều chỉnh thứ cấp (Nguồn [1]). Con số này là quan sát kinh nghiệm của Dow, không phải quy luật cố định. Dow và Hamilton đều thừa nhận rất khó phân biệt nhịp thứ cấp mạnh với khởi đầu một xu hướng mới (Nguồn [1]). Điều cần theo dõi là định nghĩa: các đáy sau có bắt đầu thủng các đáy trước hay không.
+
+### Câu 4: Xu hướng trên khung 5 phút
+
+Trên biểu đồ 5 phút, giá đang tăng rõ. Theo Brooks, bạn nên xem gì trước khi mua, và vì sao?
+
+**Đáp án:** Xem **khung thời gian lớn hơn**. Theo Brooks, mọi xu hướng chứa những vùng đi ngang nhỏ hơn, mọi vùng đi ngang chứa những xu hướng nhỏ hơn, và phần lớn xu hướng chỉ là một phần của vùng đi ngang ở khung lớn hơn (Nguồn [2]). Xu hướng 5 phút có thể chỉ là một nhịp trong vùng đi ngang của khung lớn.
+
+### Câu 5: Vì sao nên thuận xu hướng?
+
+Giải thích bằng lời của bạn: vì sao Wyckoff khuyên giao dịch thuận xu hướng, và Brooks nói gì về các lần thử đảo chiều?
+
+**Đáp án:** Wyckoff viết "yếu tố chính là xu hướng": thuận xu hướng thì cơ hội thành công gấp ba, bốn lần đi ngược nó, còn mua trong thị trường giảm thì lối thoát duy nhất là chờ một nhịp hồi (Nguồn [5], tr. 48). Brooks cho rằng xu hướng có khuynh hướng tiếp diễn và phần lớn nỗ lực đảo chiều thất bại. Con số khoảng 80% ông nêu là ước tính từ kinh nghiệm, không phải kết quả nghiên cứu (Nguồn [4]).
 
 ## Câu hỏi thường gặp
 

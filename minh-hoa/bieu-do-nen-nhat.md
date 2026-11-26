@@ -88,3 +88,10 @@ ten: Cùng hình dạng nhưng giữa vùng đi ngang chồng chéo — chỉ l�
 109 111 104 105
 105 110 101 108 | Bóng dưới dài
 ```
+
+## Câu 1: Đọc một cây nến
+
+```nen
+ten: Mở 100, cao 102, thấp 88, đóng 101 (số giả định)
+100 102 88 101
+```

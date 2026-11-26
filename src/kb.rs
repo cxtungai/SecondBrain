@@ -1,6 +1,7 @@
 //! Kho tri thức: đọc ghi chú, kiểm tra, dựng đồ thị liên kết (links, backlinks, gaps, tags).
 
 use crate::mentions::{find_unlinked_mentions, Mention};
+use crate::render::{atx_heading, extract_exercises, has_objectives};
 use crate::schema::{self, Source, KNOWN_FIELDS};
 use crate::text::{count_words, extract_wikilinks, markdown_to_plain, normalize_for_search, slugify, vi_cmp};
 use regex::Regex;
@@ -133,9 +134,8 @@ fn parse_learning_path(body: &str) -> (Vec<RawLevel>, Vec<String>) {
         if fence {
             continue;
         }
-        let hashes = t.chars().take_while(|&c| c == '#').count();
-        if (1..=6).contains(&hashes) && t[hashes..].starts_with(' ') {
-            let text = markdown_to_plain(t[hashes..].trim().trim_end_matches('#').trim());
+        if let Some((hashes, text)) = atx_heading(t) {
+            let text = markdown_to_plain(text);
             if hashes <= 2 {
                 inside = hashes == 2 && slugify(&text).starts_with("lo-trinh");
                 current = None;
@@ -313,6 +313,9 @@ fn quality_warnings(note: &Note) -> Vec<(Level, String)> {
             out.push((Level::Warning, msg));
         }
     }
+    for e in extract_exercises(&note.body).iter().filter(|e| !e.has_answer) {
+        out.push((Level::Warning, format!("Bài tập \"{}\" chưa có đáp án — thêm đoạn mở bằng **Đáp án:** (người đọc bấm mới hiện)", e.question)));
+    }
     out
 }
 
@@ -333,13 +336,12 @@ pub fn definition_text(body: &str) -> String {
         if fence {
             continue;
         }
-        let hashes = t.chars().take_while(|&c| c == '#').count();
-        if (1..=6).contains(&hashes) && t[hashes..].starts_with(' ') {
+        if let Some((hashes, text)) = atx_heading(t) {
             if started {
                 taken = true;
             }
             if hashes <= 2 {
-                let s = slugify(&markdown_to_plain(t[hashes..].trim()));
+                let s = slugify(&markdown_to_plain(text));
                 zone = s.starts_with("dinh-nghia") || s.starts_with("muc-dich");
                 (taken, started) = (false, false);
             }
@@ -567,6 +569,36 @@ impl Kb {
             }
             kb.all[i].learning_path = path;
         }
+        // Bài cấp Hiểu / Vận dụng: có mục tiêu bài học và bài tập tự kiểm tra (người dùng dặn 2026-11-26).
+        // Kiểm lúc còn là bản nháp, như câu định nghĩa.
+        let mut checked: HashSet<&str> = HashSet::new();
+        let mut lesson_issues = Vec::new();
+        for topic in kb.all.iter().filter(|n| n.kind == "topic") {
+            for l in topic.learning_path.iter().filter(|l| l.level == 2 || l.level == 3) {
+                for s in &l.notes {
+                    let n = &kb.all[kb.by_slug[s]];
+                    if !n.inbox || n.kind == "source" || !checked.insert(n.slug.as_str()) {
+                        continue;
+                    }
+                    let mut missing = vec![];
+                    if !has_objectives(&n.body) {
+                        missing.push("mục \"Mục tiêu bài học\"");
+                    }
+                    if extract_exercises(&n.body).is_empty() {
+                        missing.push("mục \"Bài tập\" (mỗi câu một tiêu đề ###, kèm **Đáp án:**)");
+                    }
+                    if !missing.is_empty() {
+                        lesson_issues.push(Issue {
+                            path: n.path.clone(),
+                            level: Level::Warning,
+                            message: format!("Bài cấp {} · {} của lộ trình \"{}\" chưa có {}", l.level, level_name(l.level), topic.title, missing.join(" và ")),
+                            draft: true,
+                        });
+                    }
+                }
+            }
+        }
+        kb.issues.extend(lesson_issues);
         for i in 0..kb.all.len() {
             for target in kb.all[i].links.clone() {
                 let t = kb.by_slug[&target];
