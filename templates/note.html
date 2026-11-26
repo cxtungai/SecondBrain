@@ -16,6 +16,9 @@
         {% if note.rated %}{{ m.cred(note.cred_title) }}{% endif %}
         <span>Cập nhật {{ c.updated }}</span>
       </div>
+      {% if is_topic %}<p class="note-role">⭐ <strong>Chủ đề chính</strong> — bài tổng quan, đọc trước rồi đi theo các bài con bên dưới.</p>
+      {% elif place and c.type == 'source' %}<p class="note-role">📚 <strong>Tài liệu gốc</strong> của chủ đề <a href="{{ place.topic.url }}">{{ place.topic.title }}</a> — bản đồ sách để tra cứu, có số trang.</p>
+      {% elif place %}<p class="note-role">📖 Bài con <strong>{{ place.index }}/{{ place.total }}</strong> của chủ đề <a href="{{ place.topic.url }}">{{ place.topic.title }}</a></p>{% endif %}
       <h1>{{ c.title }}</h1>
       <p class="note-summary">{{ c.summary }}</p>
       {% if note.inbox %}

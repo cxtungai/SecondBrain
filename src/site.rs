@@ -468,7 +468,9 @@ impl Site {
             .collect();
         related.sort_by(|a, b| b.0.cmp(&a.0));
         let original = note.updates.as_deref().and_then(|s| kb.get(s));
-        let parent = backlinks.iter().find(|n| n.kind == "topic" && !n.inbox).copied();
+        let with_drafts = self.dev || self.review.is_some();
+        let place = kb.parent_topic(note, with_drafts);
+        let parent = place.map(|(p, _, _)| p);
         let crumbs = vec![
             json!({"name": "Trang chủ", "href": self.url("")}),
             match parent {
@@ -477,9 +479,16 @@ impl Site {
             },
             json!({"name": note.title, "href": self.note_url(&note.slug)}),
         ];
+        // "Đọc tiếp": các bài sau bài này trong thứ tự đọc của chủ đề, rồi tới các bài trước.
         let next_reads: Vec<Json> = parent
             .map(|p| {
-                p.links.iter().filter_map(|s| kb.get(s)).filter(|n| n.slug != note.slug && !note.links.contains(&n.slug)).take(4).map(|n| self.note_card(n)).collect()
+                let order: Vec<&Note> = kb.reading_order(p, with_drafts);
+                let at = order.iter().position(|n| n.slug == note.slug).map_or(0, |i| i + 1);
+                order[at..].iter().chain(order[..at].iter())
+                    .filter(|n| n.slug != note.slug && !note.links.contains(&n.slug))
+                    .take(4)
+                    .map(|n| self.note_card(n))
+                    .collect()
             })
             .unwrap_or_default();
         let sources: Vec<Json> = note
@@ -531,6 +540,8 @@ impl Site {
             "crumbs": crumbs, "html": self.render_body(&note.body, false),
             "toc": if headings.len() >= 3 { self.toc(&note.body) } else { vec![] },
             "sources": sources, "parent": parent.map(|p| self.link(p)), "next_reads": next_reads,
+            "place": place.map(|(p, i, total)| json!({"topic": self.link(p), "index": i, "total": total})),
+            "is_topic": note.kind == "topic",
             "backlinks": backlinks.iter().map(|n| self.link(n)).collect::<Vec<_>>(),
             "outgoing": outgoing.iter().map(|n| self.link(n)).collect::<Vec<_>>(),
             "broken": note.broken_links.iter().map(|b| json!({"name": b, "href": self.gap_href(b)})).collect::<Vec<_>>(),
@@ -631,7 +642,31 @@ impl Site {
         let errors_for = |path: &str| -> Vec<String> {
             kb.issues.iter().chain(self.data.articles.issues.iter()).filter(|i| i.path == path && i.level == Level::Error).map(|i| i.message.clone()).collect()
         };
-        let notes: Vec<Json> = kb.inbox().iter().map(|n| card(self.note_card(n), &n.path, &n.title, errors_for(&n.path))).collect();
+        let groups: Vec<Json> = kb
+            .inbox_by_topic()
+            .iter()
+            .map(|g| {
+                let mut items: Vec<Json> = vec![];
+                if let Some(t) = g.topic.filter(|t| t.inbox) {
+                    let mut c = card(self.note_card(t), &t.path, &t.title, errors_for(&t.path));
+                    c["role"] = json!("⭐ Chủ đề chính · đọc trước");
+                    c["main"] = json!(true);
+                    items.push(c);
+                }
+                for n in &g.notes {
+                    let mut c = card(self.note_card(n), &n.path, &n.title, errors_for(&n.path));
+                    c["role"] = json!(kb.role_label(n));
+                    items.push(c);
+                }
+                json!({
+                    "title": g.topic.map(|t| t.title.clone()),
+                    "url": g.topic.map(|t| self.note_url(&t.slug)),
+                    "topic_published": g.topic.is_some_and(|t| !t.inbox),
+                    "items": items,
+                })
+            })
+            .collect();
+        let notes_count = kb.inbox().len();
         let articles: Vec<Json> = self.data.articles.drafts().iter().map(|a| card(self.article_card(a), &a.path, &a.title, errors_for(&a.path))).collect();
         // Bản nháp lỗi nặng tới mức không đọc được (không có trong danh sách trên).
         let listed: HashSet<&str> = kb.inbox().iter().map(|n| n.path.as_str()).chain(self.data.articles.drafts().iter().map(|a| a.path.as_str())).collect();
@@ -642,7 +677,7 @@ impl Site {
             }
         }
         let repo = self.review.as_ref().and_then(|r| r.repo.clone());
-        let total = notes.len() + articles.len();
+        let total = notes_count + articles.len();
         let approve_all = repo.as_ref().filter(|_| total > 1).map(|repo| {
             issue_url(repo, "Duyệt tất cả bản nháp", &format!(
                 "Bấm nút **Create** (Tạo) màu xanh bên dưới để đăng **tất cả {total} bản nháp** đang chờ duyệt.\n\n\
@@ -651,7 +686,7 @@ impl Site {
         });
         self.render_template("review.html", json!({
             "title": "Khu duyệt bài", "description": "Bản nháp chờ duyệt — chưa kiểm chứng.", "section": "review", "noindex": true,
-            "notes": notes, "articles": articles, "broken": broken, "total": total,
+            "groups": groups, "notes_count": notes_count, "articles": articles, "broken": broken, "total": total,
             "approve_all": approve_all,
             "repo_url": repo.as_ref().map(|r| format!("https://github.com/{r}")),
             "issues_url": repo.as_ref().map(|r| format!("https://github.com/{r}/issues?q=is%3Aissue")),
@@ -1140,6 +1175,43 @@ mod tests {
         assert!(index.contains("/Repo/duyet/notes/nhap/"));
         // Ghi chú đã đăng không có trang trong Khu duyệt bài.
         assert!(site.render("duyet/notes/chu-de/").is_none());
+    }
+
+    #[test]
+    fn ban_nhap_xep_theo_chu_de_va_thu_tu_doc() {
+        let note = |path: &str, title: &str, kind: &str, body: &str| FileEntry {
+            path: path.into(),
+            raw: format!("---\ntitle: {title}\ntype: {kind}\nsummary: Mẫu.\nstatus: draft\ncreated: 2026-01-01\n---\n{body}\n"),
+        };
+        let files = vec![
+            note("knowledge/_inbox/pa.md", "PA", "topic", "Theo sách [[sach]], đọc [[b]] trước, rồi [[a]]."),
+            note("knowledge/_inbox/sach.md", "Sách", "source", "Sách gốc. Xem [[pa]]."),
+            note("knowledge/_inbox/a.md", "A", "concept", "A là gì. Xem [[pa]]."),
+            note("knowledge/_inbox/b.md", "B", "framework", "B là gì. Xem [[pa]]."),
+            note("knowledge/_inbox/le.md", "Lẻ", "concept", "Lẻ là gì."),
+        ];
+        let kb = Kb::build(&files, true);
+        let groups = kb.inbox_by_topic();
+        assert_eq!(groups.len(), 2);
+        assert_eq!(groups[0].topic.map(|t| t.slug.as_str()), Some("pa"));
+        // Bản đồ tài liệu gốc xếp cuối dù chủ đề nhắc tới nó trước.
+        assert_eq!(groups[0].notes.iter().map(|n| n.slug.as_str()).collect::<Vec<_>>(), ["b", "a", "sach"]);
+        assert!(groups[1].topic.is_none());
+        assert_eq!(groups[1].notes[0].slug, "le");
+        let (p, i, total) = kb.parent_topic(kb.get("a").unwrap(), true).unwrap();
+        assert_eq!((p.slug.as_str(), i, total), ("pa", 2, 3));
+        assert_eq!(kb.role_label(kb.get("sach").unwrap()), "Tài liệu gốc · 3/3");
+        assert!(kb.parent_topic(kb.get("a").unwrap(), false).is_none());
+
+        let articles = Articles::build(&[], &kb, true);
+        let site = Site::new(Loaded { config: Config::default(), config_error: None, kb, articles }, "/Repo", None, false)
+            .into_review(Review { repo: Some("chu/kho".into()), branch: Some("main".into()) });
+        let index = String::from_utf8(site.render("duyet/").unwrap().body).unwrap();
+        let (main, b, a) = (index.find("Chủ đề chính").unwrap(), index.find("Bài con 1/3").unwrap(), index.find("Bài con 2/3").unwrap());
+        assert!(main < b && b < a);
+        assert!(index.contains("Chưa thuộc chủ đề"));
+        let page = String::from_utf8(site.render("duyet/notes/a/").unwrap().body).unwrap();
+        assert!(page.contains("Bài con <strong>2/3</strong>"));
     }
 
     #[test]

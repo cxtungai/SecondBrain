@@ -275,15 +275,26 @@ fn desk(site: &Site, project: &Project, sync_note: &str) -> String {
             .map(|i| i.message.clone())
             .collect()
     };
-    let mut pending: Vec<Json> = kb
-        .inbox()
-        .iter()
-        .map(|n| {
-            json!({"type": n.kind, "label": schema::type_label(&n.kind), "title": n.title, "summary": n.summary, "path": n.path,
-                "url": site.note_url(&n.slug), "edit_url": format!("/ban-lam-viec/sua/?f={}", n.path), "errors": errors_for(&n.path),
-                "cred": n.credibility.average.map(|a| format!("Uy tín nguồn TB {a}/5 · {} nguồn", n.sources.len()))})
-        })
-        .collect();
+    let item = |n: &crate::kb::Note, role: String, main: bool, group: Option<String>| {
+        json!({"type": n.kind, "label": schema::type_label(&n.kind), "title": n.title, "summary": n.summary, "path": n.path,
+            "url": site.note_url(&n.slug), "edit_url": format!("/ban-lam-viec/sua/?f={}", n.path), "errors": errors_for(&n.path),
+            "cred": n.credibility.average.map(|a| format!("Uy tín nguồn TB {a}/5 · {} nguồn", n.sources.len())),
+            "role": role, "main": main, "group": group})
+    };
+    // Xếp theo chủ đề: chủ đề chính trước, bài con theo thứ tự đọc; `group` là tiêu đề nhóm ở mục đầu tiên của nhóm.
+    let mut pending: Vec<Json> = vec![];
+    for g in kb.inbox_by_topic() {
+        let mut heading = Some(match g.topic {
+            Some(t) => format!("📚 Chủ đề: {}", t.title),
+            None => "Chưa thuộc chủ đề nào".to_string(),
+        });
+        if let Some(t) = g.topic.filter(|t| t.inbox) {
+            pending.push(item(t, "⭐ Chủ đề chính · đọc trước".into(), true, heading.take()));
+        }
+        for n in &g.notes {
+            pending.push(item(n, kb.role_label(n), false, heading.take()));
+        }
+    }
     pending.extend(site.data.articles.drafts().iter().map(|a| {
         json!({"type": "article", "label": format!("Bài viết · {}", crate::articles::intent_label(&a.intent)), "title": a.title,
             "summary": a.description, "path": a.path, "url": format!("/bai-viet/{}/", a.slug),

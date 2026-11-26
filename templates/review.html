@@ -34,14 +34,21 @@
   {% if approve_all %}<a class="btn" href="{{ approve_all }}" target="_blank" rel="noopener">✅ Duyệt tất cả ({{ total }})</a>{% endif %}
 </div>
 
-{% if notes %}
-<section>
-  <h2>Ghi chú tri thức ({{ notes|length }})</h2>
+{% for g in groups %}
+<section class="review-group">
+  {% if g.title %}
+  <h2>📚 Chủ đề: {{ g.title }}</h2>
+  <p class="stat-line">{% if g.topic_published %}Chủ đề này đã đăng (<a href="{{ g.url }}">xem</a>); dưới đây là các bài con mới chờ duyệt, theo thứ tự đọc.{% else %}Đọc bài <b>chủ đề chính</b> trước, rồi lần lượt các bài con theo số thứ tự.{% endif %}</p>
+  {% else %}
+  <h2>Ghi chú chưa thuộc chủ đề nào ({{ g.items|length }})</h2>
+  <p class="stat-line">Nên gắn vào một chủ đề trước khi đăng — nhờ Claude "kết nối" giúp.</p>
+  {% endif %}
   <ul class="review-list">
-    {% for n in notes %}
-    <li class="review-item" data-type="{{ n.type }}">
+    {% for n in g.items %}
+    <li class="review-item{% if n.main %} review-main-topic{% endif %}" data-type="{{ n.type }}">
       <div class="review-main">
         <div class="meta-row">
+          <span class="badge badge-role{% if n.main %} badge-role-main{% endif %}">{{ n.role }}</span>
           {{ m.type_badge(n, false) }}
           {% if n.rated %}{{ m.cred(n.cred) }}{% endif %}
           <span>Cập nhật {{ n.updated }}</span>
@@ -55,7 +62,7 @@
     {% endfor %}
   </ul>
 </section>
-{% endif %}
+{% endfor %}
 
 {% if articles %}
 <section>

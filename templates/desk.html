@@ -14,9 +14,10 @@
     <p class="stat-line">Bấm vào tiêu đề để đọc. Hài lòng thì bấm <strong>Duyệt & đăng</strong>; chưa ổn thì <strong>Sửa</strong>, hoặc nhờ Claude sửa.</p>
     <ul class="desk-list">
       {% for p in pending_items %}
-      <li data-type="{{ p.type }}">
+      {% if p.group %}<li class="desk-group-title"><strong>{{ p.group }}</strong></li>{% endif %}
+      <li data-type="{{ p.type }}"{% if p.main %} class="review-main-topic"{% endif %}>
         <div class="desk-item-main">
-          <div class="meta-row"><span class="badge badge-type">{{ p.label }}</span>{% if p.cred %}<span>{{ p.cred }}</span>{% endif %}<span>{{ p.path }}</span></div>
+          <div class="meta-row">{% if p.role %}<span class="badge badge-role{% if p.main %} badge-role-main{% endif %}">{{ p.role }}</span>{% endif %}<span class="badge badge-type">{{ p.label }}</span>{% if p.cred %}<span>{{ p.cred }}</span>{% endif %}<span>{{ p.path }}</span></div>
           <a class="desk-title" href="{{ p.url }}">{{ p.title }}</a>
           <p>{{ p.summary }}</p>
           {% if p.errors %}<p class="desk-error">⚠ Cần sửa trước khi đăng: {{ p.errors|join('; ') }}</p>{% endif %}

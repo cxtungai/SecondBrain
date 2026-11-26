@@ -15,3 +15,8 @@ Mỗi mục: lỗi gặp phải → nguyên nhân gốc → cách sửa → bằ
 - **Nguyên nhân gốc:** template được nhúng vào chương trình lúc build (`include_str!`). Cargo coi bản build từ bản sao là còn mới, nên repo thật chạy lại đúng file chạy có template hỏng.
 - **Cách sửa:** bản sao dùng thư mục build riêng (để mặc định, hoặc `CARGO_TARGET_DIR` riêng). Lỡ dùng chung rồi thì `cargo clean --release -p secondbrain` rồi build lại.
 - **Bằng chứng:** task `secondbrain-20261125064153-667cce78`, ngày 2026-11-25. Lần `verify` đầu báo `./sb build` lỗi (panic `src/site.rs:107`); sau `cargo clean -p secondbrain` thì cả 4 bước kiểm tra đều đạt.
+
+## 2026-11-26 — Thứ tự đọc và đọc sách gốc
+- Ghi chú `source` được bài chủ đề nhắc tới sớm (trong bảng nguồn gốc) nhảy lên "Bài con 1/8". Thứ tự đọc lấy theo lần nhắc đầu tiên, nhưng `source` phải xếp cuối (`Kb::reading_order`). Bằng chứng: dist/duyet/index.html trước và sau khi sửa.
+- Bản quét archive.org có thể là bản in khác năm xuất bản đầu (cu31924031269552: metadata ghi 1922, trang tên sách ghi bản in lần 5, 1925). Ghi rõ bản in và lấy số trang theo bản đã đọc.
+- Bản chữ djvu.txt có tiêu đề chạy đầu trang kèm số trang: đổi thành mốc `⟦tr.N⟧` (scratchpad/tools/reflow.mjs) để trích dẫn có trang; trang mở đầu chương có số ở chân trang.

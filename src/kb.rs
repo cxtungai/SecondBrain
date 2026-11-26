@@ -4,7 +4,7 @@ use crate::mentions::{find_unlinked_mentions, Mention};
 use crate::schema::{self, Source, KNOWN_FIELDS};
 use crate::text::{count_words, extract_wikilinks, normalize_for_search, slugify, vi_cmp};
 use serde::Serialize;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::sync::OnceLock;
 
 /// Thư mục bản nháp do AI nghiên cứu, chờ người dùng duyệt (không lên web).
@@ -229,6 +229,12 @@ pub struct Gap {
     pub from: Vec<String>,
 }
 
+/// Một nhóm bản nháp: chủ đề chính và các bài con theo thứ tự đọc (xem `Kb::inbox_by_topic`).
+pub struct TopicGroup<'a> {
+    pub topic: Option<&'a Note>,
+    pub notes: Vec<&'a Note>,
+}
+
 pub struct Kb {
     pub all: Vec<Note>,
     /// Chỉ số ghi chú đã đăng, mới cập nhật trước.
@@ -420,6 +426,68 @@ impl Kb {
     /// Bản nháp chờ duyệt.
     pub fn inbox(&self) -> Vec<&Note> {
         self.inbox_idx.iter().map(|&i| &self.all[i]).collect()
+    }
+
+    /// Bản nháp xếp theo chủ đề để người duyệt biết đâu là bài chính, đâu là bài con:
+    /// mỗi nhóm là một chủ đề (bản nháp hoặc đã đăng) với các bài con nháp theo thứ tự
+    /// chủ đề nhắc tới (= thứ tự đọc). Chủ đề nháp đứng trước; bài không thuộc chủ đề nào
+    /// nằm ở nhóm cuối (`topic: None`).
+    pub fn inbox_by_topic(&self) -> Vec<TopicGroup<'_>> {
+        let topics = self.topics_in_order(true);
+        let mut taken: HashSet<&str> = topics.iter().map(|t| t.slug.as_str()).collect();
+        let mut groups: Vec<TopicGroup> = vec![];
+        for t in topics {
+            let notes: Vec<&Note> = self.reading_order(t, true).into_iter().filter(|n| n.inbox && taken.insert(n.slug.as_str())).collect();
+            if t.inbox || !notes.is_empty() {
+                groups.push(TopicGroup { topic: Some(t), notes });
+            }
+        }
+        let rest: Vec<&Note> = self.inbox().into_iter().filter(|n| !taken.contains(n.slug.as_str())).collect();
+        if !rest.is_empty() {
+            groups.push(TopicGroup { topic: None, notes: rest });
+        }
+        groups
+    }
+
+    /// Nhãn vai trò của một bản nháp trong Khu duyệt bài / Bàn làm việc: "Bài con 2/8", "Tài liệu gốc · 8/8"…
+    pub fn role_label(&self, note: &Note) -> String {
+        match self.parent_topic(note, true) {
+            Some((_, i, total)) if note.kind == "source" => format!("Tài liệu gốc · {i}/{total}"),
+            Some((_, i, total)) => format!("Bài con {i}/{total}"),
+            None => "Chưa thuộc chủ đề".into(),
+        }
+    }
+
+    /// Các chủ đề theo thứ tự ưu tiên khi một bài thuộc nhiều chủ đề: chủ đề nháp trước, rồi chủ đề đã đăng, mỗi nhóm theo tên.
+    fn topics_in_order(&self, with_drafts: bool) -> Vec<&Note> {
+        let mut topics: Vec<&Note> = if with_drafts { self.inbox().into_iter().filter(|n| n.kind == "topic").collect() } else { vec![] };
+        topics.sort_by(|a, b| vi_cmp(&a.title, &b.title));
+        let mut published = self.by_type("topic");
+        published.sort_by(|a, b| vi_cmp(&a.title, &b.title));
+        topics.extend(published);
+        topics
+    }
+
+    /// Thứ tự đọc các bài con của một chủ đề: theo thứ tự chủ đề nhắc tới lần đầu, riêng ghi chú
+    /// `source` (bản đồ tài liệu gốc) xếp cuối vì là tài liệu tra cứu, không phải bài học.
+    pub fn reading_order(&self, topic: &Note, with_drafts: bool) -> Vec<&Note> {
+        let children: Vec<&Note> = topic.links.iter().filter_map(|s| self.get(s)).filter(|n| (with_drafts || !n.inbox) && n.kind != "topic").collect();
+        let (mut lessons, sources): (Vec<&Note>, Vec<&Note>) = children.into_iter().partition(|n| n.kind != "source");
+        lessons.extend(sources);
+        lessons
+    }
+
+    /// Chủ đề mà ghi chú thuộc về và vị trí của nó trong thứ tự đọc của chủ đề (bắt đầu từ 1, trên tổng số).
+    /// `with_drafts`: tính cả chủ đề và bài con đang là bản nháp (Khu duyệt bài, Bàn làm việc).
+    pub fn parent_topic(&self, note: &Note, with_drafts: bool) -> Option<(&Note, usize, usize)> {
+        if note.kind == "topic" {
+            return None;
+        }
+        self.topics_in_order(with_drafts).into_iter().find_map(|t| {
+            let order = self.reading_order(t, with_drafts);
+            let pos = order.iter().position(|n| n.slug == note.slug)?;
+            Some((t, pos + 1, order.len()))
+        })
     }
 
     pub fn by_type(&self, kind: &str) -> Vec<&Note> {
