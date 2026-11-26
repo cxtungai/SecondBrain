@@ -20,3 +20,9 @@ Mỗi mục: lỗi gặp phải → nguyên nhân gốc → cách sửa → bằ
 - Ghi chú `source` được bài chủ đề nhắc tới sớm (trong bảng nguồn gốc) nhảy lên "Bài con 1/8". Thứ tự đọc lấy theo lần nhắc đầu tiên, nhưng `source` phải xếp cuối (`Kb::reading_order`). Bằng chứng: dist/duyet/index.html trước và sau khi sửa.
 - Bản quét archive.org có thể là bản in khác năm xuất bản đầu (cu31924031269552: metadata ghi 1922, trang tên sách ghi bản in lần 5, 1925). Ghi rõ bản in và lấy số trang theo bản đã đọc.
 - Bản chữ djvu.txt có tiêu đề chạy đầu trang kèm số trang: đổi thành mốc `⟦tr.N⟧` (scratchpad/tools/reflow.mjs) để trích dẫn có trang; trang mở đầu chương có số ở chân trang.
+
+## 2026-11-26 — SEO kỹ thuật trên GitHub Pages dạng thư mục con
+- Web ở `cxtungai.github.io/SecondBrain/` thì bot chỉ đọc `cxtungai.github.io/robots.txt` (đang 404), nên `Disallow` và dòng `Sitemap` trong `/SecondBrain/robots.txt` không có tác dụng. Bản nháp vẫn an toàn nhờ thẻ `noindex`; sitemap phải gửi qua Search Console / Bing Webmaster. Bằng chứng: curl trả 404 cho `/robots.txt`, 200 cho `/SecondBrain/robots.txt`.
+- Thẻ canonical có sẵn trong `templates/base.html` nhưng chương trình chưa từng điền (trang thật không có canonical). Giờ `render_template` tự điền theo đường dẫn đang dựng (`CURRENT_ROUTE`), bỏ qua bản trên máy, Khu duyệt bài, trang noindex và 404. Kiểm bằng `scratchpad/check-seo.mjs`: 36 trang, mọi trang công khai có canonical, JSON-LD đều hợp lệ.
+- Dựng thử trong Git Bash: `BASE_PATH=/SecondBrain` bị đổi thành `C:/Program Files/Git/SecondBrain`. Dùng `MSYS_NO_PATHCONV=1` và đưa `--out` dạng Windows (`cygpath -w`), nếu không bản dựng rơi vào `C:\c\Users\…`.
+- Ảnh PNG (ảnh chia sẻ 1200×630, logo) vẽ bằng Edge không giao diện: `msedge --headless=new --screenshot=… --window-size=1200,630 file:///…html`. Không cần thêm thư viện vào chương trình.

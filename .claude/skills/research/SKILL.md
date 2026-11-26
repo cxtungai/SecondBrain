@@ -14,6 +14,7 @@ Nếu trống: hỏi người dùng, hoặc đề xuất 3 mục từ `./sb kb g
 Ba file đi kèm, đọc khi tới bước tương ứng:
 - `references/truy-cap-nguon.md`: cách đọc nguồn khó truy cập (PDF, trang chặn công cụ tự động) và những việc không được làm.
 - `references/kiem-chung.md`: bảng khẳng định, SIFT, độc lập nguồn, mức độ chắc chắn.
+- `references/geo.md`: viết để Google và AI tìm kiếm trích đúng (SEO/GEO) mà **không đánh đổi chất lượng tri thức**; danh sách tự kiểm trước khi lưu bản nháp.
 - `references/doc-sach-goc.md`: chế độ **Đọc sách gốc**: đọc trọn từng cuốn sách gốc có kiểm kê, ghi số trang, viết ghi chú "bản đồ sách" rồi bổ sung các ghi chú chủ đề.
 - `NGUON.md`: các dự án đã tham khảo để thiết kế quy trình này.
 
@@ -72,6 +73,7 @@ Mức **Sâu**: nói ngắn kế hoạch cho người dùng trước khi làm ti
 - **Chọn loại ghi chú:** chủ đề rộng (vd. "Price action") → `topic` làm trụ cột kèm 2–4 ghi chú con, trong đó **ít nhất một ghi chú `framework` hướng dẫn cách dùng từng bước**; một khái niệm → `concept`; phương pháp, setup, quy trình → `framework`; số liệu → `fact`; ví dụ thực tế → `case-study`; tóm tắt một tài liệu → `source`.
 - Theo template `knowledge/_templates/<type>.md`; xoá các chú thích `<!-- -->` khi đã viết xong phần đó.
 - Viết tiếng Việt, rõ ràng, có cấu trúc. **Câu đầu tiên trả lời thẳng "X là gì?"**: Google/AI hay trích câu này.
+- **Dễ được trích (GEO), theo `references/geo.md`:** mỗi mục `##` mở bằng ý chính và gọi đúng tên chủ thể (không mở bằng "Nó / Điều này / Tuy nhiên"); mỗi đoạn một ý; bảng khi so sánh, danh sách đánh số khi có bước; trích ngắn nguyên văn tài liệu gốc kèm số trang cho ý cốt lõi. Đây chỉ là cách trình bày: **không thêm, bớt hay đổi ý của nguồn để đạt gợi ý SEO** (người dùng dặn 2026-11-26).
 - Gắn nguồn sau mỗi khẳng định quan trọng: `(Nguồn [2])` hoặc `[2][4]`, số là vị trí trong danh sách `sources`.
 - Số liệu luôn đi kèm **thị trường, giai đoạn, cách đo**: "97% người lướt sóng hợp đồng tương lai ở Brazil kiên trì ≥ 300 ngày (2013–2015)", không viết "97% trader thua lỗ".
 - Phân biệt rõ: đồng thuận / còn tranh cãi / ý kiến của một tác giả / cách làm của người thực hành (chưa kiểm chứng). Nêu giới hạn và cách hiểu sai thường gặp.
@@ -101,6 +103,7 @@ Git giữ mọi phiên bản mãi mãi, nên mỗi byte thừa sẽ nằm trong 
 
 - Lưu vào `knowledge/_inbox/<slug>.md` (slug không dấu, chữ thường, nối bằng `-`). Ghi chú con cũng để trong `_inbox`.
 - `./sb check --inbox` → không còn lỗi cho các file vừa tạo.
+- `./sb seo <slug> --drafts` → xem gợi ý SEO/GEO. Sửa cách trình bày khi hợp lý; gợi ý nào mà sửa sẽ hại độ chính xác thì để nguyên và nêu trong báo cáo.
 - Kiểm số nguồn: mọi nguồn trong `sources` đều được trích, và không có `[n]` nào vượt quá danh sách.
 - `./sb kb mentions <slug>` → thêm các liên kết bị sót.
 - Đọc lại từng số liệu trong bài, so với bảng khẳng định (đúng số, đúng nguồn, đúng bối cảnh).

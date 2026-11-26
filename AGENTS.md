@@ -148,7 +148,13 @@ Quy tắc:
 - Không nhồi từ khoá, không giật tít, không hứa hẹn; giữ nguyên sắc thái "còn tranh cãi / giới hạn" của tri thức.
 - Kiểm tra trùng từ khoá trước khi viết: `./sb seo --keyword "<từ khoá>"`.
 
-**GEO cho ghi chú tri thức** — chỉ những gì làm tri thức rõ và đáng tin hơn: câu đầu trả lời thẳng ("X là …"), `summary` 70–160 ký tự, nguồn có điểm uy tín, `## Câu hỏi thường gặp`, liên kết nội bộ, ngày cập nhật. `./sb seo` liệt kê gợi ý; trên Bàn làm việc (`./sb mo`), trang nào cũng có hộp "SEO / GEO" (không lên web).
+**GEO cho ghi chú tri thức** — chỉ những gì làm tri thức rõ và đáng tin hơn: câu đầu trả lời thẳng ("X là …"), `summary` 70–160 ký tự, nguồn có điểm uy tín, `## Câu hỏi thường gặp`, liên kết nội bộ, ngày cập nhật. Thêm vào đó là cách trình bày giúp AI trích đúng: đoạn mở đầu nêu ý chính, mỗi mục mở bằng câu tự đứng được (gọi đúng tên chủ thể, không "Nó / Điều này"), mỗi đoạn một ý, không nhảy cấp tiêu đề, dẫn `(Nguồn [n])` đúng chỗ, mục giới hạn / khi nào không áp dụng, trích ngắn nguyên văn tài liệu gốc. Chi tiết, bằng chứng và việc không được làm: `.claude/skills/research/references/geo.md`.
+
+**Tri thức đứng trên SEO/GEO** (người dùng dặn 2026-11-26): không thêm khẳng định, số liệu, câu trích không có trong nguồn; không cắt vụn bài, không viết bản riêng cho AI, không nhồi từ khoá, không bỏ giới hạn hay chỗ "còn tranh cãi". Gợi ý nào mà sửa sẽ hại độ chính xác thì để nguyên.
+
+`./sb seo` liệt kê gợi ý (chỉ là gợi ý, không chặn build); trên Bàn làm việc (`./sb mo`), trang nào cũng có hộp "SEO / GEO" (không lên web).
+
+**Phần kỹ thuật chương trình tự lo** khi dựng web: canonical, Open Graph và thẻ X/Twitter kèm ảnh chia sẻ (`assets/og-image.png`), JSON-LD (WebSite + Organization ở trang chủ; Article có tác giả hoặc tên thương hiệu khi `author` trống, đơn vị xuất bản, nguồn trích; FAQ; Breadcrumb; DefinedTermSet), sitemap có ngày sửa, `feed.xml` (Atom), `robots.txt` nêu tên bot tìm kiếm và bot AI, `llms.txt`, bản Markdown. Mã xác minh Google Search Console / Bing Webmaster điền ở `cau-hinh.yml` (`google_site_verification`, `bing_site_verification`). Web nằm dưới `/ten-repo/` thì bot không đọc `robots.txt` của mình (chỉ đọc ở gốc tên miền), nên cần gửi sitemap qua Search Console.
 
 ## Quy trình
 

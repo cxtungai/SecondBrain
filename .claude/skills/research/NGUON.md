@@ -14,5 +14,10 @@
 | [virgiliojr94/book-to-skill](https://github.com/virgiliojr94/book-to-skill) | MIT | Đọc sách theo từng chương; mỗi chương rút ý cốt lõi, khung giữ đúng tên tác giả, lỗi cần tránh, ví dụ mẫu; "rút cấu trúc, không tóm tắt"; không chép nguyên văn. Dùng cho chế độ Đọc sách gốc. (Không dùng chế độ tìm sách qua kho sách lậu.) |
 | [FABLES](https://arxiv.org/abs/2404.01261) (Kim và cộng sự, 2024) | bài nghiên cứu | Tóm tắt sách bằng AI hay bỏ sót ý quan trọng; AI tự chấm độ trung thực không khớp với người đọc → phải đọc có kiểm kê và người dùng duyệt cuối. |
 | [flonat/claude-research — literature](https://skills.sh/flonat/claude-research/literature) | MIT | Trích dẫn không kiểm được còn tệ hơn không trích. |
+| [GEO](https://arxiv.org/abs/2311.09735) (Aggarwal và cộng sự, KDD 2024) | bài nghiên cứu (mã Apache-2.0) | Dẫn nguồn, câu trích, số liệu giúp AI nhắc tới nhiều hơn; nhồi từ khoá gần như vô ích. Dùng trong `references/geo.md`. |
+| [cxcscmu/AutoGEO](https://github.com/cxcscmu/AutoGEO) (ICLR 2026) | MIT | Quy tắc "AI tìm kiếm thích gì" rút từ Gemini, GPT, Claude: kết luận trước, đoạn tự đứng được, cân bằng, định nghĩa thuật ngữ, có ngày. |
+| [zubair-trabzada/geo-seo-claude — geo-citability](https://github.com/zubair-trabzada/geo-seo-claude) | MIT | Thang "dễ được trích": câu trả lời đầu mục, đoạn tự đứng được, cấu trúc, mật độ bằng chứng, nội dung độc đáo. Rút gọn thành danh sách tự kiểm và gợi ý trong `./sb seo`. |
+| [coreyhaines31/marketingskills — ai-seo](https://github.com/coreyhaines31/marketingskills) | MIT | Cách từng AI chọn nguồn; việc không được làm (viết riêng cho AI, cắt vụn bài, trích dẫn giả). |
+| [AgriciDaniel/claude-seo — seo-agentic](https://github.com/AgriciDaniel/claude-seo) | MIT | robots.txt theo RFC 9309 (nhóm bot riêng phải lặp đủ quy tắc), danh sách bot AI theo mục đích, llms.txt, bản Markdown. Không cài cả bộ (cần Python + Chromium, nhiều phần trả phí). |
 
 Phần riêng của Second Brain: thang điểm uy tín 1–5 (`AGENTS.md`), cách đọc nguồn khó truy cập (`references/truy-cap-nguon.md`, rút từ đợt Price action) và quy tắc giữ kho nhẹ.

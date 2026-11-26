@@ -8,7 +8,7 @@ argument-hint: <từ khoá, vd. "cách vẽ hỗ trợ kháng cự">
 
 Từ khoá: **$ARGUMENTS** (trống → hỏi người dùng, hoặc đề xuất 3 góc bài từ các ghi chú `verified` có nhiều backlinks).
 
-Đọc mục "Bài viết SEO/GEO" trong `AGENTS.md` trước. Nguyên tắc: **tri thức là nguồn sự thật, bài viết là lớp trình bày.** Bài viết không đưa dữ kiện mới, không làm sai lệch tri thức để hợp từ khoá. Kết quả là **bài nháp** (`status: draft`) — chỉ người dùng duyệt mới đăng.
+Đọc mục "Bài viết SEO/GEO" trong `AGENTS.md` và `../research/references/geo.md` (cách viết để AI trích đúng, bằng chứng, việc không được làm) trước. Nguyên tắc: **tri thức là nguồn sự thật, bài viết là lớp trình bày.** Bài viết không đưa dữ kiện mới, không làm sai lệch tri thức để hợp từ khoá. Tối ưu SEO/GEO không bao giờ được làm giảm chất lượng kiến thức (người dùng dặn 2026-11-26). Kết quả là **bài nháp** (`status: draft`) — chỉ người dùng duyệt mới đăng.
 
 ## 1. Kiểm tra tri thức trước
 
@@ -32,6 +32,8 @@ Tạo file: `./sb new article "<Tiêu đề>" --keyword "<từ khoá>" --based-o
 - **description** 70–160 ký tự: người đọc nhận được gì; có từ khoá.
 - **2–3 câu đầu trả lời ngay câu hỏi** (GEO: AI search và đoạn trích nổi bật lấy từ đây).
 - Mỗi `##` là một câu hỏi phụ người đọc hay hỏi; câu ngắn, ví dụ cụ thể, bảng/danh sách khi so sánh hoặc liệt kê bước.
+- Mỗi mục mở bằng 1–2 câu trả lời thẳng, gọi đúng tên chủ thể (không mở bằng "Nó / Điều này / Tuy nhiên"), để đoạn đó được trích riêng vẫn đúng. Mỗi đoạn một ý; không cắt vụn bài.
+- Có thể chèn hình nến bằng khối ```nen (xem `AGENTS.md`, mục "Hình minh hoạ"), số liệu lấy đúng từ ghi chú gốc.
 - **Mọi dữ kiện, số liệu, định nghĩa phải có trong ghi chú gốc** — đặt `[[slug]]` ngay chỗ dùng (lần đầu nhắc tới). Không cần chép nguồn ngoài vào bài: trang bài viết tự hiện mục "Tri thức gốc" có nguồn và điểm uy tín.
 - Giữ đúng sắc thái của tri thức: điều còn tranh cãi vẫn nói là tranh cãi, giới hạn vẫn nêu rõ.
 - Cuối bài: `## Câu hỏi thường gặp` (≥ 3 câu `### …?`) và `## Tìm hiểu sâu hơn` (danh sách `[[ghi chú]]`).
@@ -42,7 +44,7 @@ Tạo file: `./sb new article "<Tiêu đề>" --keyword "<từ khoá>" --based-o
 ## 4. Kiểm tra
 
 - `./sb check` — không lỗi cho bài này (`based_on` tồn tại, có liên kết về ghi chú gốc, không trùng từ khoá).
-- `./sb seo <slug> --drafts` — sửa các tiêu chí chưa đạt khi hợp lý (không đánh đổi độ chính xác lấy điểm).
+- `./sb seo <slug> --drafts` — sửa các tiêu chí chưa đạt khi hợp lý (không đánh đổi độ chính xác lấy điểm). Gợi ý gồm cả phần GEO: mục tự đứng được, đoạn quá dài, cấp tiêu đề.
 - Xem trước: Khu duyệt bài trên web (`/duyet/`, sau khi đẩy bản nháp lên) hoặc Bàn làm việc (`./sb mo`) → "Chờ bạn duyệt"; hộp "SEO / GEO" chỉ hiện trên Bàn làm việc.
 
 ## 5. Báo cáo cho người dùng

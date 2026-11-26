@@ -16,6 +16,23 @@ pub struct Config {
     pub author: String,
     pub disclaimer: String,
     pub agent_rules: Vec<String>,
+    /// Mã xác minh Google Search Console (thẻ meta "google-site-verification") — trống nếu chưa đăng ký.
+    pub google_site_verification: String,
+    /// Mã xác minh Bing Webmaster Tools (thẻ meta "msvalidate.01") — trống nếu chưa đăng ký.
+    pub bing_site_verification: String,
+}
+
+/// Nhận cả mã trơn lẫn nguyên thẻ `<meta name=… content="mã" />` người dùng dán vào.
+pub fn verification_code(raw: &str) -> String {
+    let s = raw.trim();
+    if let Some(i) = s.find("content=") {
+        let rest = &s[i + 8..];
+        let q = rest.chars().next().filter(|c| *c == '"' || *c == '\'');
+        let rest = if q.is_some() { &rest[1..] } else { rest };
+        let end = rest.find(|c: char| Some(c) == q || (q.is_none() && (c.is_whitespace() || c == '/' || c == '>'))).unwrap_or(rest.len());
+        return rest[..end].trim().to_string();
+    }
+    s.chars().filter(|c| c.is_ascii_alphanumeric() || "-_=+.".contains(*c)).collect()
 }
 
 impl Default for Config {
@@ -35,6 +52,8 @@ impl Default for Config {
                 "Ưu tiên ghi chú cập nhật gần hơn khi có thông tin mâu thuẫn, và nêu rõ mốc thời gian của số liệu.".into(),
                 "Bắt đầu từ ghi chú loại \"topic\" (bản đồ chủ đề) để nắm tổng quan, rồi đi theo liên kết tới ghi chú chi tiết.".into(),
             ],
+            google_site_verification: String::new(),
+            bing_site_verification: String::new(),
         }
     }
 }
@@ -58,6 +77,10 @@ impl Config {
         set(&mut cfg.description, "description");
         set(&mut cfg.author, "author");
         set(&mut cfg.disclaimer, "disclaimer");
+        set(&mut cfg.google_site_verification, "google_site_verification");
+        set(&mut cfg.bing_site_verification, "bing_site_verification");
+        cfg.google_site_verification = verification_code(&cfg.google_site_verification);
+        cfg.bing_site_verification = verification_code(&cfg.bing_site_verification);
         if let Some(v) = get_str(&map, "name") {
             cfg.name = v;
         }

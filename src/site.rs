@@ -38,6 +38,8 @@ pub const ASSETS: &[(&str, &str, &[u8])] = &[
     ("assets/graph.js", "text/javascript; charset=utf-8", include_bytes!("../assets/graph.js")),
     ("assets/desk.js", "text/javascript; charset=utf-8", include_bytes!("../assets/desk.js")),
     ("assets/favicon.svg", "image/svg+xml", include_bytes!("../assets/favicon.svg")),
+    ("assets/og-image.png", "image/png", include_bytes!("../assets/og-image.png")),
+    ("assets/logo.png", "image/png", include_bytes!("../assets/logo.png")),
 ];
 
 const TEMPLATES: &[(&str, &str)] = &[
@@ -110,6 +112,29 @@ pub fn cred_view(score: Option<f64>, with_label: bool, title: Option<String>) ->
 
 fn json_ld(v: &Json) -> String {
     v.to_string().replace("</", "<\\/")
+}
+
+thread_local! {
+    /// Đường dẫn đang dựng — để render_template tự điền canonical / og:url mà không phải sửa từng trang.
+    static CURRENT_ROUTE: std::cell::RefCell<Option<String>> = const { std::cell::RefCell::new(None) };
+}
+
+/// Ảnh hiện khi chia sẻ link (Facebook, Zalo, X…): 1200×630.
+pub const OG_IMAGE: &str = "assets/og-image.png";
+/// Logo vuông 256×256 cho dữ liệu cấu trúc Organization.
+pub const LOGO: &str = "assets/logo.png";
+
+/// Ngày "YYYY-MM-DD" → thời điểm đầy đủ cho Atom / Open Graph.
+fn iso_time(d: &str) -> String {
+    if d.len() == 10 {
+        format!("{d}T00:00:00Z")
+    } else {
+        d.to_string()
+    }
+}
+
+fn xml_escape(s: &str) -> String {
+    s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;").replace('"', "&quot;")
 }
 
 impl Site {
@@ -200,7 +225,42 @@ impl Site {
         self.url(&format!("gaps/#{}", slugify(target)))
     }
 
-    pub fn render_template(&self, name: &str, ctx: Json) -> String {
+    /// URL tuyệt đối chính thức của trang đang dựng — chỉ cho trang công khai được phép lập chỉ mục
+    /// (không phải bản dựng trên máy, Khu duyệt bài, trang noindex hay 404).
+    fn canonical_for(&self, route: Option<&str>, noindex: bool) -> Option<String> {
+        let route = route?;
+        if self.site_url.is_none() || self.dev || self.review.is_some() || noindex || route == "404.html" {
+            return None;
+        }
+        Some(self.abs(route))
+    }
+
+    /// Đơn vị đứng tên web trong dữ liệu cấu trúc: tên thương hiệu (tên trang), không cần lộ tên người.
+    fn org_ld(&self) -> Json {
+        json!({"@type": "Organization", "@id": format!("{}#org", self.abs("")), "name": self.data.config.name, "url": self.abs(""),
+            "logo": {"@type": "ImageObject", "url": self.abs(LOGO), "width": 256, "height": 256}})
+    }
+
+    /// Tác giả: người nếu cau-hinh.yml có điền, không thì là thương hiệu (đúng sự thật: web biên soạn và duyệt nội dung).
+    fn author_ld(&self) -> Json {
+        if self.data.config.author.is_empty() {
+            json!({"@type": "Organization", "name": self.data.config.name, "url": self.abs("")})
+        } else {
+            json!({"@type": "Person", "name": self.data.config.author})
+        }
+    }
+
+    pub fn render_template(&self, name: &str, mut ctx: Json) -> String {
+        if let Json::Object(m) = &mut ctx {
+            let noindex = m.get("noindex").and_then(|v| v.as_bool()).unwrap_or(false);
+            let route = CURRENT_ROUTE.with(|r| r.borrow().clone());
+            if let Some(c) = self.canonical_for(route.as_deref(), noindex) {
+                m.entry("canonical").or_insert(json!(c));
+            }
+            if self.site_url.is_some() && !self.dev {
+                m.entry("og_image").or_insert(json!(self.abs(OG_IMAGE)));
+            }
+        }
         match self.env.get_template(name).and_then(|t| t.render(&ctx)) {
             Ok(s) => s,
             Err(e) => {
@@ -327,7 +387,7 @@ impl Site {
     pub fn routes(&self) -> Vec<String> {
         let mut r: Vec<String> = [
             "", "kien-thuc/", "bai-viet/", "tu-dien/", "graph/", "search/", "ai/", "gioi-thieu/", "gaps/", "tags/", "llms.txt",
-            "llms-full.txt", "knowledge.json", "search-index.json", "sitemap.xml", "robots.txt", "404.html",
+            "llms-full.txt", "knowledge.json", "search-index.json", "sitemap.xml", "robots.txt", "feed.xml", "404.html",
         ]
         .iter()
         .map(|s| s.to_string())
@@ -359,6 +419,13 @@ impl Site {
 
     /// Dựng một trang theo đường dẫn (không có base, không có "/" đầu).
     pub fn render(&self, route: &str) -> Option<Page> {
+        CURRENT_ROUTE.with(|r| *r.borrow_mut() = Some(route.to_string()));
+        let page = self.render_route(route);
+        CURRENT_ROUTE.with(|r| *r.borrow_mut() = None);
+        page
+    }
+
+    fn render_route(&self, route: &str) -> Option<Page> {
         if let Some(p) = self.asset(route) {
             return Some(p);
         }
@@ -373,13 +440,14 @@ impl Site {
             "gioi-thieu/" => Page::html(self.about()),
             "gaps/" => Page::html(self.gaps()),
             "tags/" => Page::html(self.tags_index()),
-            "404.html" => Page::html(self.render_template("404.html", json!({}))),
+            "404.html" => Page::html(self.render_template("404.html", json!({"noindex": true}))),
             "llms.txt" => Page::text("text/plain; charset=utf-8", self.llms_txt()),
             "llms-full.txt" => Page::text("text/plain; charset=utf-8", self.llms_full()),
             "knowledge.json" => Page::text("application/json; charset=utf-8", self.knowledge_json()),
             "search-index.json" => Page::text("application/json; charset=utf-8", self.search_index()),
             "sitemap.xml" => Page::text("application/xml; charset=utf-8", self.sitemap()),
             "robots.txt" => Page::text("text/plain; charset=utf-8", self.robots()),
+            "feed.xml" => Page::text("application/atom+xml; charset=utf-8", self.feed()),
             r => {
                 let parts: Vec<&str> = r.trim_end_matches('/').split('/').collect();
                 match (parts.as_slice(), r.ends_with('/')) {
@@ -448,8 +516,15 @@ impl Site {
             .map(|i| json!({"path": i.path, "message": i.message, "error": i.level == Level::Error}))
             .collect();
         let errors = issues.iter().filter(|i| i["error"] == true).count();
+        let cfg = &self.data.config;
+        let ld = json!({"@context": "https://schema.org", "@graph": [
+            {"@type": "WebSite", "@id": format!("{}#website", self.abs("")), "name": cfg.name, "url": self.abs(""),
+             "description": cfg.description, "inLanguage": cfg.language, "publisher": {"@id": format!("{}#org", self.abs(""))}},
+            self.org_ld(),
+        ]});
         self.render_template("home.html", json!({
             "section": "home",
+            "json_ld": if self.dev { Json::Null } else { json!(json_ld(&ld)) },
             "stats": {"notes": kb.published.len(), "verified": kb.notes().iter().filter(|n| n.status == "verified").count(), "articles": self.data.articles.published().len(), "gaps": kb.gaps.len()},
             "issues": if self.dev { issues.iter().take(8).cloned().collect::<Vec<_>>() } else { vec![] },
             "issues_total": issues.len(), "errors": errors,
@@ -523,7 +598,10 @@ impl Site {
                 "datePublished": note.created, "dateModified": note.updated,
                 "keywords": if note.tags.is_empty() { Json::Null } else { json!(note.tags.join(", ")) },
                 "url": self.abs(&format!("notes/{}/", note.slug)),
-                "author": if self.data.config.author.is_empty() { Json::Null } else { json!({"@type": "Person", "name": self.data.config.author}) },
+                "mainEntityOfPage": self.abs(&format!("notes/{}/", note.slug)),
+                "image": self.abs(OG_IMAGE),
+                "author": self.author_ld(),
+                "publisher": self.org_ld(),
                 "citation": note.sources.iter().map(|s| match &s.url { Some(u) => json!({"@type": "CreativeWork", "name": s.title, "url": u}), None => json!(s.title) }).collect::<Vec<_>>(),
             }),
             self.breadcrumb_ld(&crumbs),
@@ -534,6 +612,7 @@ impl Site {
         let file = note.path.rsplit('/').next().unwrap_or("");
         self.render_template("note.html", json!({
             "title": note.title, "description": note.summary, "section": "", "og_type": "article",
+            "pub_time": iso_time(&note.created), "mod_time": iso_time(&note.updated),
             "json_ld": if note.inbox { Json::Null } else { json!(json_ld(&json!(lds))) },
             "noindex": note.inbox,
             "md_url": if note.inbox { Json::Null } else { json!(self.url(&format!("notes/{}.md", note.slug))) },
@@ -581,7 +660,10 @@ impl Site {
                 "inLanguage": self.data.config.language, "datePublished": published, "dateModified": a.updated,
                 "keywords": std::iter::once(&a.keyword).chain(a.keywords.iter()).cloned().collect::<Vec<_>>().join(", "),
                 "url": self.abs(&format!("bai-viet/{}/", a.slug)),
-                "author": if self.data.config.author.is_empty() { Json::Null } else { json!({"@type": "Person", "name": self.data.config.author}) },
+                "mainEntityOfPage": self.abs(&format!("bai-viet/{}/", a.slug)),
+                "image": self.abs(OG_IMAGE),
+                "author": self.author_ld(),
+                "publisher": self.org_ld(),
                 "isBasedOn": basis.iter().map(|n| json!({"@type": "CreativeWork", "name": n.title, "url": self.abs(&format!("notes/{}/", n.slug))})).collect::<Vec<_>>(),
                 "about": basis.iter().map(|n| json!({"@type": "Thing", "name": n.title, "url": self.abs(&format!("notes/{}/", n.slug))})).collect::<Vec<_>>(),
             }),
@@ -600,6 +682,7 @@ impl Site {
         );
         self.render_template("article.html", json!({
             "title": a.title, "description": a.description, "section": "articles", "og_type": "article",
+            "pub_time": iso_time(&published), "mod_time": iso_time(&a.updated),
             "json_ld": if draft { Json::Null } else { json!(json_ld(&json!(lds))) }, "noindex": draft,
             "a": self.article_card(a), "path": a.path, "draft": draft, "crumbs": crumbs,
             "read_minutes": (a.word_count as f64 / 220.0).round().max(1.0) as usize, "word_count": a.word_count,
@@ -1081,12 +1164,62 @@ impl Site {
     }
 
     fn robots(&self) -> String {
+        let rules = format!("Allow: /\nDisallow: {}\nDisallow: {}\n", self.url("gaps/"), self.url("duyet/"));
+        // Bot của công cụ tìm kiếm và trợ lý AI (tìm nguồn để trả lời, đọc trang khi người dùng hỏi) — nêu tên rõ
+        // để chào đón. Theo RFC 9309, bot có nhóm riêng sẽ bỏ qua nhóm "*", nên nhóm này lặp lại đủ quy tắc.
+        let bots = ["Googlebot", "Bingbot", "OAI-SearchBot", "ChatGPT-User", "Claude-SearchBot", "Claude-User", "PerplexityBot", "Perplexity-User"];
+        let named: String = bots.iter().map(|b| format!("User-agent: {b}\n")).collect();
+        let note = if self.base.is_empty() {
+            String::new()
+        } else {
+            "# Lưu ý: bot chỉ đọc robots.txt ở gốc tên miền. Web đang nằm trong thư mục con nên file này chỉ để tham khảo —\n\
+             # hãy gửi sitemap qua Google Search Console và Bing Webmaster Tools.\n"
+                .to_string()
+        };
         format!(
-            "User-agent: *\nAllow: /\nDisallow: {}\nDisallow: {}\n\nSitemap: {}\n# Chỉ mục cho AI agent: {}\n",
-            self.url("gaps/"),
-            self.url("duyet/"),
+            "# {} — chào đón công cụ tìm kiếm và trợ lý AI đọc, trích dẫn tri thức đã duyệt.\n{note}\n{named}{rules}\nUser-agent: *\n{rules}\nSitemap: {}\n# Chỉ mục cho AI agent: {}\n# Tin mới (Atom): {}\n",
+            self.data.config.name,
             self.abs("sitemap.xml"),
-            self.abs("llms.txt")
+            self.abs("llms.txt"),
+            self.abs("feed.xml")
+        )
+    }
+
+    /// Tin mới dạng Atom: ghi chú đã duyệt + bài viết đã đăng, mới nhất trước (tối đa 50).
+    fn feed(&self) -> String {
+        let kb = self.kb();
+        let mut items: Vec<(String, String, String, String)> = kb
+            .notes()
+            .iter()
+            .map(|n| (n.updated.clone(), n.title.clone(), self.abs(&format!("notes/{}/", n.slug)), n.summary.clone()))
+            .chain(self.data.articles.published().iter().map(|a| (a.updated.clone(), a.title.clone(), self.abs(&format!("bai-viet/{}/", a.slug)), a.description.clone())))
+            .collect();
+        items.sort_by(|a, b| b.0.cmp(&a.0).then_with(|| vi_cmp(&a.1, &b.1)));
+        items.truncate(50);
+        let cfg = &self.data.config;
+        let updated = items.first().map(|i| iso_time(&i.0)).unwrap_or_else(|| iso_time(&self.today));
+        let author = if cfg.author.is_empty() { &cfg.name } else { &cfg.author };
+        let entries: Vec<String> = items
+            .iter()
+            .map(|(d, title, url, summary)| {
+                format!(
+                    "  <entry>\n    <title>{}</title>\n    <link href=\"{url}\"/>\n    <id>{url}</id>\n    <updated>{}</updated>\n    <summary>{}</summary>\n  </entry>",
+                    xml_escape(title),
+                    iso_time(d),
+                    xml_escape(summary)
+                )
+            })
+            .collect();
+        format!(
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<feed xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"{}\">\n  <title>{}</title>\n  <subtitle>{}</subtitle>\n  <link href=\"{}\" rel=\"self\"/>\n  <link href=\"{}\"/>\n  <id>{}</id>\n  <updated>{updated}</updated>\n  <author><name>{}</name></author>\n{}\n</feed>\n",
+            cfg.language,
+            xml_escape(&cfg.name),
+            xml_escape(&cfg.description),
+            self.abs("feed.xml"),
+            self.abs(""),
+            self.abs(""),
+            xml_escape(author),
+            entries.join("\n")
         )
     }
 }
@@ -1243,6 +1376,61 @@ mod tests {
         assert!(!kj.contains("\n  "), "knowledge.json ghi gọn, không thụt lề");
         let si: Json = serde_json::from_str(&String::from_utf8(site.render("search-index.json").unwrap().body).unwrap()).unwrap();
         assert!(si.as_array().unwrap().iter().all(|x| x["text"].as_str().unwrap().chars().count() <= SEARCH_TEXT_CHARS));
+    }
+
+    #[test]
+    fn seo_ky_thuat_tren_web_cong_khai() {
+        let site = Site::new(load(false), "/Repo", Some("https://vd.github.io".into()), false);
+        let page = |r: &str| String::from_utf8(site.render(r).unwrap().body).unwrap();
+        // Địa chỉ chính thức, ảnh chia sẻ, thẻ X/Twitter trên trang ghi chú; thời điểm đăng/sửa.
+        let note = page("notes/chu-de/");
+        assert!(note.contains(r#"<link rel="canonical" href="https://vd.github.io/Repo/notes/chu-de/" />"#));
+        assert!(note.contains(r#"<meta property="og:url" content="https://vd.github.io/Repo/notes/chu-de/" />"#));
+        assert!(note.contains(r#"<meta property="og:image" content="https://vd.github.io/Repo/assets/og-image.png" />"#));
+        assert!(note.contains(r#"content="summary_large_image""#));
+        assert!(note.contains(r#"<meta property="article:modified_time" content="2026-01-01T00:00:00Z" />"#));
+        // Tác giả để trống -> đứng tên thương hiệu, có đơn vị xuất bản.
+        assert!(note.contains(r#""author":{"@type":"Organization","name":"Second Brain""#));
+        assert!(note.contains(r#""publisher":{"@id":"https://vd.github.io/Repo/#org""#) || note.contains(r#""publisher":{"@type":"Organization""#));
+        // Trang chủ: WebSite + Organization.
+        let home = page("");
+        assert!(home.contains(r#""@type":"WebSite""#) && home.contains(r#""@type":"Organization""#));
+        assert!(home.contains(r#"<link rel="canonical" href="https://vd.github.io/Repo/" />"#));
+        // 404 và trang noindex không có canonical.
+        assert!(!page("404.html").contains("rel=\"canonical\""));
+        assert!(!page("gaps/").contains("rel=\"canonical\""));
+        // Tin mới Atom chỉ có bài đã duyệt.
+        let feed = page("feed.xml");
+        assert!(feed.contains("<id>https://vd.github.io/Repo/notes/chu-de/</id>") && !feed.contains("nhap"));
+        // robots.txt: nhóm bot AI lặp đủ quy tắc chặn Khu duyệt bài.
+        let robots = page("robots.txt");
+        assert!(robots.contains("User-agent: Claude-SearchBot") && robots.contains("User-agent: OAI-SearchBot"));
+        assert_eq!(robots.matches("Disallow: /Repo/duyet/").count(), 2);
+        assert!(robots.contains("chỉ đọc robots.txt ở gốc tên miền"));
+        // Ảnh chia sẻ và logo được xuất kèm.
+        assert_eq!(site.render("assets/og-image.png").unwrap().content_type, "image/png");
+    }
+
+    #[test]
+    fn ban_dung_tren_may_va_khu_duyet_khong_co_canonical() {
+        let dev = Site::new(load(true), "", None, true);
+        assert!(!String::from_utf8(dev.render("notes/chu-de/").unwrap().body).unwrap().contains("canonical"));
+        let review = Site::new(load(true), "/Repo", Some("https://vd.github.io".into()), false)
+            .into_review(Review { repo: None, branch: None });
+        let page = String::from_utf8(review.render("duyet/notes/nhap/").unwrap().body).unwrap();
+        assert!(!page.contains("canonical") && page.contains("noindex"));
+    }
+
+    #[test]
+    fn ma_xac_minh_chu_web() {
+        let mut data = load(false);
+        data.config.google_site_verification = "abcXYZ_12-3".into();
+        let site = Site::new(data, "", Some("https://vd.github.io".into()), false);
+        let home = String::from_utf8(site.render("").unwrap().body).unwrap();
+        assert!(home.contains(r#"<meta name="google-site-verification" content="abcXYZ_12-3" />"#));
+        assert!(!home.contains("msvalidate.01"));
+        assert_eq!(crate::config::verification_code(r#"<meta name="msvalidate.01" content="ABC123DEF" />"#), "ABC123DEF");
+        assert_eq!(crate::config::verification_code(" abc-123 "), "abc-123");
     }
 
     #[test]
