@@ -20,6 +20,7 @@ sources:
     date: 2009
     kind: book
     credibility: 3
+    primary: true
     credibility_note: Tài liệu gốc của tác giả price action hiện đại, đọc toàn văn chương 1; tác giả bán khoá học.
     accessed: 2026-11-25
   - title: "Candlestick chart"
@@ -42,6 +43,7 @@ sources:
     publisher: FinanzBuch Verlag (bản tiếng Đức của Japanese Candlestick Charting Techniques)
     kind: book
     credibility: 3
+    primary: true
     credibility_note: Tài liệu gốc của người đưa nến Nhật sang phương Tây, nhưng chỉ đọc được chương mở đầu bản dịch tiếng Đức; phần tiêu chí từng mô hình chưa đọc được.
     accessed: 2026-11-25
 created: 2026-11-25

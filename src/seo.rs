@@ -209,6 +209,21 @@ pub fn note_hints(note: &Note, today: &str) -> Vec<Hint> {
         let faq = extract_faq(&note.body).len();
         h(&mut out, faq >= 2, format!("{faq} câu hỏi thường gặp"), "Thêm mục \"Câu hỏi thường gặp\" với 3–5 câu hỏi — site tự sinh dữ liệu FAQ cho Google/AI.");
     }
+    if note.kind == "topic" {
+        // Lộ trình học 6 cấp: cấu trúc tri thức của chủ đề (Biết → Sáng tạo), không phải mẹo SEO.
+        let mut levels: Vec<usize> = note.learning_path.iter().map(|l| l.level).collect();
+        levels.dedup();
+        let missing: Vec<&str> = (1..=6).filter(|l| !levels.contains(l)).map(crate::kb::level_name).collect();
+        let label = if note.learning_path.is_empty() {
+            "Chưa có mục \"Lộ trình học\" 6 cấp".to_string()
+        } else if missing.is_empty() {
+            "Lộ trình học đủ 6 cấp".to_string()
+        } else {
+            format!("Lộ trình học thiếu cấp: {}", missing.join(", "))
+        };
+        h(&mut out, !note.learning_path.is_empty() && missing.is_empty(), label,
+            "Thêm \"## Lộ trình học\" với \"### 1. Biết\" … \"### 6. Sáng tạo\", dưới mỗi cấp liệt kê [[bài]] (bài chưa có vẫn ghi để thành việc cần nghiên cứu).");
+    }
     if note.kind != "topic" {
         h(&mut out, !note.sources.is_empty(), format!("{} nguồn", note.sources.len()), "Nguồn có tên, ngày và điểm uy tín giúp người đọc lẫn AI tin và trích dẫn.");
     }

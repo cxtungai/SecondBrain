@@ -54,6 +54,7 @@ sources:
     date: 1910
     kind: book
     credibility: 4
+    primary: true
     credibility_note: Tài liệu gốc của Wyckoff, phạm vi công cộng; đã đối chiếu trực tiếp đoạn về "điểm kháng cự".
     accessed: 2026-11-25
   - title: "The Stock Market Barometer: A Study of its Forecast Value Based on Charles H. Dow's Theory of the Price Movement"
@@ -63,6 +64,7 @@ sources:
     date: 1922
     kind: book
     credibility: 4
+    primary: true
     credibility_note: Tài liệu gốc của lý thuyết Dow; phạm vi công cộng, đọc nguyên văn chương I–X.
     accessed: 2026-11-25
   - title: "Reading Price Charts Bar by Bar — Chapter 1: Price Action (trích đoạn của nhà xuất bản)"
@@ -72,6 +74,7 @@ sources:
     date: 2009
     kind: book
     credibility: 3
+    primary: true
     credibility_note: Tài liệu gốc của tác giả price action hiện đại, đọc toàn văn chương 1.
     accessed: 2026-11-25
   - title: "How I Trade and Invest in Stocks and Bonds"
@@ -81,6 +84,7 @@ sources:
     date: 1922
     kind: book
     credibility: 4
+    primary: true
     credibility_note: Tài liệu gốc của Wyckoff, đọc trọn 14 chương trên bản quét thư viện Cornell (bản in lần thứ 5, 1925; không còn hạn chế bản quyền).
     accessed: 2026-11-26
 created: 2026-11-25
@@ -93,7 +97,9 @@ research:
 
 ## Định nghĩa
 
-**Hỗ trợ** (support) là mức hoặc vùng giá mà tại đó lực mua thường đủ mạnh để chặn đà giảm, ít nhất là tạm thời. **Kháng cự** (resistance) là điều ngược lại: vùng giá nơi lực bán thường đủ mạnh để chặn đà tăng (Nguồn [1][3]). Britannica gọi chúng là "sàn và trần có điều kiện", vì sớm muộn giá cũng xuyên qua khi hoàn cảnh thay đổi (Nguồn [4]).
+**Hỗ trợ** (support) và **kháng cự** (resistance) là những mức hoặc vùng giá nơi đà giảm, đà tăng thường dừng lại. Trong tài liệu gốc, Wyckoff (1910) gọi "điểm kháng cự" là mức giá mà thị trường quay đầu sau một nhịp hồi (Nguồn [6]); lý thuyết Dow coi cạnh trên và cạnh dưới của một vùng đi ngang hẹp là ranh giới của giai đoạn tích luỹ hoặc phân phối (Nguồn [7]). Cách nói phổ biến hiện nay: **hỗ trợ** là vùng giá mà lực mua thường đủ mạnh để chặn đà giảm, ít nhất là tạm thời; **kháng cự** là vùng giá nơi lực bán thường đủ mạnh để chặn đà tăng (Nguồn [1][3]).
+
+Britannica gọi chúng là "sàn và trần có điều kiện", vì sớm muộn giá cũng xuyên qua khi hoàn cảnh thay đổi (Nguồn [4]).
 
 ## Giải thích
 

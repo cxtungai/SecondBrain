@@ -51,6 +51,7 @@
               <select name="s_cred"><option value="">Điểm uy tín…</option>{% for c in scale %}<option value="{{ c.score }}"{% if c.score == s.credibility %} selected{% endif %}>{{ c.score }} — {{ c.label }}</option>{% endfor %}</select>
             </div>
             <input name="s_note" placeholder="Lý do chấm điểm (1 câu)" value="{{ s.credibility_note }}" />
+            <label class="check"><input type="checkbox" name="s_primary"{% if s.primary %} checked{% endif %} /> Tài liệu gốc <small>(do chính người đặt ra khái niệm viết, hoặc văn bản chính thức)</small></label>
             <input type="hidden" name="s_extra" value="{{ s.extra }}" />
             <button class="btn btn-ghost btn-small" type="button" data-action="remove-source">Xoá nguồn này</button>
           </div>
@@ -82,6 +83,7 @@
       <select name="s_cred"><option value="">Điểm uy tín…</option>{% for c in scale %}<option value="{{ c.score }}">{{ c.score }} — {{ c.label }}</option>{% endfor %}</select>
     </div>
     <input name="s_note" placeholder="Lý do chấm điểm (1 câu)" />
+    <label class="check"><input type="checkbox" name="s_primary" /> Tài liệu gốc <small>(do chính người đặt ra khái niệm viết, hoặc văn bản chính thức)</small></label>
     <input type="hidden" name="s_extra" value="{}" />
     <button class="btn btn-ghost btn-small" type="button" data-action="remove-source">Xoá nguồn này</button>
   </div>

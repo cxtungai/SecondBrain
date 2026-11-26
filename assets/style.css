@@ -786,6 +786,14 @@ mark {
   background: var(--accent-soft);
 }
 
+.badge-primary {
+  margin-left: 0.35rem;
+  color: var(--text);
+  background: var(--surface-2);
+  border-color: var(--border);
+  vertical-align: 0.1em;
+}
+
 .cred-table {
   border-collapse: collapse;
   width: 100%;
@@ -986,6 +994,90 @@ mark {
 .next-steps {
   max-width: 44rem;
   margin-top: 2rem;
+}
+
+/* ---------- Lộ trình học 6 cấp (trang chủ đề) và bài trước / bài tiếp ---------- */
+.ladder {
+  max-width: 44rem;
+  margin: 1.25rem 0;
+}
+
+.ladder h2 {
+  font-size: 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.ladder ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.ladder-step > a,
+.ladder-step > span {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  height: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+}
+
+.ladder-step > a:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.ladder-num,
+.ladder-step small {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.ladder-step--empty > a,
+.ladder-step--empty > span {
+  border-style: dashed;
+  background: transparent;
+}
+
+.ladder-step--empty strong {
+  color: var(--muted);
+}
+
+.lesson-nav {
+  max-width: 44rem;
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.lesson-nav .card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-decoration: none;
+}
+
+.lesson-nav .lesson-next {
+  text-align: right;
+}
+
+@media (max-width: 560px) {
+  .ladder ol {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lesson-nav {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ---------- Bài viết SEO/GEO ---------- */
@@ -1264,6 +1356,8 @@ mark {
 #sources { display: grid; gap: 0.75rem; }
 .source-row { display: grid; gap: 0.4rem; padding: 0.6rem; border-radius: 8px; background: var(--surface-2); }
 .source-row .btn { justify-self: start; }
+.editor .source-row label.check { display: flex; align-items: center; gap: 0.45rem; font-weight: 400; }
+.editor .source-row input[type='checkbox'] { width: auto; padding: 0; }
 
 @media (max-width: 860px) {
   .desk-grid, .editor-cols, .row2 { grid-template-columns: 1fr; }

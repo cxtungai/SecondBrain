@@ -12,6 +12,7 @@ sources:
     date: 2026
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Hướng dẫn chính thức của Google cho AI Overviews và AI Mode; đọc toàn văn.
     accessed: 2026-11-26
   - title: "Search generative AI control"
@@ -20,6 +21,7 @@ sources:
     date: 2026
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Trang trợ giúp chính thức về nút bật/tắt AI trong Search Console; đọc toàn văn.
     accessed: 2026-11-26
   - title: "RFC 9309: Robots Exclusion Protocol"
@@ -29,6 +31,7 @@ sources:
     date: 2022-09
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Chuẩn chính thức của robots.txt; đọc phần nhóm user-agent và vị trí file.
     accessed: 2026-11-26
   - title: "How to specify a canonical URL with rel=\"canonical\" and other methods"
@@ -36,6 +39,7 @@ sources:
     publisher: Google Search Central
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Tài liệu chính thức về canonical; đọc phần thứ tự mạnh yếu của các tín hiệu.
     accessed: 2026-11-26
   - title: "Build and submit a sitemap"
@@ -43,6 +47,7 @@ sources:
     publisher: Google Search Central
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Tài liệu chính thức về sitemap; đọc phần lastmod.
     accessed: 2026-11-26
   - title: "Introducing AI Performance in Bing Webmaster Tools Public Preview"
@@ -51,6 +56,7 @@ sources:
     date: 2026-02
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Thông báo chính thức về báo cáo trích dẫn AI của Bing; đọc toàn văn.
     accessed: 2026-11-26
 created: 2026-11-26

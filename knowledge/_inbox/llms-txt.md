@@ -13,6 +13,7 @@ sources:
     date: 2024-09-03 (bản 2 sửa 2026-08-10)
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Văn bản đề xuất gốc của người đặt ra llms.txt; đọc toàn văn. Là đề xuất, chưa phải chuẩn chính thức.
     accessed: 2026-11-26
   - title: "Optimizing your website for generative AI features on Google Search"
@@ -21,6 +22,7 @@ sources:
     date: 2026
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Hướng dẫn chính thức của Google, mục "Mythbusting" nói rõ Google Search không dùng llms.txt; đọc toàn văn.
     accessed: 2026-11-26
 created: 2026-11-26

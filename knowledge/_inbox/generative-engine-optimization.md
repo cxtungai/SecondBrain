@@ -13,6 +13,7 @@ sources:
     date: 2024
     kind: paper
     credibility: 5
+    primary: true
     credibility_note: Bài gốc đặt ra khái niệm GEO, đã bình duyệt tại KDD 2024; đọc toàn văn bản HTML v3 (phương pháp, bảng 1–3, phần giới hạn).
     accessed: 2026-11-26
   - title: "What Generative Search Engines Like and How to Optimize Web Content Cooperatively (AutoGEO)"
@@ -30,6 +31,7 @@ sources:
     date: 2026
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Hướng dẫn chính thức của Google cho AI Overviews và AI Mode; đọc toàn văn. Chỉ nói về Google, không về ChatGPT, Perplexity hay Claude.
     accessed: 2026-11-26
   - title: "Optimizing Visibility in Generative Engines: A Critical Survey of Generative Engine Optimization (2023–2026)"
@@ -56,6 +58,7 @@ sources:
     date: 2026-02
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Thông báo chính thức của Bing về báo cáo trích dẫn trong câu trả lời AI; đọc toàn văn.
     accessed: 2026-11-26
 created: 2026-11-26

@@ -15,8 +15,11 @@
         {{ m.status_badge(c) }}
         {% if note.rated %}{{ m.cred(note.cred_title) }}{% endif %}
         <span>Cập nhật {{ c.updated }}</span>
+        <span>⏱ ~{{ read_minutes }} phút đọc</span>
       </div>
-      {% if is_topic %}<p class="note-role">⭐ <strong>Chủ đề chính</strong> — bài tổng quan, đọc trước rồi đi theo các bài con bên dưới.</p>
+      {% if is_topic and ladder %}<p class="note-role">⭐ <strong>Chủ đề chính</strong> — cấp 1 · Biết: bài giới thiệu. Đọc trước, rồi đi theo <a href="#lo-trinh">lộ trình học</a> từ Hiểu tới Sáng tạo.</p>
+      {% elif is_topic %}<p class="note-role">⭐ <strong>Chủ đề chính</strong> — bài tổng quan, đọc trước rồi đi theo các bài con bên dưới.</p>
+      {% elif place and place.level %}<p class="note-role">🪜 Cấp {{ place.level }} · <strong>{{ place.level_name }}</strong> — bài {{ place.index }}/{{ place.total }} trong lộ trình <a href="{{ place.topic.url }}">{{ place.topic.title }}</a></p>
       {% elif place and c.type == 'source' %}<p class="note-role">📚 <strong>Tài liệu gốc</strong> của chủ đề <a href="{{ place.topic.url }}">{{ place.topic.title }}</a> — bản đồ sách để tra cứu, có số trang.</p>
       {% elif place %}<p class="note-role">📖 Bài con <strong>{{ place.index }}/{{ place.total }}</strong> của chủ đề <a href="{{ place.topic.url }}">{{ place.topic.title }}</a></p>{% endif %}
       <h1>{{ c.title }}</h1>
@@ -43,6 +46,23 @@
       {% if note.status == 'outdated' %}<p class="callout callout-bad">Thông tin đã lỗi thời — không dùng cho content mới.</p>{% endif %}
     </header>
 
+    {% if ladder %}
+    <nav class="ladder card" id="lo-trinh" aria-label="Lộ trình học">
+      <h2>Lộ trình học · 6 cấp</h2>
+      <ol>
+        {% for l in ladder %}
+        <li class="ladder-step{% if l.empty %} ladder-step--empty{% endif %}">
+          {% if l.id %}<a href="#{{ l.id }}">{% else %}<span>{% endif %}
+            <span class="ladder-num">Cấp {{ l.level }}</span>
+            <strong>{{ l.name }}</strong>
+            <small>{{ l.status }}</small>
+          {% if l.id %}</a>{% else %}</span>{% endif %}
+        </li>
+        {% endfor %}
+      </ol>
+    </nav>
+    {% endif %}
+
     {% if toc %}
     <details class="toc card" open>
       <summary>Mục lục</summary>
@@ -64,6 +84,7 @@
         {% for s in sources %}
         <li>
           {% if s.url %}<a href="{{ s.url }}" target="_blank" rel="noopener noreferrer">{{ s.title }}</a>{% else %}<strong>{{ s.title }}</strong>{% endif %}
+          {% if s.primary %}<span class="badge badge-primary" title="Do chính người đặt ra / hệ thống hoá khái niệm viết, hoặc văn bản chính thức">📜 Tài liệu gốc</span>{% endif %}
           <span class="src-meta">{{ s.meta }}{% if s.accessed %}{% if s.meta %} · {% endif %}truy cập {{ s.accessed }}{% endif %}</span>
           <span class="src-meta">{{ m.cred(s.cred) }}{% if s.credibility_note %} — {{ s.credibility_note }}{% endif %}</span>
           {% if s.note %}<span class="src-meta">{{ s.note }}</span>{% endif %}
@@ -73,19 +94,25 @@
     </section>
     {% endif %}
 
-    {% if next_reads and parent %}
-    <section class="next-steps">
-      <h2 class="section-title">Đọc tiếp trong “{{ parent.title }}”</h2>
-      <div class="grid">
-        {% for n in next_reads %}
-        <a class="card" href="{{ n.url }}" data-type="{{ n.type }}">
-          <span class="badge badge-type">{{ n.type_label }}</span>
-          <strong style="display:block;margin-top:0.4rem">{{ n.title }}</strong>
-          <span class="stat-line" style="display:block;margin-top:0.25rem">{{ n.summary }}</span>
-        </a>
-        {% endfor %}
-      </div>
-    </section>
+    {% if lesson_nav %}
+    <nav class="lesson-nav" aria-label="Bài trước và bài tiếp trong “{{ lesson_nav.topic.title }}”">
+      {% set p = lesson_nav.prev %}
+      <a class="card lesson-prev" href="{{ p.url }}" data-type="{{ p.type }}">
+        <span class="stat-line">← Bài trước{% if p.level_name %} · {{ p.level_name }}{% endif %}</span>
+        <strong>{{ p.title }}</strong>
+      </a>
+      {% if lesson_nav.next %}{% set n = lesson_nav.next %}
+      <a class="card lesson-next" href="{{ n.url }}" data-type="{{ n.type }}">
+        <span class="stat-line">Bài tiếp{% if n.level_name %} · {{ n.level_name }}{% endif %} →</span>
+        <strong>{{ n.title }}</strong>
+      </a>
+      {% else %}
+      <a class="card lesson-next" href="{{ lesson_nav.topic.url }}">
+        <span class="stat-line">Hết lộ trình →</span>
+        <strong>Về “{{ lesson_nav.topic.title }}”</strong>
+      </a>
+      {% endif %}
+    </nav>
     {% endif %}
   </article>
 

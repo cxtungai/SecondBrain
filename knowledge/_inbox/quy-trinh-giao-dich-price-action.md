@@ -13,6 +13,7 @@ sources:
     date: 2009
     kind: book
     credibility: 3
+    primary: true
     credibility_note: Tài liệu gốc của tác giả price action hiện đại, đọc toàn văn chương 1; tác giả bán khoá học, tỷ lệ thắng là ước tính cá nhân.
     accessed: 2026-11-25
   - title: "Trading Price Action Trends — Chapter 1 (trích đoạn của nhà xuất bản)"
@@ -22,6 +23,7 @@ sources:
     date: 2011
     kind: book
     credibility: 3
+    primary: true
     credibility_note: Tài liệu gốc, đọc toàn văn chương 1; cùng giới hạn như trên.
     accessed: 2026-11-25
   - title: "How to Trade Price Action Manual (trang giới thiệu)"
@@ -30,6 +32,7 @@ sources:
     publisher: Brooks Trading Course
     kind: blog
     credibility: 2
+    primary: true
     credibility_note: Của chính tác giả, trên trang bán khoá học; chỉ đọc được phần mở, phần còn lại dành cho người mua.
     accessed: 2026-11-25
   - title: "Price Action Trading Terms Glossary"
@@ -38,6 +41,7 @@ sources:
     publisher: Brooks Trading Course
     kind: blog
     credibility: 2
+    primary: true
     credibility_note: Bảng thuật ngữ của chính tác giả, trên trang bán khoá học.
     accessed: 2026-11-25
   - title: "How I Trade and Invest in Stocks and Bonds"
@@ -47,6 +51,7 @@ sources:
     date: 1922
     kind: book
     credibility: 4
+    primary: true
     credibility_note: Tài liệu gốc của Wyckoff, không còn hạn chế bản quyền; đọc trọn 14 chương (bản in lần thứ 5, 1925), số trang theo bản này. Bản đồ sách ở ghi chú riêng.
     accessed: 2026-11-25
   - title: "Studies in Tape Reading"
@@ -56,6 +61,7 @@ sources:
     date: 1910
     kind: book
     credibility: 4
+    primary: true
     credibility_note: Tài liệu gốc của Wyckoff, phạm vi công cộng; đọc nguyên văn chương I–VI.
     accessed: 2026-11-25
   - title: "Trading Price Action Reversals — Chapter 25: Trading Guidelines (phần xem trước)"
@@ -65,6 +71,7 @@ sources:
     date: 2012
     kind: book
     credibility: 3
+    primary: true
     credibility_note: Tài liệu gốc; chỉ đọc được phần mở đầu chương.
     accessed: 2026-11-25
 created: 2026-11-25

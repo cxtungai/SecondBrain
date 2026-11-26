@@ -13,6 +13,7 @@ sources:
     date: 1922
     kind: book
     credibility: 4
+    primary: true
     credibility_note: Tài liệu gốc, đọc trọn 14 chương (tr. 15–189) trên bản quét của thư viện Cornell — bản in lần thứ 5 (1925), không còn hạn chế bản quyền ở Mỹ. Chỉ là kinh nghiệm cá nhân, không có số liệu kiểm chứng; tác giả quảng bá tạp chí của mình và có cổ phần ở vài mã nêu trong sách.
     accessed: 2026-11-26
 created: 2026-11-26

@@ -12,6 +12,7 @@ sources:
     date: 2026
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Hướng dẫn chính thức của Google cho AI Overviews và AI Mode; đọc toàn văn.
     accessed: 2026-11-26
   - title: "AI features and your website"
@@ -19,6 +20,7 @@ sources:
     publisher: Google Search Central
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Tài liệu chính thức về cách AI Overviews và AI Mode chọn link; đọc toàn văn.
     accessed: 2026-11-26
   - title: "GEO: Generative Engine Optimization"
@@ -28,6 +30,7 @@ sources:
     date: 2024
     kind: paper
     credibility: 5
+    primary: true
     credibility_note: Bài gốc đặt ra khái niệm GEO, đã bình duyệt; đọc toàn văn.
     accessed: 2026-11-26
 created: 2026-11-26

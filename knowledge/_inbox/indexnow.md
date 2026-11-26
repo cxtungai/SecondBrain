@@ -12,6 +12,7 @@ sources:
     date: 2026
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Tài liệu gốc của giao thức; đọc toàn văn (gửi một URL, gửi danh sách, xác minh khoá, mã phản hồi).
     accessed: 2026-11-26
   - title: "IndexNow — FAQ và danh sách công cụ tham gia"
@@ -20,6 +21,7 @@ sources:
     date: 2026
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Trang chính thức; đọc phần danh sách công cụ tham gia và yêu cầu chia sẻ URL giữa các công cụ (kèm trang searchengines).
     accessed: 2026-11-26
   - title: "Indexing API Quickstart"
@@ -27,6 +29,7 @@ sources:
     publisher: Google Search Central
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Tài liệu chính thức về giới hạn của Indexing API của Google; đọc toàn văn.
     accessed: 2026-11-26
   - title: "Sitemaps ping endpoint is going away"
@@ -35,6 +38,7 @@ sources:
     date: 2023-06
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Thông báo chính thức Google bỏ cách "ping" sitemap và cách Google dùng lastmod; đọc toàn văn.
     accessed: 2026-11-26
   - title: "Build and submit a sitemap"
@@ -42,6 +46,7 @@ sources:
     publisher: Google Search Central
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Tài liệu chính thức về sitemap và trường lastmod; đọc phần lastmod.
     accessed: 2026-11-26
 created: 2026-11-26

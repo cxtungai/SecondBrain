@@ -58,6 +58,7 @@ sources:
     date: 2019                    # năm hoặc ngày phát hành
     kind: book                    # paper | official | data | book | media | education | expert | blog | video | forum | other
     credibility: 4                # 1–5, theo thang bên dưới
+    primary: true                 # tài liệu gốc — xem "Nguồn theo cấp tri thức"
     credibility_note: Sách chuyên môn của tác giả có kinh nghiệm thực tế, có dẫn nguồn
     accessed: 2026-11-25
 created: 2026-11-25
@@ -72,7 +73,7 @@ research:                         # tuỳ chọn — do agent nghiên cứu đi�
 
 | Loại | Dùng cho |
 | --- | --- |
-| `topic` | Chủ đề trụ cột: giới thiệu ngắn + dẫn tới các ghi chú con, nhóm theo loại. |
+| `topic` | Chủ đề trụ cột: bài giới thiệu (cấp Biết) + **Lộ trình học 6 cấp** dẫn tới các ghi chú con (xem "Lộ trình học"). |
 | `concept` | Một khái niệm/thuật ngữ. Câu đầu trả lời thẳng "X là gì?". |
 | `fact` | Số liệu, dữ kiện có thể trích dẫn. **Bắt buộc có nguồn.** |
 | `framework` | Mô hình, phương pháp, quy trình, setup, checklist. |
@@ -107,13 +108,57 @@ Mỗi nguồn được chấm 1–5. Xuất phát từ mức của loại nguồ
 
 Quy tắc dùng điểm: khẳng định quan trọng cần ≥ 2 nguồn độc lập hoặc 1 nguồn điểm 5; nguồn điểm 1 không làm căn cứ cho khẳng định; ghi chú `fact` ở trạng thái `verified` cần ít nhất một nguồn ≥ 3 (`./sb check` sẽ cảnh báo).
 
+### Nguồn theo cấp tri thức
+
+Người dùng dặn (2026-11-26): mỗi cấp của "Lộ trình học" lấy tài liệu theo một quy tắc riêng. Cấp càng gần "X là gì" thì nguồn càng phải gốc.
+
+**Tài liệu gốc** (`primary: true` trong `sources`), một trong ba loại:
+
+- do chính người đặt ra hoặc hệ thống hoá khái niệm / phương pháp viết: sách, bài, chương mẫu của nhà xuất bản, bản dịch của sách đó (vd. Al Brooks cho price action, Wyckoff, Hamilton cho lý thuyết Dow, Nison cho nến Nhật ở phương Tây);
+- văn bản chính thức của tổ chức làm ra thứ được nói tới (vd. Google nói về Google Search, IndexNow.org về IndexNow, RFC 9309 về robots.txt);
+- bài nghiên cứu gốc đặt ra khái niệm (vd. bài GEO năm 2024).
+
+Bài tóm tắt, trang giáo dục, bách khoa, blog thuật lại **không** phải tài liệu gốc, dù uy tín cao. "Gốc" và "uy tín" là hai trục khác nhau: sách của Brooks là tài liệu gốc nhưng chỉ được 3 điểm uy tín vì ông bán khoá học.
+
+| Cấp | Được lấy từ đâu |
+| --- | --- |
+| **1. Biết**: định nghĩa, nguồn gốc, nguyên lý cốt lõi, quy tắc của chính phương pháp | **Bắt buộc tài liệu gốc.** Câu định nghĩa phải dẫn ít nhất một nguồn `primary: true`; nguồn thứ cấp chỉ được diễn giải thêm, đặt sau. Chưa đọc được tài liệu gốc thì ghi rõ "lấy qua nguồn thứ cấp, chưa đối chiếu sách gốc" và đưa vào "Câu hỏi còn mở". |
+| **2. Hiểu**, **3. Vận dụng**: giải thích cơ chế, ví dụ, bài tập vận dụng, cách làm từng bước | **Linh hoạt** giữa tài liệu gốc và nguồn uy tín ≥ 3: sách chuyên môn, sở giao dịch, tổ chức đào tạo có tên tuổi, nghiên cứu, chuyên gia kiểm chứng được. Không được trái với định nghĩa gốc; cách giải thích khác tác giả gốc thì ghi "theo …". Ví dụ tự dựng ghi rõ là giả định. |
+| **4. Phân tích, tổng hợp** | Mỗi trường phái được so sánh phải dẫn tài liệu gốc của chính nó; nhận định so sánh dẫn nguồn uy tín ≥ 3, hoặc ghi rõ là tổng hợp của kho. |
+| **5. Đánh giá** | Nghiên cứu có bình duyệt, dữ liệu sơ cấp, cơ quan quản lý (thường ≥ 4). Lời của chính tác giả về hiệu quả phương pháp của mình **không** phải bằng chứng hiệu quả. |
+| **6. Sáng tạo** | Cách kết hợp phải có người viết thật: tác giả gốc, hoặc người thực hành / tổ chức uy tín ≥ 3. Nói rõ đã có kiểm chứng hay chưa. Không tự nghĩ ra chiến lược. |
+
+Cấp 1 là quy tắc người dùng đặt ra; cấp 2–3 là quy tắc "linh hoạt nguồn uy tín" của người dùng; cấp 4–6 là đề xuất của agent theo cùng tinh thần, người dùng có thể sửa. `./sb check` cảnh báo bản nháp (`topic`, `concept`, `framework`) có câu định nghĩa (đoạn đầu bài, đoạn đầu mục "Định nghĩa" hoặc "Mục đích") không dẫn tài liệu gốc. Trên web, nguồn `primary: true` có nhãn "📜 Tài liệu gốc"; trong form sửa bài trên Bàn làm việc là ô đánh dấu "Tài liệu gốc".
+
 ## Liên kết tri thức
 
 - `[[slug]]`, `[[slug|nhãn hiển thị]]`, `[[slug#tiêu-đề]]`. Cũng có thể viết `[[Tiêu đề]]` hoặc `[[alias]]` — hệ thống tự tìm ghi chú.
 - Link lần xuất hiện đầu tiên của mỗi thuật ngữ đã có ghi chú. Không dùng link Markdown thường cho ghi chú nội bộ.
 - `[[thuật-ngữ-chưa-có]]` là hợp lệ: nó hiện trong trang **Tri thức còn thiếu** (`/gaps/`) — hàng đợi nghiên cứu.
 - Mỗi ghi chú mới phải được ít nhất một ghi chú `topic` liên kết tới, và nên có mục `## Liên quan`.
-- Backlinks, đồ thị, breadcrumb, "Đọc tiếp" đều được sinh tự động từ liên kết.
+- Backlinks, đồ thị, breadcrumb, bài trước / bài tiếp đều được sinh tự động từ liên kết.
+
+## Lộ trình học (6 cấp)
+
+Người dùng dặn (2026-11-26): tri thức của mỗi chủ đề phải dẫn người đọc từ **biết** tới **tự sáng tạo**, theo 6 cấp nhận thức (thang Bloom). Trang chủ đề giới thiệu phương pháp; các bài con giúp hiểu, làm được, rồi đánh giá và kết hợp nó.
+
+| Cấp | Bài phải làm rõ | Thường là |
+| --- | --- | --- |
+| 1. Biết | X là gì, từ đâu ra, gồm những phần nào | phần Tổng quan của ghi chú `topic` |
+| 2. Hiểu | vì sao, cơ chế, thành phần, hiểu sai thường gặp | `concept` |
+| 3. Vận dụng | làm từng bước, ví dụ có số, lỗi khi làm | `framework`, `case-study` |
+| 4. Phân tích, tổng hợp | so sánh trường phái / biến thể, mổ xẻ ví dụ thật, ghép nhiều yếu tố | `concept`, `case-study` |
+| 5. Đánh giá | bằng chứng, số liệu, giới hạn, khi nào không dùng, cách tự kiểm chứng | `fact` |
+| 6. Sáng tạo | kết hợp với phương pháp khác, tự xây kế hoạch — vẫn dựa trên nguồn | `framework` |
+
+Ghi chú `topic` có mục `## Lộ trình học` với các tiêu đề `### 1. Biết — …` … `### 6. Sáng tạo — …` (mẫu: `knowledge/_templates/topic.md`; ví dụ: ghi chú Price action). Dưới mỗi cấp: một câu nói cấp đó trả lời gì, rồi `- [[slug]]: mô tả một dòng`; bài chưa có vẫn ghi liên kết để thành việc cần nghiên cứu. Chương trình tự đọc mục này:
+
+- thứ tự đọc của chủ đề = thứ tự trong lộ trình (cấp 1 → 6); ghi chú `source` không nằm trong lộ trình xếp cuối;
+- trang bài con hiện "Cấp 2 · Hiểu — bài 3/8", thời gian đọc, nút **bài trước / bài tiếp**; Khu duyệt bài ghi "Hiểu · Bài 3/8";
+- trang chủ đề có thẻ **Lộ trình học · 6 cấp** (số bài và số bài còn thiếu mỗi cấp);
+- `knowledge.json` có `learning_path` cho chủ đề; `./sb seo <slug>` báo cấp còn thiếu; tiêu đề cấp 3 không khớp cấp nào thì `./sb check` cảnh báo.
+
+Thêm bài mới cho chủ đề đã có lộ trình → đặt vào đúng cấp (`/connect`). Sắp xếp lại lộ trình chỉ là đổi cách trình bày: không thêm, bớt hay đổi dữ kiện của ghi chú.
 
 ## Bài viết SEO/GEO
 

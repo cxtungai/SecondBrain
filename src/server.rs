@@ -362,7 +362,7 @@ fn editor(site: &Site, project: &Project, rel: &str) -> String {
                     let mut extra = serde_json::Map::new();
                     for (k, v) in m {
                         if let Some(k) = k.as_str() {
-                            if !["title", "url", "kind", "credibility", "credibility_note"].contains(&k) {
+                            if !["title", "url", "kind", "credibility", "credibility_note", "primary"].contains(&k) {
                                 extra.insert(k.to_string(), schema::yaml_to_json(v));
                             }
                         }
@@ -372,9 +372,10 @@ fn editor(site: &Site, project: &Project, rel: &str) -> String {
                         return None;
                     }
                     Some(json!({"title": gs("title"), "url": gs("url"), "kind": gs("kind"), "credibility": gs("credibility").parse::<u8>().ok(),
-                        "credibility_note": gs("credibility_note"), "extra": Json::Object(extra).to_string()}))
+                        "credibility_note": gs("credibility_note"), "primary": matches!(gs("primary").trim(), "true" | "yes" | "co" | "có"),
+                        "extra": Json::Object(extra).to_string()}))
                 }
-                Yaml::String(s) => Some(json!({"title": s, "url": if s.starts_with("http") { s.as_str() } else { "" }, "kind": "", "credibility": Json::Null, "credibility_note": "", "extra": "{}"})),
+                Yaml::String(s) => Some(json!({"title": s, "url": if s.starts_with("http") { s.as_str() } else { "" }, "kind": "", "credibility": Json::Null, "credibility_note": "", "primary": false, "extra": "{}"})),
                 _ => None,
             })
             .collect(),
@@ -598,7 +599,13 @@ fn save_file(project: &Project, rel: &str, data: &Json) -> Result<(), String> {
                     let obj = s.as_object()?;
                     let mut m = Mapping::new();
                     // Thứ tự dễ đọc: tên, link, rồi các trường khác.
-                    for key in ["title", "url", "author", "publisher", "date", "kind", "credibility", "credibility_note", "accessed", "note"] {
+                    for key in ["title", "url", "author", "publisher", "date", "kind", "credibility", "primary", "credibility_note", "accessed", "note"] {
+                        if key == "primary" {
+                            if obj.get(key).and_then(Json::as_bool) == Some(true) {
+                                m.insert(Yaml::String(key.into()), Yaml::Bool(true));
+                            }
+                            continue;
+                        }
                         if let Some(v) = obj.get(key) {
                             let text = match v {
                                 Json::String(x) => x.trim().to_string(),
@@ -613,7 +620,7 @@ fn save_file(project: &Project, rel: &str, data: &Json) -> Result<(), String> {
                         }
                     }
                     for (k, v) in obj {
-                        if !m.contains_key(Yaml::String(k.clone())) && !v.is_null() && v.as_str() != Some("") {
+                        if k != "primary" && !m.contains_key(Yaml::String(k.clone())) && !v.is_null() && v.as_str() != Some("") {
                             if let Ok(y) = serde_yaml::to_value(v) {
                                 m.insert(Yaml::String(k.clone()), y);
                             }
@@ -803,5 +810,26 @@ mod tests {
         assert_eq!((back.google_site_verification.as_str(), back.bing_site_verification.as_str()), ("g-123", "B456"));
         assert_eq!(back.indexnow_key, "e30830c4a30455c9");
         assert_eq!(back.agent_rules, Config::default().agent_rules);
+    }
+
+    #[test]
+    fn luu_form_giu_dau_tai_lieu_goc() {
+        let dir = std::env::temp_dir().join(format!("sb-src-{}", std::process::id()));
+        std::fs::create_dir_all(dir.join("knowledge/_inbox")).unwrap();
+        let rel = "knowledge/_inbox/x.md";
+        std::fs::write(dir.join(rel), "---\ntitle: X\ntype: concept\nsummary: X.\nstatus: draft\ncreated: 2026-01-01\n---\n\nX là gì.\n").unwrap();
+        let project = Project { root: dir.clone() };
+        let data = json!({"body": "X là gì (Nguồn [1]).", "fields": {}, "sources": [
+            {"title": "Sách gốc", "url": "https://a.vn", "kind": "book", "credibility": "4", "credibility_note": "", "primary": true, "author": "A"},
+            {"title": "Bài tóm tắt", "url": "https://b.vn", "kind": "blog", "credibility": "2", "credibility_note": "", "primary": false},
+        ]});
+        save_file(&project, rel, &data).unwrap();
+        let saved = std::fs::read_to_string(dir.join(rel)).unwrap();
+        std::fs::remove_dir_all(&dir).ok();
+        assert_eq!(saved.matches("primary: true").count(), 1);
+        assert!(!saved.contains("primary: false"));
+        let note = crate::kb::parse_note(rel, &saved).unwrap().note;
+        assert_eq!(note.sources.iter().map(|s| s.primary).collect::<Vec<_>>(), [true, false]);
+        assert_eq!(note.sources[0].author.as_deref(), Some("A"));
     }
 }

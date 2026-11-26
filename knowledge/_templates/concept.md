@@ -13,6 +13,7 @@ sources:
     date:
     kind:              # paper | official | data | book | media | education | expert | blog | video | forum | other
     credibility:       # 1–5, xem thang điểm trong AGENTS.md
+    primary:           # true nếu là tài liệu gốc (người đặt ra / hệ thống hoá khái niệm viết, văn bản chính thức)
     credibility_note:  # lý do chấm điểm, 1 câu
     accessed: {{date}}
 created: {{date}}

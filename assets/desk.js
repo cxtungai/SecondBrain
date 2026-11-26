@@ -183,7 +183,8 @@
       try {
         extra = JSON.parse(g('s_extra') || '{}');
       } catch {}
-      return { ...extra, title: g('s_title'), url: g('s_url'), kind: g('s_kind'), credibility: g('s_cred'), credibility_note: g('s_note') };
+      const primary = !!(row.querySelector('[name=s_primary]') || {}).checked;
+      return { ...extra, title: g('s_title'), url: g('s_url'), kind: g('s_kind'), credibility: g('s_cred'), credibility_note: g('s_note'), primary };
     });
     return data;
   };

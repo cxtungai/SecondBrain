@@ -13,6 +13,7 @@ sources:
     date: 1922
     kind: book
     credibility: 4
+    primary: true
     credibility_note: Tài liệu gốc của lý thuyết Dow, có trích nguyên văn xã luận của Dow; phạm vi công cộng, đọc nguyên văn chương I–X.
     accessed: 2026-11-25
   - title: "Trading Price Action Trends — Chapter 1 (trích đoạn của nhà xuất bản)"
@@ -22,6 +23,7 @@ sources:
     date: 2011
     kind: book
     credibility: 3
+    primary: true
     credibility_note: Tài liệu gốc của tác giả price action hiện đại, đọc toàn văn chương 1; tác giả bán khoá học.
     accessed: 2026-11-25
   - title: "Price Action Trading Terms Glossary"
@@ -30,6 +32,7 @@ sources:
     publisher: Brooks Trading Course
     kind: blog
     credibility: 2
+    primary: true
     credibility_note: Bảng thuật ngữ của chính tác giả, trên trang bán khoá học; dùng cho định nghĩa thuật ngữ của Brooks.
     accessed: 2026-11-25
   - title: "What is price action? 6 aspects"
@@ -39,6 +42,7 @@ sources:
     date: 2020-08-30
     kind: blog
     credibility: 2
+    primary: true
     credibility_note: Bài của chính tác giả trên trang bán khoá học; tỷ lệ nêu trong bài là ước tính cá nhân.
     accessed: 2026-11-25
   - title: "How I Trade and Invest in Stocks and Bonds"
@@ -48,6 +52,7 @@ sources:
     date: 1922
     kind: book
     credibility: 4
+    primary: true
     credibility_note: Tài liệu gốc của Wyckoff, đọc trọn 14 chương trên bản quét thư viện Cornell (bản in lần thứ 5, 1925; không còn hạn chế bản quyền).
     accessed: 2026-11-25
   - title: "Reading Price Charts Bar by Bar — Chapter 1: Price Action (trích đoạn của nhà xuất bản)"
@@ -57,6 +62,7 @@ sources:
     date: 2009
     kind: book
     credibility: 3
+    primary: true
     credibility_note: Tài liệu gốc, đọc toàn văn chương 1.
     accessed: 2026-11-25
 created: 2026-11-25

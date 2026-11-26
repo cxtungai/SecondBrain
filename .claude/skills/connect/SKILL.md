@@ -21,7 +21,7 @@ Xem thêm trang `/kien-thuc/` (mục "Chưa thuộc chủ đề nào") trên Bà
 ## 2. Sửa
 
 - **Nhắc tên chưa liên kết:** bọc cụm từ thành `[[slug|cụm từ]]` ở lần xuất hiện đầu tiên trong ghi chú. Bỏ qua nếu nghĩa khác (vd. "code" thường ≠ phương pháp CODE).
-- **Ghi chú cô lập / chưa thuộc chủ đề:** thêm vào ghi chú `topic` phù hợp (đúng mục theo loại) và vào `## Liên quan` của ghi chú gần nghĩa nhất.
+- **Ghi chú cô lập / chưa thuộc chủ đề:** thêm vào ghi chú `topic` phù hợp và vào `## Liên quan` của ghi chú gần nghĩa nhất. Chủ đề có `## Lộ trình học` thì thêm vào **đúng cấp** (1. Biết · 2. Hiểu · 3. Vận dụng · 4. Phân tích, tổng hợp · 5. Đánh giá · 6. Sáng tạo — xem bảng cấp trong skill `research`), thay liên kết "chưa có ghi chú" nếu bài mới lấp đúng chỗ đó. Chủ đề chưa có lộ trình thì đề xuất thêm (báo cáo, hỏi người dùng nếu chủ đề đã đăng).
 - **Chủ đề quá lớn** (> ~15 liên kết): đề xuất tách thành chủ đề con, hỏi người dùng trước khi làm.
 - **Tri thức còn thiếu:** không tự viết nội dung. Liệt kê theo số lần được nhắc và đề xuất người dùng chạy `/research <tên>` cho các mục quan trọng nhất.
 - Chỉ thêm/sửa liên kết — không thay đổi ý nghĩa nội dung, không đổi `updated`.

@@ -2,10 +2,11 @@
 
 use crate::mentions::{find_unlinked_mentions, Mention};
 use crate::schema::{self, Source, KNOWN_FIELDS};
-use crate::text::{count_words, extract_wikilinks, normalize_for_search, slugify, vi_cmp};
+use crate::text::{count_words, extract_wikilinks, markdown_to_plain, normalize_for_search, slugify, vi_cmp};
+use regex::Regex;
 use serde::Serialize;
 use std::collections::{HashMap, HashSet};
-use std::sync::OnceLock;
+use std::sync::{LazyLock, OnceLock};
 
 /// Thư mục bản nháp do AI nghiên cứu, chờ người dùng duyệt (không lên web).
 pub const INBOX_DIR: &str = "knowledge/_inbox";
@@ -77,6 +78,98 @@ pub struct Note {
     pub backlinks: Vec<String>,
     /// Bản nháp này cập nhật cho ghi chú đã đăng nào (slug gốc).
     pub updates: Option<String>,
+    /// Chủ đề: lộ trình học 6 cấp đọc từ mục "## Lộ trình học" (rỗng nếu chưa có).
+    #[serde(skip)]
+    pub learning_path: Vec<PathLevel>,
+}
+
+/// Sáu cấp của lộ trình học, theo thang nhận thức Bloom: từ biết tới tự sáng tạo.
+pub const LEVELS: [&str; 6] = ["Biết", "Hiểu", "Vận dụng", "Phân tích, tổng hợp", "Đánh giá", "Sáng tạo"];
+
+/// Tên cấp 1–6 ("" nếu ngoài khoảng).
+pub fn level_name(level: usize) -> &'static str {
+    level.checked_sub(1).and_then(|i| LEVELS.get(i)).copied().unwrap_or("")
+}
+
+/// Cấp (1–6) của một tiêu đề cấp 3 trong mục "Lộ trình học": "2. Hiểu — vì sao…" → 2.
+pub fn level_of_heading(text: &str) -> Option<usize> {
+    const KEYS: [(&str, usize); 7] =
+        [("biet", 1), ("hieu", 2), ("van-dung", 3), ("phan-tich", 4), ("tong-hop", 4), ("danh-gia", 5), ("sang-tao", 6)];
+    let s = slugify(text);
+    let s = s.trim_start_matches(|c: char| c.is_ascii_digit() || c == '-');
+    KEYS.iter().find(|(k, _)| s == *k || s.starts_with(&format!("{k}-"))).map(|&(_, l)| l)
+}
+
+/// Một cấp trong lộ trình học của chủ đề.
+#[derive(Debug, Clone, Serialize)]
+pub struct PathLevel {
+    pub level: usize,
+    /// Chữ của tiêu đề cấp 3 và id của nó trên trang.
+    pub heading: String,
+    pub id: String,
+    /// Bài đã có (slug), theo thứ tự trong mục.
+    pub notes: Vec<String>,
+    /// Bài còn thiếu: liên kết tới ghi chú chưa có.
+    pub gaps: Vec<String>,
+}
+
+struct RawLevel {
+    level: usize,
+    heading: String,
+    targets: Vec<String>,
+}
+
+/// Đọc mục "## Lộ trình học" của chủ đề: mỗi "### <cấp>" cùng các [[liên kết]] bên dưới.
+/// Trả về các cấp và những tiêu đề cấp 3 không khớp cấp nào.
+fn parse_learning_path(body: &str) -> (Vec<RawLevel>, Vec<String>) {
+    let (mut levels, mut unknown): (Vec<RawLevel>, Vec<String>) = (vec![], vec![]);
+    let (mut fence, mut inside, mut current) = (false, false, None::<usize>);
+    for line in body.lines() {
+        let t = line.trim_start();
+        if t.starts_with("```") || t.starts_with("~~~") {
+            fence = !fence;
+            continue;
+        }
+        if fence {
+            continue;
+        }
+        let hashes = t.chars().take_while(|&c| c == '#').count();
+        if (1..=6).contains(&hashes) && t[hashes..].starts_with(' ') {
+            let text = markdown_to_plain(t[hashes..].trim().trim_end_matches('#').trim());
+            if hashes <= 2 {
+                inside = hashes == 2 && slugify(&text).starts_with("lo-trinh");
+                current = None;
+            } else if inside && hashes == 3 {
+                current = level_of_heading(&text).map(|level| {
+                    levels.push(RawLevel { level, heading: text.clone(), targets: vec![] });
+                    levels.len() - 1
+                });
+                if current.is_none() {
+                    unknown.push(text);
+                }
+            }
+            continue;
+        }
+        if let (true, Some(c)) = (inside, current) {
+            levels[c].targets.extend(extract_wikilinks(line).into_iter().map(|w| w.target));
+        }
+    }
+    (levels, unknown)
+}
+
+/// Vị trí của một bài trong lộ trình chủ đề: thứ tự, cấp, bài trước và bài tiếp.
+pub struct Place<'a> {
+    pub topic: &'a Note,
+    pub index: usize,
+    pub total: usize,
+    pub level: Option<usize>,
+    pub prev: Option<&'a Note>,
+    pub next: Option<&'a Note>,
+}
+
+/// Cấp của một bài trong lộ trình của chủ đề (cấp đầu tiên liệt kê bài đó).
+pub fn level_in(topic: &Note, slug: &str) -> Option<usize> {
+    topic.learning_path.iter().find(|l| l.notes.iter().any(|s| s == slug)).map(|l| l.level)
 }
 
 pub fn is_inbox_path(path: &str) -> bool {
@@ -189,6 +282,7 @@ pub fn parse_note(path: &str, raw: &str) -> Result<ParsedNote, Vec<String>> {
         broken_links: vec![],
         backlinks: vec![],
         updates: None,
+        learning_path: vec![],
     };
     Ok(ParsedNote { note, warnings })
 }
@@ -212,7 +306,82 @@ fn quality_warnings(note: &Note) -> Vec<(Level, String)> {
     if note.summary.chars().count() > 400 {
         out.push((Level::Warning, "summary quá dài (> 400 ký tự) — nên gói trong 1–2 câu".into()));
     }
+    // Cấp Biết: "X là gì" phải chuẩn nên định nghĩa dẫn tài liệu gốc (người dùng dặn 2026-11-26).
+    // Kiểm lúc còn là bản nháp — khi nghiên cứu và khi duyệt.
+    if note.inbox && ["topic", "concept", "framework"].contains(&note.kind.as_str()) {
+        if let Some(msg) = definition_source_problem(note) {
+            out.push((Level::Warning, msg));
+        }
+    }
     out
+}
+
+static CITATION: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\[(\d{1,2})\]").unwrap());
+
+/// Câu định nghĩa của ghi chú: đoạn văn đầu tiên trước tiêu đề đầu tiên, và đoạn văn đầu tiên
+/// của mục "## Định nghĩa" hoặc "## Mục đích" (framework). Bỏ qua đoạn trích (">"), chú thích, code.
+pub fn definition_text(body: &str) -> String {
+    let mut out = String::new();
+    // Vùng đang đọc: mở đầu bài hoặc mục định nghĩa; `taken` = vùng này đã lấy xong đoạn đầu.
+    let (mut fence, mut zone, mut taken, mut started) = (false, true, false, false);
+    for line in body.lines() {
+        let t = line.trim_start();
+        if t.starts_with("```") || t.starts_with("~~~") {
+            fence = !fence;
+            continue;
+        }
+        if fence {
+            continue;
+        }
+        let hashes = t.chars().take_while(|&c| c == '#').count();
+        if (1..=6).contains(&hashes) && t[hashes..].starts_with(' ') {
+            if started {
+                taken = true;
+            }
+            if hashes <= 2 {
+                let s = slugify(&markdown_to_plain(t[hashes..].trim()));
+                zone = s.starts_with("dinh-nghia") || s.starts_with("muc-dich");
+                (taken, started) = (false, false);
+            }
+            continue;
+        }
+        if !zone || taken {
+            continue;
+        }
+        if t.is_empty() {
+            taken |= started;
+            continue;
+        }
+        if !started && (t.starts_with('>') || t.starts_with("<!--")) {
+            continue;
+        }
+        started = true;
+        out.push_str(line);
+        out.push('\n');
+    }
+    out
+}
+
+/// Định nghĩa có dẫn tài liệu gốc (nguồn `primary: true`) không? Trả về lời nhắc nếu chưa.
+fn definition_source_problem(note: &Note) -> Option<String> {
+    let rule = "cấp Biết phải dẫn tài liệu gốc (nguồn có primary: true)";
+    if note.sources.is_empty() {
+        return Some(format!("Chưa có nguồn nào — {rule}"));
+    }
+    if !note.sources.iter().any(|s| s.primary) {
+        return Some(format!("Chưa nguồn nào được đánh dấu tài liệu gốc — {rule}"));
+    }
+    let mut cited: Vec<usize> = CITATION.captures_iter(&definition_text(&note.body)).filter_map(|c| c[1].parse().ok()).collect();
+    cited.sort_unstable();
+    cited.dedup();
+    if cited.is_empty() {
+        return Some(format!("Định nghĩa (đoạn mở đầu, mục Định nghĩa) chưa dẫn nguồn — {rule}"));
+    }
+    if !cited.iter().any(|&n| n >= 1 && note.sources.get(n - 1).is_some_and(|s| s.primary)) {
+        let list: Vec<String> = cited.iter().map(|n| format!("[{n}]")).collect();
+        return Some(format!("Định nghĩa chỉ dẫn {} — không có tài liệu gốc; {rule}", list.join("")));
+    }
+    None
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -363,6 +532,41 @@ impl Kb {
             kb.all[i].links = links;
             kb.all[i].broken_links = broken;
         }
+
+        // Lộ trình học của các chủ đề: cấp của từng bài, bài còn thiếu.
+        for i in 0..kb.all.len() {
+            if kb.all[i].kind != "topic" {
+                continue;
+            }
+            let (raw, unknown) = parse_learning_path(&kb.all[i].body);
+            let mut path = Vec::new();
+            for r in raw {
+                let (mut notes, mut gaps): (Vec<String>, Vec<String>) = (vec![], vec![]);
+                for t in r.targets {
+                    match kb.resolve_idx(&t) {
+                        Some(j) if j != i => {
+                            let s = kb.all[j].slug.clone();
+                            if !notes.contains(&s) {
+                                notes.push(s);
+                            }
+                        }
+                        Some(_) => {}
+                        None if !gaps.contains(&t) => gaps.push(t),
+                        None => {}
+                    }
+                }
+                path.push(PathLevel { level: r.level, id: slugify(&r.heading), heading: r.heading, notes, gaps });
+            }
+            for u in unknown {
+                kb.issues.push(Issue {
+                    path: kb.all[i].path.clone(),
+                    level: Level::Warning,
+                    message: format!("Lộ trình học: \"### {u}\" không khớp cấp nào — dùng Biết, Hiểu, Vận dụng, Phân tích/tổng hợp, Đánh giá, Sáng tạo"),
+                    draft: kb.all[i].inbox,
+                });
+            }
+            kb.all[i].learning_path = path;
+        }
         for i in 0..kb.all.len() {
             for target in kb.all[i].links.clone() {
                 let t = kb.by_slug[&target];
@@ -449,11 +653,13 @@ impl Kb {
         groups
     }
 
-    /// Nhãn vai trò của một bản nháp trong Khu duyệt bài / Bàn làm việc: "Bài con 2/8", "Tài liệu gốc · 8/8"…
+    /// Nhãn vai trò của một bản nháp trong Khu duyệt bài / Bàn làm việc:
+    /// "Hiểu · Bài 2/8" (chủ đề có lộ trình học), "Bài con 2/8", "Tài liệu gốc · 8/8"…
     pub fn role_label(&self, note: &Note) -> String {
-        match self.parent_topic(note, true) {
-            Some((_, i, total)) if note.kind == "source" => format!("Tài liệu gốc · {i}/{total}"),
-            Some((_, i, total)) => format!("Bài con {i}/{total}"),
+        match self.place(note, true) {
+            Some(Place { level: Some(l), index, total, .. }) => format!("{} · Bài {index}/{total}", level_name(l)),
+            Some(Place { index, total, .. }) if note.kind == "source" => format!("Tài liệu gốc · {index}/{total}"),
+            Some(Place { index, total, .. }) => format!("Bài con {index}/{total}"),
             None => "Chưa thuộc chủ đề".into(),
         }
     }
@@ -468,26 +674,51 @@ impl Kb {
         topics
     }
 
-    /// Thứ tự đọc các bài con của một chủ đề: theo thứ tự chủ đề nhắc tới lần đầu, riêng ghi chú
-    /// `source` (bản đồ tài liệu gốc) xếp cuối vì là tài liệu tra cứu, không phải bài học.
+    /// Thứ tự đọc các bài con của một chủ đề: trước hết theo "## Lộ trình học" (cấp 1 → 6), rồi
+    /// các bài khác theo thứ tự chủ đề nhắc tới lần đầu; ghi chú `source` (bản đồ tài liệu gốc)
+    /// không nằm trong lộ trình thì xếp cuối vì là tài liệu tra cứu, không phải bài học.
     pub fn reading_order(&self, topic: &Note, with_drafts: bool) -> Vec<&Note> {
-        let children: Vec<&Note> = topic.links.iter().filter_map(|s| self.get(s)).filter(|n| (with_drafts || !n.inbox) && n.kind != "topic").collect();
-        let (mut lessons, sources): (Vec<&Note>, Vec<&Note>) = children.into_iter().partition(|n| n.kind != "source");
-        lessons.extend(sources);
-        lessons
+        let visible = |n: &&Note| (with_drafts || !n.inbox) && n.kind != "topic";
+        let mut seen: HashSet<&str> = HashSet::new();
+        let mut ordered: Vec<&Note> = topic
+            .learning_path
+            .iter()
+            .flat_map(|l| l.notes.iter())
+            .filter_map(|s| self.get(s))
+            .filter(visible)
+            .filter(|n| seen.insert(n.slug.as_str()))
+            .collect();
+        let children: Vec<&Note> = topic.links.iter().filter_map(|s| self.get(s)).filter(visible).filter(|n| !seen.contains(n.slug.as_str())).collect();
+        let (lessons, sources): (Vec<&Note>, Vec<&Note>) = children.into_iter().partition(|n| n.kind != "source");
+        ordered.extend(lessons);
+        ordered.extend(sources);
+        ordered
     }
 
-    /// Chủ đề mà ghi chú thuộc về và vị trí của nó trong thứ tự đọc của chủ đề (bắt đầu từ 1, trên tổng số).
+    /// Chủ đề mà ghi chú thuộc về, vị trí trong thứ tự đọc (từ 1), cấp trong lộ trình, bài trước và bài tiếp.
     /// `with_drafts`: tính cả chủ đề và bài con đang là bản nháp (Khu duyệt bài, Bàn làm việc).
-    pub fn parent_topic(&self, note: &Note, with_drafts: bool) -> Option<(&Note, usize, usize)> {
+    pub fn place(&self, note: &Note, with_drafts: bool) -> Option<Place<'_>> {
         if note.kind == "topic" {
             return None;
         }
         self.topics_in_order(with_drafts).into_iter().find_map(|t| {
             let order = self.reading_order(t, with_drafts);
             let pos = order.iter().position(|n| n.slug == note.slug)?;
-            Some((t, pos + 1, order.len()))
+            Some(Place {
+                topic: t,
+                index: pos + 1,
+                total: order.len(),
+                level: level_in(t, &note.slug),
+                prev: pos.checked_sub(1).map(|p| order[p]),
+                next: order.get(pos + 1).copied(),
+            })
         })
+    }
+
+    /// Chủ đề mà ghi chú thuộc về và vị trí của nó trong thứ tự đọc của chủ đề (bắt đầu từ 1, trên tổng số).
+    #[cfg(test)]
+    pub fn parent_topic(&self, note: &Note, with_drafts: bool) -> Option<(&Note, usize, usize)> {
+        self.place(note, with_drafts).map(|p| (p.topic, p.index, p.total))
     }
 
     pub fn by_type(&self, kind: &str) -> Vec<&Note> {

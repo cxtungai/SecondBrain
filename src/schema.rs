@@ -101,6 +101,10 @@ pub struct Source {
     pub credibility_note: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub note: Option<String>,
+    /// Tài liệu gốc: do chính người đặt ra / hệ thống hoá khái niệm viết, hoặc văn bản chính thức
+    /// của tổ chức làm ra thứ được nói tới. Định nghĩa (cấp Biết) phải dẫn loại nguồn này.
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub primary: bool,
 }
 
 // ---------- Đọc frontmatter ----------
@@ -257,6 +261,15 @@ pub fn parse_sources(v: Option<&Value>, errors: &mut Vec<String>) -> Vec<Source>
                     credibility,
                     credibility_note: get_str(m, "credibility_note"),
                     note: get_str(m, "note"),
+                    primary: match get_str(m, "primary").as_deref().map(str::trim) {
+                        None | Some("") => false,
+                        Some("true" | "yes" | "co" | "có") => true,
+                        Some("false" | "no" | "khong" | "không") => false,
+                        Some(_) => {
+                            errors.push(format!("sources.{i}.primary: primary là true (tài liệu gốc) hoặc bỏ trống"));
+                            false
+                        }
+                    },
                 }
             }
             _ => continue,
@@ -279,6 +292,7 @@ impl Source {
             credibility: None,
             credibility_note: None,
             note: None,
+            primary: false,
         }
     }
 }

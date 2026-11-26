@@ -37,17 +37,35 @@ Viết ra (trong đầu hoặc trong `brief.md` của harness), **chưa** viết
 3. **Câu hỏi con theo góc nhìn.** Mỗi góc nhìn là một người hỏi khác nhau. Chọn những góc hợp chủ đề; với phương pháp, **hai góc đầu chiếm phần lớn công sức**:
    - *Cơ chế & nguyên lý:* nó hoạt động dựa trên điều gì? Vì sao nó được cho là có tác dụng? Gồm những thành phần nào?
    - *Người thực hành:* họ làm cụ thể từng bước thế nào? Dùng công cụ, thuật ngữ gì? Lỗi thường gặp? Đọc **tài liệu gốc của tác giả chính** (sách, chương mẫu của nhà xuất bản, trang của tác giả), không chỉ bài tóm tắt.
-   - **Phương pháp trading / đầu tư:** kiến thức về phương pháp **phải dựa trên tài liệu gốc**, tức sách hay bài của chính người đặt ra hoặc hệ thống hoá phương pháp. Ví dụ: Al Brooks (price action), Richard D. Wyckoff, Charles Dow / William P. Hamilton / Robert Rhea (lý thuyết Dow), Steve Nison (nến Nhật ở phương Tây), Schabacker và Edwards & Magee (mẫu hình cổ điển). Trước khi tìm, lập danh sách tác giả gốc. Sách cũ thường đã thuộc phạm vi công cộng (Project Gutenberg, archive.org); sách mới thì tìm chương mẫu của nhà xuất bản hoặc trang của tác giả. Trang giáo dục thứ cấp (StockCharts, Britannica, tài liệu của công ty môi giới) **chỉ bổ trợ**: không làm nguồn duy nhất cho một quy tắc của phương pháp. Trong `credibility_note` ghi rõ "tài liệu gốc" hay "thứ cấp". Thiếu tài liệu gốc thì ghi vào "Câu hỏi còn mở". Người dùng dặn điều này ngày 2026-11-25. Khi phương pháp dựa vào một vài cuốn sách chính, **đọc trọn từng cuốn** theo `references/doc-sach-goc.md` thay vì nhặt ý từ vài chương đầu (người dùng dặn 2026-11-26).
+   - **Phương pháp trading / đầu tư:** kiến thức về phương pháp **phải dựa trên tài liệu gốc**, tức sách hay bài của chính người đặt ra hoặc hệ thống hoá phương pháp. Ví dụ: Al Brooks (price action), Richard D. Wyckoff, Charles Dow / William P. Hamilton / Robert Rhea (lý thuyết Dow), Steve Nison (nến Nhật ở phương Tây), Schabacker và Edwards & Magee (mẫu hình cổ điển). Trước khi tìm, lập danh sách tác giả gốc. Sách cũ thường đã thuộc phạm vi công cộng (Project Gutenberg, archive.org); sách mới thì tìm chương mẫu của nhà xuất bản hoặc trang của tác giả. Trang giáo dục thứ cấp (StockCharts, Britannica, tài liệu của công ty môi giới) **chỉ bổ trợ**: không làm nguồn duy nhất cho một quy tắc của phương pháp. Trong `credibility_note` ghi rõ "tài liệu gốc" hay "thứ cấp", và tài liệu gốc thì thêm `primary: true`. Thiếu tài liệu gốc thì ghi vào "Câu hỏi còn mở". Người dùng dặn điều này ngày 2026-11-25. Khi phương pháp dựa vào một vài cuốn sách chính, **đọc trọn từng cuốn** theo `references/doc-sach-goc.md` thay vì nhặt ý từ vài chương đầu (người dùng dặn 2026-11-26).
    - *Định nghĩa & nguồn gốc:* ai đặt ra khái niệm, tài liệu gốc nào?
    - *Nhà nghiên cứu:* có dữ liệu, nghiên cứu, tổng quan nào? Kết quả ra sao?
    - *Người phản biện:* hạn chế, cách hiểu sai, ai nói nó không đúng?
    - *Cơ quan quản lý / pháp lý:* quy định, cảnh báo chính thức?
    - *Người đọc Việt Nam:* bối cảnh, luật, thị trường Việt Nam?
-4. **Kế hoạch ghi chú:** loại (`topic` / `concept` / `fact` / `framework` / `case-study` / `source`) và slug dự kiến cho từng ghi chú.
+4. **Kế hoạch ghi chú theo lộ trình 6 cấp.** Người dùng dặn (2026-11-26): tri thức của một chủ đề phải dẫn người đọc qua 6 cấp nhận thức (thang Bloom). Xếp câu hỏi con và ghi chú dự kiến vào đúng cấp:
+
+   | Cấp | Người đọc làm được | Câu hỏi | Ghi chú thường dùng |
+   | --- | --- | --- | --- |
+   | 1. Biết | biết X là gì | là gì, từ đâu ra, gồm những phần nào | phần Tổng quan của `topic` |
+   | 2. Hiểu | giải thích được | vì sao, cơ chế, thành phần, hiểu sai | `concept` |
+   | 3. Vận dụng | làm được | từng bước, ví dụ có số, lỗi khi làm | `framework`, `case-study` |
+   | 4. Phân tích, tổng hợp | tách và ghép | so sánh trường phái / biến thể, mổ xẻ một ví dụ thật, ghép nhiều yếu tố | `concept`, `case-study` |
+   | 5. Đánh giá | nhận định đúng sai, giới hạn | bằng chứng, số liệu, giới hạn, khi nào không dùng, cách tự kiểm chứng | `fact` |
+   | 6. Sáng tạo | tự xây cách làm | kết hợp với phương pháp khác, tự lập kế hoạch | `framework` |
+
+   Ghi loại và slug dự kiến cho từng ghi chú. Một lượt nghiên cứu không cần lấp đủ 6 cấp; cấp chưa làm thì ghi liên kết `[[slug]]` vào lộ trình để thành việc cần nghiên cứu. Cấp Sáng tạo **vẫn phải có nguồn** (cách chính tác giả gốc kết hợp, tài liệu chính thức), không tự bịa chiến lược mới.
 
 Mức **Sâu**: nói ngắn kế hoạch cho người dùng trước khi làm tiếp.
 
 ## 2. Tìm và đọc nguồn — theo từng đợt
+
+**Nguồn theo cấp** (người dùng dặn 2026-11-26, chi tiết ở `AGENTS.md` mục "Nguồn theo cấp tri thức"):
+
+- **Biết** (định nghĩa, nguồn gốc, nguyên lý, quy tắc của chính phương pháp): **bắt buộc tài liệu gốc**, đánh dấu `primary: true`. Tìm tài liệu gốc **trước**, rồi mới tới nguồn khác. Không có thì ghi rõ trong bài là lấy qua nguồn thứ cấp, chưa đối chiếu, và đưa vào "Câu hỏi còn mở".
+- **Hiểu, Vận dụng** (giải thích, ví dụ, bài tập vận dụng, từng bước): linh hoạt giữa tài liệu gốc và nguồn uy tín ≥ 3, miễn không trái định nghĩa gốc.
+- **Phân tích**: mỗi trường phái dẫn tài liệu gốc của nó. **Đánh giá**: nghiên cứu, dữ liệu sơ cấp, cơ quan quản lý. **Sáng tạo**: chỉ cách kết hợp đã có người viết (tác giả gốc, nguồn ≥ 3).
+- Sau khi viết: `./sb check --inbox --verbose`. Cảnh báo "Định nghĩa … không có tài liệu gốc" nghĩa là câu định nghĩa (đoạn đầu bài, đoạn đầu mục Định nghĩa / Mục đích) chưa dẫn nguồn `primary: true`.
 
 - **Đợt 1, quét rộng:** WebSearch cho từng câu hỏi con, cả tiếng Anh và tiếng Việt. Chạy nhiều truy vấn trong cùng một lượt. Ghi lại các ứng viên nguồn.
 - **Đợt 2, đào sâu nguồn gốc:** đọc trực tiếp từng trang; với số liệu, **truy tới nguồn sớm nhất** (bài báo → nghiên cứu → dữ liệu gốc). Không tổng hợp từ đoạn trích của kết quả tìm kiếm. Trang khó đọc (PDF, bị chặn, cần đăng nhập): làm theo `references/truy-cap-nguon.md`.
@@ -71,6 +89,7 @@ Mức **Sâu**: nói ngắn kế hoạch cho người dùng trước khi làm ti
 ## 4. Viết bài tổng hợp
 
 - **Chọn loại ghi chú:** chủ đề rộng (vd. "Price action") → `topic` làm trụ cột kèm 2–4 ghi chú con, trong đó **ít nhất một ghi chú `framework` hướng dẫn cách dùng từng bước**; một khái niệm → `concept`; phương pháp, setup, quy trình → `framework`; số liệu → `fact`; ví dụ thực tế → `case-study`; tóm tắt một tài liệu → `source`.
+- **Ghi chú `topic` có mục `## Lộ trình học`** với `### 1. Biết — …` tới `### 6. Sáng tạo — …` (theo `knowledge/_templates/topic.md`). Dưới mỗi cấp: một câu nói cấp đó trả lời gì, rồi danh sách `- [[slug]]: mô tả một dòng`. Web đọc mục này để xếp thứ tự đọc, hiện "Cấp 2 · Hiểu — bài 3/8", nút bài trước / bài tiếp và thẻ 6 cấp; `./sb seo <slug> --drafts` báo cấp còn thiếu. Bài mới cho chủ đề đã có thì thêm vào đúng cấp trong lộ trình của chủ đề đó. Ví dụ mẫu: `knowledge/_inbox/price-action.md` (hoặc `topics/price-action.md` khi đã đăng).
 - Theo template `knowledge/_templates/<type>.md`; xoá các chú thích `<!-- -->` khi đã viết xong phần đó.
 - Viết tiếng Việt, rõ ràng, có cấu trúc. **Câu đầu tiên trả lời thẳng "X là gì?"**: Google/AI hay trích câu này.
 - **Dễ được trích (GEO), theo `references/geo.md`:** mỗi mục `##` mở bằng ý chính và gọi đúng tên chủ thể (không mở bằng "Nó / Điều này / Tuy nhiên"); mỗi đoạn một ý; bảng khi so sánh, danh sách đánh số khi có bước; trích ngắn nguyên văn tài liệu gốc kèm số trang cho ý cốt lõi. Đây chỉ là cách trình bày: **không thêm, bớt hay đổi ý của nguồn để đạt gợi ý SEO** (người dùng dặn 2026-11-26).

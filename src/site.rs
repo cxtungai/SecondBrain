@@ -2,7 +2,7 @@
 //! Dùng chung cho `secondbrain build` (ghi ra dist/) và Bàn làm việc (phục vụ trực tiếp, có bản nháp).
 
 use crate::articles::{intent_label, Article, INTENTS};
-use crate::kb::{Kb, Level, Note};
+use crate::kb::{level_in, level_name, Kb, Level, Note};
 use crate::project::Loaded;
 use crate::render::{extract_faq, extract_headings, render_html, to_portable_markdown, LinkTarget};
 use crate::schema::{self, credibility_info, source_kind_label, status_info, type_label, NOTE_TYPES, STATUSES};
@@ -565,8 +565,8 @@ impl Site {
         related.sort_by(|a, b| b.0.cmp(&a.0));
         let original = note.updates.as_deref().and_then(|s| kb.get(s));
         let with_drafts = self.dev || self.review.is_some();
-        let place = kb.parent_topic(note, with_drafts);
-        let parent = place.map(|(p, _, _)| p);
+        let place = kb.place(note, with_drafts);
+        let parent = place.as_ref().map(|p| p.topic);
         let crumbs = vec![
             json!({"name": "Trang chủ", "href": self.url("")}),
             match parent {
@@ -575,18 +575,51 @@ impl Site {
             },
             json!({"name": note.title, "href": self.note_url(&note.slug)}),
         ];
-        // "Đọc tiếp": các bài sau bài này trong thứ tự đọc của chủ đề, rồi tới các bài trước.
-        let next_reads: Vec<Json> = parent
-            .map(|p| {
-                let order: Vec<&Note> = kb.reading_order(p, with_drafts);
-                let at = order.iter().position(|n| n.slug == note.slug).map_or(0, |i| i + 1);
-                order[at..].iter().chain(order[..at].iter())
-                    .filter(|n| n.slug != note.slug && !note.links.contains(&n.slug))
-                    .take(4)
-                    .map(|n| self.note_card(n))
-                    .collect()
+        // Bài trước / bài tiếp theo thứ tự đọc của chủ đề; bài đầu thì "bài trước" là chính chủ đề (bài giới thiệu).
+        let lesson = |n: &Note, topic: &Note| {
+            let mut c = self.note_card(n);
+            c["level_name"] = json!(level_in(topic, &n.slug).map(level_name));
+            c
+        };
+        let lesson_nav = place.as_ref().map(|p| {
+            json!({
+                "topic": self.link(p.topic),
+                "prev": p.prev.map(|n| lesson(n, p.topic)).unwrap_or_else(|| {
+                    let mut c = self.note_card(p.topic);
+                    c["level_name"] = json!(if p.topic.learning_path.is_empty() { "Chủ đề chính" } else { level_name(1) });
+                    c
+                }),
+                "next": p.next.map(|n| lesson(n, p.topic)),
             })
-            .unwrap_or_default();
+        });
+        // Thẻ "Lộ trình học" 6 cấp ở đầu trang chủ đề.
+        let ladder: Vec<Json> = if note.learning_path.is_empty() {
+            vec![]
+        } else {
+            (1..=6)
+                .map(|lv| {
+                    let found: Vec<_> = note.learning_path.iter().filter(|l| l.level == lv).collect();
+                    let shown = |s: &&String| kb.get(s).is_some_and(|n| with_drafts || !n.inbox);
+                    let count = found.iter().flat_map(|l| l.notes.iter()).filter(shown).count();
+                    let all = found.iter().map(|l| l.notes.len() + l.gaps.len()).sum::<usize>();
+                    let mut parts: Vec<String> = vec![];
+                    if lv == 1 {
+                        parts.push("Bài này".into());
+                    }
+                    if count > 0 {
+                        parts.push(format!("{count} bài"));
+                    }
+                    if all > count {
+                        parts.push(format!("{} bài còn thiếu", all - count));
+                    }
+                    if parts.is_empty() {
+                        parts.push("Chưa có bài".into());
+                    }
+                    json!({"level": lv, "name": level_name(lv), "id": found.first().map(|l| l.id.clone()),
+                        "status": parts.join(" · "), "empty": lv > 1 && count == 0})
+                })
+                .collect()
+        };
         let sources: Vec<Json> = note
             .sources
             .iter()
@@ -596,7 +629,8 @@ impl Site {
                     .flatten()
                     .collect();
                 json!({"title": s.title, "url": s.url, "meta": meta.join(" · "), "accessed": s.accessed.as_deref().map(format_date),
-                    "cred": cred_view(s.credibility.map(|c| c as f64), true, None), "credibility_note": s.credibility_note, "note": s.note})
+                    "cred": cred_view(s.credibility.map(|c| c as f64), true, None), "credibility_note": s.credibility_note, "note": s.note,
+                    "primary": s.primary})
             })
             .collect();
         let articles: Vec<Json> = if note.inbox { vec![] } else { self.data.articles.for_note(&note.slug).iter().map(|a| self.article_card(a)).collect() };
@@ -639,9 +673,11 @@ impl Site {
             "original": original.map(|o| self.link(o)),
             "crumbs": crumbs, "html": self.page_html(&note.slug, &note.body, false),
             "toc": if headings.len() >= 3 { self.toc(&note.body) } else { vec![] },
-            "sources": sources, "parent": parent.map(|p| self.link(p)), "next_reads": next_reads,
-            "place": place.map(|(p, i, total)| json!({"topic": self.link(p), "index": i, "total": total})),
-            "is_topic": note.kind == "topic",
+            "sources": sources, "parent": parent.map(|p| self.link(p)), "lesson_nav": lesson_nav,
+            "place": place.as_ref().map(|p| json!({"topic": self.link(p.topic), "index": p.index, "total": p.total,
+                "level": p.level, "level_name": p.level.map(level_name)})),
+            "is_topic": note.kind == "topic", "ladder": ladder,
+            "read_minutes": (note.word_count as f64 / 220.0).round().max(1.0) as usize,
             "backlinks": backlinks.iter().map(|n| self.link(n)).collect::<Vec<_>>(),
             "outgoing": outgoing.iter().map(|n| self.link(n)).collect::<Vec<_>>(),
             "broken": note.broken_links.iter().map(|b| json!({"name": b, "href": self.gap_href(b)})).collect::<Vec<_>>(),
@@ -985,6 +1021,15 @@ impl Site {
         if !n.extra.is_empty() {
             m["extra"] = Json::Object(n.extra.clone());
         }
+        if !n.learning_path.is_empty() {
+            // Lộ trình học 6 cấp: chỉ giữ bài đã đăng, bài còn thiếu ghi riêng.
+            let kb = self.kb();
+            m["learning_path"] = json!(n.learning_path.iter().map(|l| json!({
+                "level": l.level, "name": level_name(l.level),
+                "notes": l.notes.iter().filter(|s| kb.get(s).is_some_and(|x| !x.inbox)).collect::<Vec<_>>(),
+                "missing": l.gaps.iter().cloned().chain(l.notes.iter().filter(|s| kb.get(s).is_some_and(|x| x.inbox)).cloned()).collect::<Vec<_>>(),
+            })).collect::<Vec<_>>());
+        }
         m
     }
 
@@ -993,6 +1038,7 @@ impl Site {
         if let Some(o) = fm.as_object_mut() {
             o.remove("links");
             o.remove("backlinks");
+            o.remove("learning_path"); // đã có trong nội dung (mục "Lộ trình học")
         }
         let yaml = serde_yaml::to_string(&fm).unwrap_or_default();
         let mut related: Vec<&Note> = Vec::new();
@@ -1366,6 +1412,82 @@ mod tests {
         assert!(index.contains("Chưa thuộc chủ đề"));
         let page = String::from_utf8(site.render("duyet/notes/a/").unwrap().body).unwrap();
         assert!(page.contains("Bài con <strong>2/3</strong>"));
+    }
+
+    #[test]
+    fn lo_trinh_hoc_sau_cap() {
+        let note = |path: &str, title: &str, kind: &str, body: &str| FileEntry {
+            path: path.into(),
+            raw: format!("---\ntitle: {title}\ntype: {kind}\nsummary: Mẫu.\nstatus: draft\ncreated: 2026-01-01\n---\n{body}\n"),
+        };
+        let topic = "Giới thiệu, nhắc [[c]] trước.\n\n## Lộ trình học\n\n### 1. Biết — là gì\n\nPhần trên.\n\n\
+            ### 2. Hiểu\n\n- [[b]]\n- [[a]]\n\n### 3. Vận dụng: làm thế nào\n\n- [[c]]\n- [[chua-co]]\n\n\
+            ### Đọc thêm\n\n- [[a]]\n\n### 6. Sáng tạo\n\n```\n[[trong-code]]\n```\n\n## Tài liệu gốc\n\n- [[sach]]\n";
+        let files = vec![
+            note("knowledge/_inbox/pa.md", "PA", "topic", topic),
+            note("knowledge/_inbox/sach.md", "Sách", "source", "Sách gốc."),
+            note("knowledge/_inbox/a.md", "A", "concept", "A."),
+            note("knowledge/_inbox/b.md", "B", "concept", "B."),
+            note("knowledge/_inbox/c.md", "C", "framework", "C."),
+        ];
+        let kb = Kb::build(&files, true);
+        let pa = kb.get("pa").unwrap();
+        let levels: Vec<(usize, Vec<&str>, Vec<&str>)> = pa
+            .learning_path
+            .iter()
+            .map(|l| (l.level, l.notes.iter().map(String::as_str).collect(), l.gaps.iter().map(String::as_str).collect()))
+            .collect();
+        assert_eq!(levels, [(1, vec![], vec![]), (2, vec!["b", "a"], vec![]), (3, vec!["c"], vec!["chua-co"]), (6, vec![], vec![])]);
+        assert_eq!(pa.learning_path[2].id, "3-van-dung-lam-the-nao");
+        // Thứ tự đọc theo lộ trình (không theo lần nhắc đầu), tài liệu gốc ngoài lộ trình xếp cuối.
+        assert_eq!(kb.reading_order(pa, true).iter().map(|n| n.slug.as_str()).collect::<Vec<_>>(), ["b", "a", "c", "sach"]);
+        assert_eq!(kb.role_label(kb.get("a").unwrap()), "Hiểu · Bài 2/4");
+        assert_eq!(kb.role_label(kb.get("sach").unwrap()), "Tài liệu gốc · 4/4");
+        let p = kb.place(kb.get("c").unwrap(), true).unwrap();
+        assert_eq!((p.level, p.prev.map(|n| n.slug.as_str()), p.next.map(|n| n.slug.as_str())), (Some(3), Some("a"), Some("sach")));
+        assert!(kb.issues.iter().any(|i| i.message.contains("Đọc thêm") && i.level == Level::Warning));
+
+        let articles = Articles::build(&[], &kb, true);
+        let site = Site::new(Loaded { config: Config::default(), config_error: None, kb, articles, figures: Default::default() }, "/Repo", None, false)
+            .into_review(Review { repo: Some("chu/kho".into()), branch: Some("main".into()) });
+        let topic_page = String::from_utf8(site.render("duyet/notes/pa/").unwrap().body).unwrap();
+        assert!(topic_page.contains("Lộ trình học · 6 cấp"));
+        assert!(topic_page.contains("href=\"#2-hieu\""));
+        assert!(topic_page.contains("1 bài còn thiếu"));
+        let b = String::from_utf8(site.render("duyet/notes/b/").unwrap().body).unwrap();
+        assert!(b.contains("Cấp 2 · <strong>Hiểu</strong>"));
+        assert!(b.contains("← Bài trước · Biết") && b.contains("Bài tiếp · Hiểu →"));
+        let sach = String::from_utf8(site.render("duyet/notes/sach/").unwrap().body).unwrap();
+        assert!(sach.contains("Hết lộ trình"));
+    }
+
+    #[test]
+    fn dinh_nghia_phai_dan_tai_lieu_goc() {
+        let srcs = "sources:\n  - title: Tóm tắt\n    credibility: 3\n  - title: Sách gốc\n    credibility: 4\n    primary: true\n";
+        let note = |path: &str, body: &str| FileEntry {
+            path: path.into(),
+            raw: format!("---\ntitle: T\ntype: concept\nsummary: Mẫu.\nstatus: draft\n{srcs}created: 2026-01-01\n---\n{body}\n"),
+        };
+        let warn = |kb: &Kb, path: &str| kb.issues.iter().filter(|i| i.path == path).any(|i| i.message.contains("tài liệu gốc"));
+        let files = vec![
+            note("knowledge/_inbox/a.md", "A là gì (Nguồn [1]).\n\n## Giải thích\n\nTheo sách (Nguồn [2])."),
+            note("knowledge/_inbox/b.md", "B là gì (Nguồn [1][2])."),
+            note("knowledge/_inbox/c.md", "C là gì.\n\n## Định nghĩa\n\nC là … (Nguồn [2]).\n\n```\n[1]\n```"),
+            note("knowledge/_inbox/d.md", "D là gì, chưa dẫn nguồn."),
+            note("knowledge/concepts/e.md", "E đã đăng (Nguồn [1])."),
+            // Chỉ câu định nghĩa (đoạn đầu của mục) mới tính: nhắc sách gốc ở đoạn sau không đủ.
+            note("knowledge/_inbox/f.md", "## Mục đích\n\nF là … (Nguồn [1]).\n\nTheo sách gốc (Nguồn [2])."),
+            note("knowledge/_inbox/g.md", "> Lưu ý chung (Nguồn [1]).\n\nG là … (Nguồn [2]).\n\n## Mục đích\n\nDùng để …"),
+        ];
+        let kb = Kb::build(&files, true);
+        assert!(warn(&kb, "knowledge/_inbox/f.md"));
+        assert!(!warn(&kb, "knowledge/_inbox/g.md"), "bỏ qua đoạn trích ở đầu bài");
+        assert!(warn(&kb, "knowledge/_inbox/a.md"), "định nghĩa chỉ dẫn nguồn thứ cấp");
+        assert!(!warn(&kb, "knowledge/_inbox/b.md"));
+        assert!(!warn(&kb, "knowledge/_inbox/c.md"), "mục Định nghĩa dẫn tài liệu gốc");
+        assert!(warn(&kb, "knowledge/_inbox/d.md"));
+        assert!(!warn(&kb, "knowledge/concepts/e.md"), "chỉ kiểm bản nháp");
+        assert!(kb.get("b").unwrap().sources[1].primary && !kb.get("b").unwrap().sources[0].primary);
     }
 
     #[test]

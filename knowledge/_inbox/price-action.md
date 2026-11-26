@@ -13,6 +13,7 @@ sources:
     date: 2009
     kind: book
     credibility: 3
+    primary: true
     credibility_note: Tài liệu gốc của tác giả price action hiện đại, đọc toàn văn chương 1; tác giả bán khoá học, các tỷ lệ thắng là ước tính cá nhân.
     accessed: 2026-11-25
   - title: "Trading Price Action Trends — Chapter 1 (trích đoạn của nhà xuất bản)"
@@ -22,6 +23,7 @@ sources:
     date: 2011
     kind: book
     credibility: 3
+    primary: true
     credibility_note: Tài liệu gốc, đọc toàn văn chương 1; cùng giới hạn như trên.
     accessed: 2026-11-25
   - title: "Trading Price Action Reversals — Chapter 25: Trading Guidelines (phần xem trước)"
@@ -31,6 +33,7 @@ sources:
     date: 2012
     kind: book
     credibility: 3
+    primary: true
     credibility_note: Tài liệu gốc; chỉ đọc được phần mở đầu và 3 nguyên tắc đầu trong 78 nguyên tắc.
     accessed: 2026-11-25
   - title: "What is price action? 6 aspects"
@@ -40,6 +43,7 @@ sources:
     date: 2020-08-30
     kind: blog
     credibility: 2
+    primary: true
     credibility_note: Bài của chính tác giả nhưng trên trang bán khoá học; dùng để nêu quan điểm của Brooks, không làm căn cứ cho số liệu.
     accessed: 2026-11-25
   - title: "The Stock Market Barometer: A Study of its Forecast Value Based on Charles H. Dow's Theory of the Price Movement"
@@ -49,6 +53,7 @@ sources:
     date: 1922
     kind: book
     credibility: 4
+    primary: true
     credibility_note: Tài liệu gốc của lý thuyết Dow (người kế tục Dow, có trích nguyên văn xã luận của Dow); phạm vi công cộng, đọc nguyên văn chương I–X.
     accessed: 2026-11-25
   - title: "Studies in Tape Reading"
@@ -58,6 +63,7 @@ sources:
     date: 1910
     kind: book
     credibility: 4
+    primary: true
     credibility_note: Tài liệu gốc của Wyckoff, phạm vi công cộng; đọc nguyên văn chương I–VI (khoảng nửa đầu sách).
     accessed: 2026-11-25
   - title: "How I Trade and Invest in Stocks and Bonds"
@@ -67,6 +73,7 @@ sources:
     date: 1922
     kind: book
     credibility: 4
+    primary: true
     credibility_note: Tài liệu gốc của Wyckoff, đọc trọn 14 chương trên bản quét thư viện Cornell (bản in lần thứ 5, 1925; không còn hạn chế bản quyền). Bản đồ sách có số trang ở ghi chú riêng.
     accessed: 2026-11-25
   - title: "Technische Analyse mit Candlesticks — Kapitel 1: Einleitung (bản đọc thử của nhà xuất bản)"
@@ -75,6 +82,7 @@ sources:
     publisher: FinanzBuch Verlag (bản tiếng Đức của Japanese Candlestick Charting Techniques)
     kind: book
     credibility: 3
+    primary: true
     credibility_note: Tài liệu gốc của người đưa nến Nhật sang phương Tây, nhưng chỉ đọc được chương mở đầu bản dịch tiếng Đức.
     accessed: 2026-11-25
   - title: "Foundations of Technical Analysis: Computational Algorithms, Statistical Inference, and Empirical Implementation"
@@ -96,7 +104,7 @@ research:
 
 **Price action** (hành động giá) là phương pháp đọc thị trường và ra quyết định giao dịch dựa trên chính diễn biến của giá: giá đang có xu hướng hay đi ngang, phản ứng thế nào ở các vùng giá quan trọng, và từng thanh giá cho thấy bên mua hay bên bán đang kiểm soát (Nguồn [1][2]). Theo Al Brooks, tác giả hệ thống hoá price action hiện đại, price action là bất kỳ cách thể hiện nào của chuyển động giá; người giao dịch nên đọc chính giá thay vì phủ chỉ báo lên biểu đồ (Nguồn [4]). Đây là một nhánh của [[phan-tich-ky-thuat|phân tích kỹ thuật]].
 
-> Ghi chú này chỉ cung cấp kiến thức, **không phải khuyến nghị đầu tư**. Giao dịch ngắn hạn có rủi ro mất vốn rất cao; xem phần "Bằng chứng và rủi ro" ở cuối bài.
+> Ghi chú này chỉ cung cấp kiến thức, **không phải khuyến nghị đầu tư**. Giao dịch ngắn hạn có rủi ro mất vốn rất cao; xem cấp 5 "Đánh giá" trong phần Lộ trình học.
 
 ## Tổng quan
 
@@ -144,41 +152,63 @@ Chi tiết ở [[quy-trinh-giao-dich-price-action]]:
 
 Chỉ báo là phép tính từ giá, nên luôn đi sau giá. Brooks cho rằng phủ chỉ báo lên biểu đồ chỉ làm người giao dịch khó thấy giá hơn và giảm cơ hội thành công (Nguồn [4]). Hamilton cũng thấy không cần ghép thêm các chỉ số khác vào chỉ số giá, vì giá đã phản ánh chúng (Nguồn [5]).
 
-### Hạn chế của phương pháp
+## Lộ trình học
+
+Học price action theo 6 cấp, từ biết tới tự sáng tạo: mỗi cấp trả lời một câu hỏi và dựa trên cấp trước nó. Bài ghi "chưa có ghi chú" là phần đang chờ nghiên cứu.
+
+### 1. Biết — price action là gì
+
+Phần **Tổng quan** của bài này trả lời câu hỏi đầu tiên: price action là gì, bắt nguồn từ đâu, dựa trên nguyên lý nào và đọc những gì trên biểu đồ.
+
+- [[phan-tich-ky-thuat]]: lĩnh vực rộng hơn mà price action thuộc về *(chưa có ghi chú)*.
+
+### 2. Hiểu — vì sao giá chuyển động như vậy
+
+Cấp Hiểu giải thích từng thành phần mà price action đọc: chúng là gì, hình thành ra sao và vì sao có ý nghĩa.
+
+- [[xu-huong-gia]]: xu hướng tăng, giảm, đi ngang theo lý thuyết Dow và Brooks.
+- [[ho-tro-va-khang-cu]]: vùng giá nơi đà giảm hoặc đà tăng thường dừng lại.
+- [[bieu-do-nen-nhat]]: cách đọc thân và bóng nến.
+
+### 3. Vận dụng — từ biểu đồ tới một lệnh cụ thể
+
+Cấp Vận dụng đưa các thành phần vào một lệnh: nhận ra tín hiệu, vào lệnh, đặt dừng lỗ và quản lý lệnh.
+
+- [[mau-hinh-nen]]: các mô hình nến và cách đánh giá thanh tín hiệu.
+- [[quy-trinh-giao-dich-price-action]]: các bước từ đọc bối cảnh tới quản lý lệnh.
+- [[quan-ly-rui-ro-giao-dich]]: khối lượng lệnh, giới hạn thua lỗ *(chưa có ghi chú)*.
+- [[cac-loai-lenh-giao-dich]]: lệnh thị trường, lệnh dừng, lệnh giới hạn *(chưa có ghi chú)*.
+
+### 4. Phân tích, tổng hợp — ghép nhiều yếu tố thành một nhận định
+
+Cấp Phân tích, tổng hợp tách một biểu đồ thành bối cảnh, vùng giá, tín hiệu, rồi ghép chúng lại; so sánh các trường phái; đọc nhiều khung thời gian cùng lúc. Bảng "Nguồn gốc" ở phần Tổng quan là bản so sánh tóm tắt.
+
+- [[so-sanh-cac-truong-phai-price-action]]: Dow, Wyckoff, nến Nhật và Brooks giống và khác nhau ở đâu *(chưa có ghi chú)*.
+- [[phan-tich-da-khung-thoi-gian]]: ghép nhận định trên nhiều khung thời gian *(chưa có ghi chú)*.
+- Case study phân tích một biểu đồ thật từ đầu tới cuối: chưa có.
+
+### 5. Đánh giá — phương pháp hiệu quả tới đâu, giới hạn ở đâu
+
+Cấp Đánh giá nhìn price action bằng bằng chứng và giới hạn của chính nó, trước khi dùng bằng tiền thật.
+
+**Hạn chế của phương pháp:**
 
 - **Chủ quan.** Brooks thừa nhận mọi thứ đều chủ quan, không có bộ quy tắc dễ dàng nào để kiếm tiền (Nguồn [3]). Với giới nghiên cứu, tính chủ quan cũng là rào cản lớn nhất khi muốn kiểm chứng phân tích kỹ thuật (Nguồn [9]).
 - **Khó làm trong thời gian thực.** Nhìn lại biểu đồ cũ thì thấy rõ điểm vào và ra; làm khi giá đang chạy thì khó hơn nhiều (Nguồn [1]).
 - **Không phải hệ thống thắng chắc.** Hamilton viết lý thuyết Dow không phải "hệ thống để thắng nhà cái", và chiếc phong vũ biểu thị trường không hoàn hảo (Nguồn [5]). Wyckoff nhắc rằng vốn có thể bị hao mòn vì giao dịch quá nhiều hoặc phán đoán kém (Nguồn [6]).
 
-## Khái niệm
+**Bằng chứng và rủi ro:**
 
-- [[xu-huong-gia]]: xu hướng tăng, giảm, đi ngang theo lý thuyết Dow và Brooks.
-- [[ho-tro-va-khang-cu]]: vùng giá nơi đà giảm hoặc đà tăng thường dừng lại.
-- [[bieu-do-nen-nhat]]: cách đọc thân và bóng nến.
-- [[phan-tich-ky-thuat]]: lĩnh vực rộng hơn mà price action thuộc về *(chưa có ghi chú)*.
+- [[nghien-cuu-hieu-qua-phan-tich-ky-thuat]]: nghiên cứu học thuật về phân tích kỹ thuật và mô hình nến cho kết quả trái chiều. Price action theo kiểu tự đọc biểu đồ rất khó kiểm chứng bằng nghiên cứu, vì phải biến cách đọc chủ quan thành quy tắc máy tính (Nguồn [9]).
+- [[ty-le-nha-giao-dich-ca-nhan-thua-lo]]: phần lớn người giao dịch cá nhân ngắn hạn thua lỗ. Ở Việt Nam, Ngân hàng Nhà nước chưa cấp phép cho sàn forex nào; chi tiết trong ghi chú này.
+- [[kiem-chung-phuong-phap-giao-dich]]: tự kiểm chứng một cách giao dịch bằng dữ liệu quá khứ và nhật ký lệnh *(chưa có ghi chú)*.
 
-## Mô hình & phương pháp
+### 6. Sáng tạo — kết hợp price action với phương pháp khác
 
-- [[quy-trinh-giao-dich-price-action]]: các bước từ đọc bối cảnh tới quản lý lệnh.
-- [[mau-hinh-nen]]: các mô hình nến và cách đánh giá thanh tín hiệu.
-- [[quan-ly-rui-ro-giao-dich]]: khối lượng lệnh, giới hạn thua lỗ *(chưa có ghi chú)*.
+Cấp Sáng tạo là ghép price action với phương pháp khác và tự xây cách làm của mình. Chính các truyền thống gốc đã là những sự kết hợp: Wyckoff đọc giá cùng khối lượng (Nguồn [6]); Nison dùng nến Nhật chung với các công cụ phân tích phương Tây (Nguồn [8]).
 
-## Số liệu & dữ kiện
-
-Phần phụ, để đối chiếu kỳ vọng:
-
-- [[nghien-cuu-hieu-qua-phan-tich-ky-thuat]]: nghiên cứu học thuật về phân tích kỹ thuật và mô hình nến cho kết quả trái chiều.
-- [[ty-le-nha-giao-dich-ca-nhan-thua-lo]]: phần lớn người lướt sóng cá nhân thua lỗ.
-
-## Case study
-
-Chưa có.
-
-## Bằng chứng và rủi ro (tóm tắt)
-
-- Price action theo kiểu tự đọc biểu đồ rất khó kiểm chứng bằng nghiên cứu, vì phải biến cách đọc chủ quan thành quy tắc máy tính (Nguồn [9]). Xem [[nghien-cuu-hieu-qua-phan-tich-ky-thuat]].
-- Phần lớn người giao dịch cá nhân ngắn hạn thua lỗ; xem [[ty-le-nha-giao-dich-ca-nhan-thua-lo]].
-- Ở Việt Nam, Ngân hàng Nhà nước chưa cấp phép cho sàn forex nào; chi tiết trong ghi chú trên.
+- [[ket-hop-price-action-voi-phuong-phap-khac]]: các cách ghép price action với khối lượng và phương pháp khác, theo tài liệu của chính tác giả *(chưa có ghi chú)*.
+- [[xay-dung-ke-hoach-giao-dich]]: tự viết kế hoạch giao dịch của riêng mình từ các cấp trên *(chưa có ghi chú)*.
 
 ## Tài liệu gốc
 
@@ -207,7 +237,7 @@ Mỗi thanh giá là kết quả giằng co giữa người mua và người bá
 
 ### Bắt đầu học price action từ đâu?
 
-Theo thứ tự: nhận diện xu hướng và vùng đi ngang ([[xu-huong-gia]]), xác định [[ho-tro-va-khang-cu|hỗ trợ – kháng cự]], đọc thân và bóng nến ([[bieu-do-nen-nhat]]), rồi mới học setup và cách đặt lệnh ([[quy-trinh-giao-dich-price-action]]).
+Theo lộ trình 6 cấp của bài này. Trước hết đọc phần Tổng quan để biết price action là gì. Sau đó hiểu xu hướng và vùng đi ngang ([[xu-huong-gia]]), [[ho-tro-va-khang-cu|hỗ trợ – kháng cự]], thân và bóng nến ([[bieu-do-nen-nhat]]). Rồi mới học setup và cách đặt lệnh ([[quy-trinh-giao-dich-price-action]]). Sau cùng là phân tích, đánh giá bằng bằng chứng và kết hợp với phương pháp khác.
 
 ### Price action có cần dùng chỉ báo không?
 

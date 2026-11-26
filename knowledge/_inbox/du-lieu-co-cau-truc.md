@@ -11,6 +11,7 @@ sources:
     publisher: Google Search Central
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Tài liệu chính thức của Google; đọc toàn văn (định nghĩa, định dạng, khuyên dùng JSON-LD, nguyên tắc nội dung hiển thị).
     accessed: 2026-11-26
   - title: "Article (Article, NewsArticle, BlogPosting) structured data"
@@ -18,6 +19,7 @@ sources:
     publisher: Google Search Central
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Tài liệu chính thức cho kiểu Article; đọc phần thuộc tính.
     accessed: 2026-11-26
   - title: "Changes to HowTo and FAQ rich results"
@@ -26,6 +28,7 @@ sources:
     date: 2023-08
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Thông báo chính thức giới hạn kết quả FAQ; đọc toàn văn.
     accessed: 2026-11-26
   - title: "Optimizing your website for generative AI features on Google Search"
@@ -34,6 +37,7 @@ sources:
     date: 2026
     kind: official
     credibility: 5
+    primary: true
     credibility_note: Hướng dẫn chính thức về AI trong Google Search; đọc toàn văn, có phần nói về dữ liệu có cấu trúc.
     accessed: 2026-11-26
 created: 2026-11-26
