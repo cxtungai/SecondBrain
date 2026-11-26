@@ -22,6 +22,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      indexnow_urls: ${{ steps.indexnow.outputs.urls }}
+      site: ${{ steps.pages.outputs.base_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -38,6 +41,17 @@ jobs:
           SITE_URL: ${{ steps.pages.outputs.origin }}
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
           SB_BRANCH: ${{ github.event.repository.default_branch }}
+      # So sitemap đang chạy trên web (bản cũ) với bản vừa dựng → danh sách trang mới / sửa / bỏ để báo IndexNow.
+      - name: Tìm trang mới hoặc vừa sửa
+        id: indexnow
+        if: env.DEPLOY == 'true'
+        continue-on-error: true
+        run: |
+          {
+            echo "urls<<EOF_URLS"
+            node .github/scripts/indexnow.mjs doi --cu "${{ steps.pages.outputs.base_url }}/sitemap.xml" --moi dist/sitemap.xml || true
+            echo "EOF_URLS"
+          } >> "$GITHUB_OUTPUT"
       - uses: actions/upload-pages-artifact@v3
         if: env.DEPLOY == 'true'
         with:
@@ -53,3 +67,27 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Sau khi web lên: kiểm tra web thật (hỏng thì báo đỏ, GitHub gửi email), rồi báo trang mới cho IndexNow
+  # (Bing, Yandex, Naver, Seznam). Google tự đọc lại sitemap.xml nên không cần báo.
+  sau-khi-dang:
+    if: github.event_name != 'pull_request' && github.ref_name == github.event.repository.default_branch
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Kiểm tra web thật
+        run: node .github/scripts/kiem-tra-web.mjs --site "${{ needs.build.outputs.site }}/" --lan 10 --cho 30
+      - name: Báo trang mới cho IndexNow
+        if: always()
+        continue-on-error: true
+        env:
+          URLS: ${{ needs.build.outputs.indexnow_urls }}
+        run: |
+          printf '%s\n' "$URLS" > indexnow-urls.txt
+          node .github/scripts/indexnow.mjs gui --site "${{ needs.build.outputs.site }}/" --tep indexnow-urls.txt

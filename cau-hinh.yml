@@ -17,6 +17,9 @@ locale: vi_VN
 google_site_verification: "OvmgZBE__5S7i-tDzUOehuwXS-kotmB35wsSnqfmmJ8"
 bing_site_verification: ""
 
+# Khoá IndexNow — GitHub dùng để tự báo Bing, Yandex, Naver, Seznam khi có trang mới/sửa (khoá công khai, không phải mật khẩu)
+indexnow_key: "e30830c4a30455c97a090833a95b8ba6"
+
 # Quy tắc AI agent phải tuân theo khi dùng kho để viết content (hiện trong llms.txt)
 agent_rules:
   - "Chỉ dùng số liệu, dữ kiện, trích dẫn từ ghi chú có status \"verified\" như sự thật; luôn ghi nguồn theo trường sources của ghi chú đó."

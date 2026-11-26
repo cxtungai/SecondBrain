@@ -392,6 +392,7 @@ impl Site {
         .iter()
         .map(|s| s.to_string())
         .collect();
+        r.extend(self.indexnow_file());
         r.extend(NOTE_TYPES.iter().map(|t| format!("types/{}/", t.key)));
         r.extend(self.kb().tags.iter().map(|t| format!("tags/{}/", t.slug)));
         let notes: Vec<&Note> = if self.dev { self.kb().all.iter().collect() } else { self.kb().notes() };
@@ -403,6 +404,12 @@ impl Site {
         }
         r.extend(self.data.articles.all.iter().map(|a| format!("bai-viet/{}/", a.slug)));
         r
+    }
+
+    /// File khoá IndexNow `<khoá>.txt` (nội dung là chính khoá) — để Bing… xác nhận yêu cầu báo trang mới là của web này.
+    fn indexnow_file(&self) -> Option<String> {
+        let k = &self.data.config.indexnow_key;
+        crate::config::valid_indexnow_key(k).then(|| format!("{k}.txt"))
     }
 
     /// Đường dẫn của Khu duyệt bài (chỉ dùng với site đã `into_review`).
@@ -428,6 +435,11 @@ impl Site {
     fn render_route(&self, route: &str) -> Option<Page> {
         if let Some(p) = self.asset(route) {
             return Some(p);
+        }
+        if let Some(key) = self.indexnow_file() {
+            if route == key {
+                return Some(Page::text("text/plain; charset=utf-8", self.data.config.indexnow_key.clone()));
+            }
         }
         let page = match route {
             "" => Page::html(self.home()),
@@ -1431,6 +1443,18 @@ mod tests {
         assert!(!home.contains("msvalidate.01"));
         assert_eq!(crate::config::verification_code(r#"<meta name="msvalidate.01" content="ABC123DEF" />"#), "ABC123DEF");
         assert_eq!(crate::config::verification_code(" abc-123 "), "abc-123");
+    }
+
+    #[test]
+    fn khoa_indexnow() {
+        let mut data = load(false);
+        data.config.indexnow_key = "abcd1234ef".into();
+        let site = Site::new(data, "/Repo", Some("https://vd.github.io".into()), false);
+        assert!(site.routes().contains(&"abcd1234ef.txt".to_string()));
+        assert_eq!(String::from_utf8(site.render("abcd1234ef.txt").unwrap().body).unwrap(), "abcd1234ef");
+        // Không có khoá thì không có file.
+        let none = Site::new(load(false), "/Repo", None, false);
+        assert!(none.routes().iter().all(|r| !r.ends_with(".txt") || r == "llms.txt" || r == "llms-full.txt" || r == "robots.txt"));
     }
 
     #[test]

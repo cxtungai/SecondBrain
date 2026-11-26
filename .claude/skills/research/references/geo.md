@@ -52,9 +52,14 @@ Việc của agent chỉ là: đúng tên mục `## Câu hỏi thường gặp` 
 
 ## Việc người dùng làm một lần (hướng dẫn họ khi được hỏi)
 
-- **Google Search Console** và **Bing Webmaster Tools**: đăng ký, chọn cách xác minh bằng thẻ HTML, dán mã vào `cau-hinh.yml` (`google_site_verification`, `bing_site_verification`; dán cả thẻ meta cũng được), đưa lên web, bấm xác minh, rồi gửi `sitemap.xml`. Web đang nằm dưới `/SecondBrain/` nên Google không tự đọc được `robots.txt` của mình; gửi sitemap là cách chắc chắn.
+- **Google Search Console** (đã làm 2026-11-26): đăng ký, chọn cách xác minh bằng thẻ HTML, dán mã vào `cau-hinh.yml` (`google_site_verification`; dán cả thẻ meta cũng được), đưa lên web, bấm xác minh, rồi gửi `sitemap.xml`. Web đang nằm dưới `/SecondBrain/` nên Google không tự đọc được `robots.txt` của mình; gửi sitemap là cách chắc chắn. Sau đó Google tự đọc lại sitemap, không cần gửi lại.
+- **Bing Webmaster Tools**: không bắt buộc. Bing đã được báo tự động qua IndexNow mỗi lần đăng; chỉ đăng ký (chọn "Nhập từ Google Search Console") nếu muốn xem số liệu của Bing.
 - **Brave Search**: gửi địa chỉ web tại search.brave.com/submit-url (Claude dùng kết quả Brave khi tìm nguồn).
 - Muốn bền lâu: tên miền riêng (tốn phí hằng năm) giúp `robots.txt` có hiệu lực và tăng nhận diện.
+
+## Tự động sau mỗi lần đăng (không cần ai làm tay)
+
+Job `sau-khi-dang` trong `.github/workflows/deploy.yml`: kiểm tra web thật (`.github/scripts/kiem-tra-web.mjs`, hỏng thì báo đỏ) và báo trang mới/sửa/bỏ cho IndexNow (`.github/scripts/indexnow.mjs`, khoá `indexnow_key` trong `cau-hinh.yml`). Không có cách tự động hợp lệ để bấm "Yêu cầu lập chỉ mục" của Google cho bài thường (Indexing API chỉ dành cho tin tuyển dụng / livestream) — sitemap là đủ.
 
 ## Theo dõi
 

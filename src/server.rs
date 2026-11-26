@@ -650,6 +650,8 @@ fn config_yaml(cfg: &Config) -> String {
          language: {}\nlocale: {}\n\n\
          # Mã xác minh chủ web — dán mã (hoặc nguyên thẻ meta) Google Search Console / Bing Webmaster đưa cho; để trống nếu chưa đăng ký\n\
          google_site_verification: {}\nbing_site_verification: {}\n\n\
+         # Khoá IndexNow — GitHub dùng để tự báo Bing, Yandex, Naver, Seznam khi có trang mới/sửa (khoá công khai, không phải mật khẩu)\n\
+         indexnow_key: {}\n\n\
          # Quy tắc AI agent phải tuân theo khi dùng kho để viết content (hiện trong llms.txt)\nagent_rules:\n{}\n",
         q(&cfg.name),
         q(&cfg.description),
@@ -659,6 +661,7 @@ fn config_yaml(cfg: &Config) -> String {
         cfg.locale,
         q(&cfg.google_site_verification),
         q(&cfg.bing_site_verification),
+        q(&cfg.indexnow_key),
         rules.join("\n")
     )
 }
@@ -787,12 +790,18 @@ mod tests {
     fn luu_cai_dat_giu_ma_xac_minh() {
         let dir = std::env::temp_dir().join(format!("sb-cfg-{}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
-        let cfg = Config { google_site_verification: "g-123".into(), bing_site_verification: "B456".into(), ..Config::default() };
+        let cfg = Config {
+            google_site_verification: "g-123".into(),
+            bing_site_verification: "B456".into(),
+            indexnow_key: "e30830c4a30455c9".into(),
+            ..Config::default()
+        };
         std::fs::write(dir.join(crate::config::CONFIG_FILE), config_yaml(&cfg)).unwrap();
         let (back, err) = Config::load(&dir);
         std::fs::remove_dir_all(&dir).ok();
         assert!(err.is_none());
         assert_eq!((back.google_site_verification.as_str(), back.bing_site_verification.as_str()), ("g-123", "B456"));
+        assert_eq!(back.indexnow_key, "e30830c4a30455c9");
         assert_eq!(back.agent_rules, Config::default().agent_rules);
     }
 }

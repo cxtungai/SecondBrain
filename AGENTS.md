@@ -32,8 +32,9 @@ templates/  assets/     Giao diện web (minijinja) + CSS/JS — được nhúng
 cau-hinh.yml            Tên, mô tả, tác giả, miễn trừ, quy tắc cho AI agent
 sb                      Lệnh chạy chương trình cho agent: ./sb <lệnh> (cargo nếu có, không thì tải bản build sẵn)
 Mo-Second-Brain.*       File bấm đúp cho người dùng: tải chương trình lần đầu rồi mở Bàn làm việc
-.github/workflows/      deploy.yml (test + build + GitHub Pages), release.yml (file chạy), duyet.yml (nút duyệt trên web)
+.github/workflows/      deploy.yml (test + build + GitHub Pages + kiểm tra web thật + báo IndexNow), release.yml (file chạy), duyet.yml (nút duyệt trên web)
 .github/scripts/duyet.sh  Đăng/bỏ bản nháp theo tiêu đề issue (chạy thử được trên máy, xem đầu file)
+.github/scripts/kiem-tra-web.mjs, indexnow.mjs  Sau mỗi lần đăng: kiểm tra SEO của web thật; báo trang mới/sửa cho IndexNow
 .claude/skills/         Skill cho Claude Code: research, publish, connect, seo-article, write-content
 ```
 
@@ -155,6 +156,8 @@ Quy tắc:
 `./sb seo` liệt kê gợi ý (chỉ là gợi ý, không chặn build); trên Bàn làm việc (`./sb mo`), trang nào cũng có hộp "SEO / GEO" (không lên web).
 
 **Phần kỹ thuật chương trình tự lo** khi dựng web: canonical, Open Graph và thẻ X/Twitter kèm ảnh chia sẻ (`assets/og-image.png`), JSON-LD (WebSite + Organization ở trang chủ; Article có tác giả hoặc tên thương hiệu khi `author` trống, đơn vị xuất bản, nguồn trích; FAQ; Breadcrumb; DefinedTermSet), sitemap có ngày sửa, `feed.xml` (Atom), `robots.txt` nêu tên bot tìm kiếm và bot AI, `llms.txt`, bản Markdown. Mã xác minh Google Search Console / Bing Webmaster điền ở `cau-hinh.yml` (`google_site_verification`, `bing_site_verification`). Web nằm dưới `/ten-repo/` thì bot không đọc `robots.txt` của mình (chỉ đọc ở gốc tên miền), nên cần gửi sitemap qua Search Console.
+
+**Tự động sau mỗi lần đăng** (job `sau-khi-dang` trong `deploy.yml`, chạy cả khi người dùng bấm duyệt trên web): (1) `kiem-tra-web.mjs` kiểm web thật — canonical, ảnh chia sẻ, JSON-LD, mã xác minh Google/Bing, sitemap, robots, feed, llms.txt, file khoá IndexNow, `/duyet/` có noindex; hỏng thì báo đỏ. (2) `indexnow.mjs` so sitemap cũ với bản mới rồi báo trang mới/sửa/bỏ cho IndexNow (Bing, Yandex, Naver, Seznam) bằng `indexnow_key` trong `cau-hinh.yml`; lỗi chỉ cảnh báo. Google không dùng IndexNow — nó tự đọc lại sitemap. Không cần đăng ký Bing Webmaster để Bing biết bài mới. Cả hai script chạy thử được trên máy (xem đầu file).
 
 ## Quy trình
 

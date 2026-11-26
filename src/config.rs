@@ -20,6 +20,14 @@ pub struct Config {
     pub google_site_verification: String,
     /// Mã xác minh Bing Webmaster Tools (thẻ meta "msvalidate.01") — trống nếu chưa đăng ký.
     pub bing_site_verification: String,
+    /// Khoá IndexNow (8–128 ký tự chữ, số, "-"): web phục vụ `<khoá>.txt`, GitHub dùng khoá này báo
+    /// Bing, Yandex, Naver, Seznam mỗi khi có trang mới/sửa. Khoá công khai theo thiết kế, không phải mật khẩu.
+    pub indexnow_key: String,
+}
+
+/// Khoá IndexNow hợp lệ: 8–128 ký tự a-z, A-Z, 0-9, "-".
+pub fn valid_indexnow_key(k: &str) -> bool {
+    (8..=128).contains(&k.len()) && k.chars().all(|c| c.is_ascii_alphanumeric() || c == '-')
 }
 
 /// Nhận cả mã trơn lẫn nguyên thẻ `<meta name=… content="mã" />` người dùng dán vào.
@@ -54,6 +62,7 @@ impl Default for Config {
             ],
             google_site_verification: String::new(),
             bing_site_verification: String::new(),
+            indexnow_key: String::new(),
         }
     }
 }
@@ -81,6 +90,11 @@ impl Config {
         set(&mut cfg.bing_site_verification, "bing_site_verification");
         cfg.google_site_verification = verification_code(&cfg.google_site_verification);
         cfg.bing_site_verification = verification_code(&cfg.bing_site_verification);
+        set(&mut cfg.indexnow_key, "indexnow_key");
+        cfg.indexnow_key = cfg.indexnow_key.trim().to_string();
+        if !valid_indexnow_key(&cfg.indexnow_key) {
+            cfg.indexnow_key.clear();
+        }
         if let Some(v) = get_str(&map, "name") {
             cfg.name = v;
         }
